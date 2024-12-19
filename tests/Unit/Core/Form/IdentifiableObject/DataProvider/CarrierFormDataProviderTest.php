@@ -28,6 +28,7 @@ namespace Core\Form\IdentifiableObject\DataProvider;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
@@ -118,12 +119,15 @@ class CarrierFormDataProviderTest extends TestCase
                 'Zone C' => 3,
             ]);
 
+        $groupDataProvider = $this->createMock(GroupDataProvider::class);
+
         $formDataProvider = new CarrierFormDataProvider(
             $queryBus,
             $this->createMock(ShopContext::class),
             $currencyDataProvider,
             $configuration,
-            $zonesChoiceProvider
+            $zonesChoiceProvider,
+            $groupDataProvider
         );
         $formData = $formDataProvider->getData(42);
         $this->assertEquals([
@@ -180,17 +184,24 @@ class CarrierFormDataProviderTest extends TestCase
     {
         $shopContext = $this->createMock(ShopContext::class);
         $shopContext->method('getAssociatedShopIds')->willReturn([2, 4]);
+        $groupDataProvider = $this->createMock(GroupDataProvider::class);
+        $groupDataProvider
+            ->method('getAllGroupIds')
+            ->willReturn([1, 2, 3]);
+
         $formDataProvider = new CarrierFormDataProvider(
             $this->createMock(CommandBusInterface::class),
             $shopContext,
             $this->createMock(CurrencyDataProviderInterface::class),
             $this->createMock(ConfigurationInterface::class),
-            $this->createMock(ZoneByIdChoiceProvider::class)
+            $this->createMock(ZoneByIdChoiceProvider::class),
+            $groupDataProvider
         );
         $this->assertEquals([
             'general_settings' => [
                 'grade' => 0,
                 'associated_shops' => [2, 4],
+                'group_access' => [1, 2, 3],
             ],
         ], $formDataProvider->getDefaultData());
     }
