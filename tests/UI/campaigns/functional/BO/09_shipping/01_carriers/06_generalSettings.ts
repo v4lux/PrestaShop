@@ -207,6 +207,19 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierData);
     expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
+  });
+  
+  it('should return to carriers page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriers', baseContext);
+
+    await boDashboardPage.goToSubMenu(
+      page,
+      boDashboardPage.shippingLink,
+      boDashboardPage.carriersLink,
+    );
+
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
 
     const numberCarriersAfterCreation = await boCarriersPage.getNumberOfElementInGrid(page);
     expect(numberCarriersAfterCreation).to.be.equal(numberOfCarriers + 1);
