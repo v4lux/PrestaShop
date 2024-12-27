@@ -103,7 +103,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         const isActionPerformed = await boCarriersPage.setStatus(page, 1, true);
 
         if (isActionPerformed) {
-          const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+          const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
           expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
         }
 
@@ -251,7 +251,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         const isActionPerformed = await boCarriersPage.setStatus(page, 1, false);
 
         if (isActionPerformed) {
-          const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+          const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
           expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
         }
 
