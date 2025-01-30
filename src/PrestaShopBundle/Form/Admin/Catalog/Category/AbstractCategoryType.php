@@ -152,7 +152,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('additional_description', TranslatableType::class, [
                 'label' => $this->trans('Additional description', 'Admin.Catalog.Feature'),
-                'help' => $genericCharactersHint,
+                'help' => $this->trans('Text that is usually displayed after the product list on category page. It\'s a good place to put longer SEO related content.', 'Admin.Catalog.Help') . ' ' . $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
@@ -166,26 +166,18 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
-                'help' => $this->trans(
-                    'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
-                    'Admin.Catalog.Help',
-                    [
-                        '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
-                        '[/1]' => '</a>',
-                    ]
-                ),
                 'required' => false,
             ])
             ->add('cover_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('This is the cover image for your category: it will be displayed on the category\'s page. The description will appear in its top-left corner.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Category image that is usually displayed on the category page next to description, depending on your theme.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'can_be_deleted' => true,
                 'show_size' => true,
             ])
             ->add('thumbnail_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Miniature image that is used when displaying subcategories. Could be also used in menus and other places, depending on your theme.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'can_be_deleted' => true,
                 'show_size' => true,
