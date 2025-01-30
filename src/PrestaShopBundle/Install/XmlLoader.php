@@ -789,6 +789,22 @@ class XmlLoader
                     );
                 }
             }
+
+            // Special cas for categories that now have two different images for cover and thumbnail,
+            // we use the source to generate a thumbnail by default
+            if ($entity === 'category') {
+                $sourceCategoryImage = $from_path . $identifier . '.' . $extension;
+                if (file_exists($sourceCategoryImage)) {
+                    $categoryThumbnailPath = _PS_IMG_DIR_ . $p . DIRECTORY_SEPARATOR . $entity_id . '_thumb.jpg';
+                    // Same way to generate as in CategoryThumbnailImageUploader
+                    ImageManager::resize(
+                        $sourceCategoryImage,
+                        $categoryThumbnailPath,
+                        null,
+                        null
+                    );
+                }
+            }
         }
         Image::moveToNewFileSystem();
     }
