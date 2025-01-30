@@ -8,7 +8,6 @@ import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrder
 import {createAccountPage} from '@pages/FO/classic/myAccount/add';
 import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse';
 import {securePaymentPage} from '@pages/FO/classic/securePayment';
-import {siteMapPage} from '@pages/FO/classic/siteMap';
 import {storesPage} from '@pages/FO/classic/stores';
 import testContext from '@utils/testContext';
 
@@ -23,6 +22,7 @@ import {
   foClassicLoginPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
+  foClassicSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -42,6 +42,10 @@ describe('Check FO public pages', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  beforeEach(async () => {
+    utilsPlaywright.resetJsErrors();
   });
 
   it('should go to the home page', async function () {
@@ -132,7 +136,7 @@ describe('Check FO public pages', async () => {
       {linkSelector: 'About us', pageTitle: foClassicAboutUsPage.pageTitle},
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: foClassicContactUsPage.pageTitle},
-      {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
+      {linkSelector: 'Sitemap', pageTitle: foClassicSitemapPage.pageTitle},
       {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {

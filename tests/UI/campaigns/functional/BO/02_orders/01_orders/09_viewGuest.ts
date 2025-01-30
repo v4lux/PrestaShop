@@ -1,14 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import viewCustomerPage from '@pages/BO/customers/view';
-
 import {
+  boCustomersViewPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
@@ -21,8 +19,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_orders_viewGuest';
 
@@ -120,9 +116,9 @@ describe('BO - Orders : View guest from orders page', async () => {
       // Click on customer link first row
       page = await boOrdersPage.viewCustomer(page, 1);
 
-      const pageTitle = await viewCustomerPage.getPageTitle(page);
+      const pageTitle = await boCustomersViewPage.getPageTitle(page);
       expect(pageTitle).to
-        .contains(viewCustomerPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
+        .contains(boCustomersViewPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
     });
   });
 

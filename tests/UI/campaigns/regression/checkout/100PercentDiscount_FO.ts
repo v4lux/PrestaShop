@@ -1,13 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import BO pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
 // Import FO pages
 import {blockCartModal} from '@pages/FO/classic/modal/blockCart';
 
 import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   boOrderSettingsPage,
@@ -24,8 +24,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'regression_checkout_100PercentDiscount_FO';
 
@@ -87,25 +85,25 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     describe('Create a percentage cart rule', async () => {
       it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
-        await cartRulesPage.goToAddNewCartRulesPage(page);
+        await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
       });
 
       it('should create new cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createPercentCartRule', baseContext);
 
-        const validationMessage = await addCartRulePage.createEditCartRules(page, percentCartRule);
-        expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, percentCartRule);
+        expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
       });
     });
 
@@ -140,7 +138,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await cartRulesPage.viewMyShop(page);
+      page = await boCartRulesPage.viewMyShop(page);
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
@@ -250,22 +248,22 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       it('should go to cart rules page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToDelete', baseContext);
 
-        await cartRulesPage.goToSubMenu(
+        await boCartRulesPage.goToSubMenu(
           page,
-          cartRulesPage.catalogParentLink,
-          cartRulesPage.discountsLink,
+          boCartRulesPage.catalogParentLink,
+          boCartRulesPage.discountsLink,
         );
 
-        const pageTitle = await cartRulesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+        const pageTitle = await boCartRulesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
       });
 
       it('should delete our 100% cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRules', baseContext);
 
-        const validationMessage = await cartRulesPage.deleteCartRule(page);
+        const validationMessage = await boCartRulesPage.deleteCartRule(page);
         expect(validationMessage).to.contains(
-          cartRulesPage.successfulDeleteMessage,
+          boCartRulesPage.successfulDeleteMessage,
         );
       });
     });

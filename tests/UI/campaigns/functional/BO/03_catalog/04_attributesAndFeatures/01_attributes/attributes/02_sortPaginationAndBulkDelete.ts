@@ -1,12 +1,10 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import addAttributePage from '@pages/BO/catalog/attributes/addAttribute';
-
 import {expect} from 'chai';
 import {
   boAttributesPage,
+  boAttributesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -81,14 +79,14 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
 
         await boAttributesPage.goToAddAttributePage(page);
 
-        const pageTitle = await addAttributePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addAttributePage.createPageTitle);
+        const pageTitle = await boAttributesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAttributesCreatePage.createPageTitle);
       });
 
       it(`should create attribute n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewAttribute${index}`, baseContext);
 
-        const textResult = await addAttributePage.addEditAttribute(page, createAttributeData);
+        const textResult = await boAttributesCreatePage.addEditAttribute(page, createAttributeData);
         expect(textResult).to.contains(boAttributesPage.successfulCreationMessage);
 
         const numberOfAttributesAfterCreation = await boAttributesPage.getNumberOfElementInGrid(page);

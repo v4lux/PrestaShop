@@ -2,13 +2,14 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boOrderMessagesPage,
   type BrowserContext,
   FakerOrderMessage,
   type Page,
@@ -59,14 +60,14 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     );
     await boDashboardPage.closeSfToolBar(page);
 
-    const pageTitle = await orderMessagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
+    const pageTitle = await boOrderMessagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderMessagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of order messages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfOrderMessages = await orderMessagesPage.resetAndGetNumberOfLines(page);
+    numberOfOrderMessages = await boOrderMessagesPage.resetAndGetNumberOfLines(page);
     expect(numberOfOrderMessages).to.be.above(0);
   });
 
@@ -80,7 +81,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
       it('should go to add new order message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index}`, baseContext);
 
-        await orderMessagesPage.goToAddNewOrderMessagePage(page);
+        await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
         const pageTitle = await addOrderMessagePage.getPageTitle(page);
         expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
@@ -90,13 +91,13 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index}`, baseContext);
 
         const textResult = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
-        expect(textResult).to.equal(orderMessagesPage.successfulCreationMessage);
+        expect(textResult).to.equal(boOrderMessagesPage.successfulCreationMessage);
       });
 
       it('should check the order messages number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderMessageNumber${index}`, baseContext);
 
-        const numberOfOrderMessagesAfterCreation = await orderMessagesPage.getNumberOfElementInGrid(page);
+        const numberOfOrderMessagesAfterCreation = await boOrderMessagesPage.getNumberOfElementInGrid(page);
         expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + 1 + index);
       });
     });
@@ -106,28 +107,28 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boOrderMessagesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await orderMessagesPage.paginationNext(page);
+      const paginationNumber = await boOrderMessagesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await orderMessagesPage.paginationPrevious(page);
+      const paginationNumber = await boOrderMessagesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boOrderMessagesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -154,11 +155,11 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await orderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boOrderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await orderMessagesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boOrderMessagesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await orderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boOrderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -188,23 +189,23 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await orderMessagesPage.filterTable(page, 'name', 'toSortAndPaginate');
+      await boOrderMessagesPage.filterTable(page, 'name', 'toSortAndPaginate');
 
-      const textResult = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
+      const textResult = await boOrderMessagesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textResult).to.contains('toSortAndPaginate');
     });
 
     it('should delete order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await orderMessagesPage.deleteWithBulkActions(page);
-      expect(deleteTextResult).to.be.equal(orderMessagesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boOrderMessagesPage.deleteWithBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boOrderMessagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfOrderMessagesAfterFilter = await orderMessagesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderMessagesAfterFilter = await boOrderMessagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrderMessagesAfterFilter).to.be.equal(numberOfOrderMessages);
     });
   });

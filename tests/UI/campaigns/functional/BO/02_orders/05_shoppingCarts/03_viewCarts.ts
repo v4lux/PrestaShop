@@ -1,20 +1,18 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
 
-// Import BO pages
-import addOrderPage from '@pages/BO/orders/add';
-import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
-
 import {
   boDashboardPage,
   boLoginPage,
+  boOrdersCreatePage,
   boOrdersViewBlockProductsPage,
   boShoppingCartsPage,
+  boShoppingCartsViewPage,
   type BrowserContext,
   dataOrderStatuses,
   dataPaymentMethods,
@@ -26,8 +24,6 @@ import {
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_shoppingCarts_viewCarts';
 
@@ -133,14 +129,14 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       const lastShoppingCartId = await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart');
       await boShoppingCartsPage.goToViewPage(page, 1);
 
-      const pageTitle = await shoppingCartViewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
+      const pageTitle = await boShoppingCartsViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsViewPage.pageTitle(lastShoppingCartId));
     });
 
     it('should check the cart total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCardTotal', baseContext);
 
-      const cartTotal = await shoppingCartViewPage.getCartTotal(page);
+      const cartTotal = await boShoppingCartsViewPage.getCartTotal(page);
       expect(cartTotal.toString())
         .to.be.equal((dataProducts.demo_1.finalPrice).toFixed(2));
     });
@@ -148,7 +144,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should check the customer Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock1', baseContext);
 
-      const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
+      const customerInformation = await boShoppingCartsViewPage.getCustomerInformation(page);
       expect(customerInformation)
         .to.contains(`${customerData.socialTitle} ${customerData.firstName} ${customerData.lastName}`)
         .and.to.contains(customerData.email)
@@ -158,10 +154,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should check the cart Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartInformationBlock1', baseContext);
 
-      const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
+      const orderInformation = await boShoppingCartsViewPage.getOrderInformation(page);
       expect(orderInformation).to.contains('The customer has not proceeded to checkout yet.');
 
-      const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
+      const hasButtonCreateOrderFromCart = await boShoppingCartsViewPage.hasButtonCreateOrderFromCart(page);
       expect(hasButtonCreateOrderFromCart).to.eq(true);
     });
 
@@ -183,7 +179,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
             baseContext,
           );
 
-        const cartSummary = await shoppingCartViewPage.getTextColumn(
+        const cartSummary = await boShoppingCartsViewPage.getTextColumn(
           page,
           test.args.columnName,
           test.args.row === undefined ? 1 : test.args.row,
@@ -199,21 +195,21 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should click on "Create an order from this cart." button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickCreateOrderFromCartButton', baseContext);
 
-      await shoppingCartViewPage.createOrderFromThisCart(page);
+      await boShoppingCartsViewPage.createOrderFromThisCart(page);
 
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
     });
 
     it('should fill the order and create it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillAndCreateOrder', baseContext);
 
       // Choose payment method
-      await addOrderPage.setPaymentMethod(page, dataPaymentMethods.checkPayment.moduleName);
+      await boOrdersCreatePage.setPaymentMethod(page, dataPaymentMethods.checkPayment.moduleName);
       // Set order status
-      await addOrderPage.setOrderStatus(page, dataOrderStatuses.paymentAccepted);
+      await boOrdersCreatePage.setOrderStatus(page, dataOrderStatuses.paymentAccepted);
       // Create the order
-      await addOrderPage.clickOnCreateOrderButton(page);
+      await boOrdersCreatePage.clickOnCreateOrderButton(page);
 
       const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
       expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);
@@ -254,14 +250,14 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       const lastShoppingCartId = await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart');
       await boShoppingCartsPage.goToViewPage(page, 1);
 
-      const pageTitle = await shoppingCartViewPage.getPageTitle(page);
-      expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle(lastShoppingCartId));
+      const pageTitle = await boShoppingCartsViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShoppingCartsViewPage.pageTitle(lastShoppingCartId));
     });
 
     it('should check the customer Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock2', baseContext);
 
-      const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
+      const customerInformation = await boShoppingCartsViewPage.getCustomerInformation(page);
       expect(customerInformation)
         .to.contains(`${customerData.socialTitle} ${customerData.firstName} ${customerData.lastName}`)
         .and.to.contains(customerData.email)
@@ -271,10 +267,10 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should check the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock2', baseContext);
 
-      const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
+      const orderInformation = await boShoppingCartsViewPage.getOrderInformation(page);
       expect(orderInformation).to.contains(`Order #${orderId}`);
 
-      const hasButtonCreateOrderFromCart = await shoppingCartViewPage.hasButtonCreateOrderFromCart(page);
+      const hasButtonCreateOrderFromCart = await boShoppingCartsViewPage.hasButtonCreateOrderFromCart(page);
       expect(hasButtonCreateOrderFromCart).to.eq(false);
     });
 
@@ -296,7 +292,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
             baseContext,
           );
 
-        const cartSummary = await shoppingCartViewPage.getTextColumn(
+        const cartSummary = await boShoppingCartsViewPage.getTextColumn(
           page,
           test.args.columnName,
           test.args.row === undefined ? 1 : test.args.row,
@@ -312,7 +308,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should click on the order Link in the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOrderLink', baseContext);
 
-      await shoppingCartViewPage.goToOrderPage(page);
+      await boShoppingCartsViewPage.goToOrderPage(page);
 
       const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
       expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);

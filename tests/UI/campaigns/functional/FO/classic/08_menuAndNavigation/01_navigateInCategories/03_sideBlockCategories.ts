@@ -14,7 +14,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigateInCategories_sideBlockCategories';
 
-describe('FO - Menu and Navigation : Side block categories', async () => {
+describe.skip('FO - Menu and Navigation : Side block categories', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

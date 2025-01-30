@@ -1,13 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
+  boFilesPage,
   boLoginPage,
   type BrowserContext,
   FakerFile,
@@ -61,10 +60,10 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
     );
     await boDashboardPage.closeSfToolBar(page);
 
-    numberOfFiles = await filesPage.resetAndGetNumberOfLines(page);
+    numberOfFiles = await boFilesPage.resetAndGetNumberOfLines(page);
 
-    const pageTitle = await filesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(filesPage.pageTitle);
+    const pageTitle = await boFilesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFilesPage.pageTitle);
   });
 
   // 1: Create 11 files
@@ -77,7 +76,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
       it('should go to new file page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewFilePage${index}`, baseContext);
 
-        await filesPage.goToAddNewFilePage(page);
+        await boFilesPage.goToAddNewFilePage(page);
 
         const pageTitle = await addFilePage.getPageTitle(page);
         expect(pageTitle).to.contains(addFilePage.pageTitle);
@@ -87,9 +86,9 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
         await testContext.addContextItem(this, 'testIdentifier', `createFile${index}`, baseContext);
 
         const result = await addFilePage.createEditFile(page, createFileData);
-        expect(result).to.equal(filesPage.successfulCreationMessage);
+        expect(result).to.equal(boFilesPage.successfulCreationMessage);
 
-        const numberOfFilesAfterCreation = await filesPage.resetAndGetNumberOfLines(page);
+        const numberOfFilesAfterCreation = await boFilesPage.resetAndGetNumberOfLines(page);
         expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + 1 + index);
       });
 
@@ -124,11 +123,11 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await filesPage.filterTable(page, test.args.filterBy, test.args.filterValue);
-        const numberOfFilesAfterFilter = await filesPage.getNumberOfElementInGrid(page);
+        await boFilesPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        const numberOfFilesAfterFilter = await boFilesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
-          const textName = await filesPage.getTextColumnFromTable(page, i, test.args.filterBy);
+          const textName = await boFilesPage.getTextColumnFromTable(page, i, test.args.filterBy);
           expect(textName).to.contains(test.args.filterValue);
         }
       });
@@ -136,7 +135,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfFilesAfterReset = await filesPage.resetAndGetNumberOfLines(page);
+        const numberOfFilesAfterReset = await boFilesPage.resetAndGetNumberOfLines(page);
         expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
       });
     });
@@ -147,28 +146,28 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await filesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boFilesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await filesPage.paginationNext(page);
+      const paginationNumber = await boFilesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await filesPage.paginationPrevious(page);
+      const paginationNumber = await boFilesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await filesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boFilesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -210,10 +209,10 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-          const nonSortedTable = await filesPage.getAllRowsColumnContent(page, test.args.sortBy);
-          await filesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+          const nonSortedTable = await boFilesPage.getAllRowsColumnContent(page, test.args.sortBy);
+          await boFilesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-          const sortedTable = await filesPage.getAllRowsColumnContent(page, test.args.sortBy);
+          const sortedTable = await boFilesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
           if (test.args.isFloat) {
             const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -245,13 +244,13 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await filesPage.filterTable(page, 'name', 'todelete');
+      await boFilesPage.filterTable(page, 'name', 'todelete');
 
-      const numberOfFilesAfterFilter = await filesPage.getNumberOfElementInGrid(page);
+      const numberOfFilesAfterFilter = await boFilesPage.getNumberOfElementInGrid(page);
       expect(numberOfFilesAfterFilter).to.be.above(0);
 
       for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
-        const textColumn = await filesPage.getTextColumnFromTable(
+        const textColumn = await boFilesPage.getTextColumnFromTable(
           page,
           i,
           'name',
@@ -263,14 +262,14 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
     it('should delete files with Bulk Actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await filesPage.deleteFilesBulkActions(page);
-      expect(deleteTextResult).to.be.equal(filesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boFilesPage.deleteFilesBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boFilesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfFilesAfterReset = await filesPage.resetAndGetNumberOfLines(page);
+      const numberOfFilesAfterReset = await boFilesPage.resetAndGetNumberOfLines(page);
       expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
     });
   });

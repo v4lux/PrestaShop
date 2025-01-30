@@ -7,21 +7,21 @@ import zonesPage from '@pages/BO/international/locations';
 import addZonePage from '@pages/BO/international/locations/add';
 import statesPage from '@pages/BO/international/locations/states';
 import addStatePage from '@pages/BO/international/locations/states/add';
-import taxesPage from '@pages/BO/international/taxes';
 import addTaxPage from '@pages/BO/international/taxes/add';
-import taxRulesPage from '@pages/BO/international/taxes/taxRules';
-import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 import {
+  boCountriesPage,
+  boCountriesCreatePage,
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
   boDashboardPage,
   boLoginPage,
   boLocalizationPage,
   boLanguagesPage,
   boLanguagesCreatePage,
-  boCurrenciesPage,
-  boCurrenciesCreatePage,
-  boCountriesPage,
-  boCountriesCreatePage,
+  boTaxesPage,
+  boTaxRulesPage,
+  boTaxRulesCreatePage,
   boTranslationsPage,
   type BrowserContext,
   type Page,
@@ -43,6 +43,10 @@ describe('BO - International', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  beforeEach(async () => {
+    utilsPlaywright.resetJsErrors();
   });
 
   it('should login in BO', async function () {
@@ -288,8 +292,8 @@ describe('BO - International', async () => {
       boDashboardPage.taxesLink,
     );
 
-    const pageTitle = await taxesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(taxesPage.pageTitle);
+    const pageTitle = await boTaxesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -298,7 +302,7 @@ describe('BO - International', async () => {
   it('should go to \'International > Taxes > Add Tax\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToNewTax', baseContext);
 
-    await taxesPage.goToAddNewTaxPage(page);
+    await boTaxesPage.goToAddNewTaxPage(page);
 
     const pageTitle = await addTaxPage.getPageTitle(page);
     expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
@@ -315,7 +319,7 @@ describe('BO - International', async () => {
       boDashboardPage.internationalParentLink,
       boDashboardPage.taxesLink,
     );
-    await taxesPage.goToEditTaxPage(page, 1);
+    await boTaxesPage.goToEditTaxPage(page, 1);
 
     const pageTitle = await addTaxPage.getPageTitle(page);
     expect(pageTitle).to.contains(addTaxPage.pageTitleEdit);
@@ -327,10 +331,10 @@ describe('BO - International', async () => {
   it('should go to \'International > TaxRules\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxRulesPage', baseContext);
 
-    await taxesPage.goToTaxRulesPage(page);
+    await boTaxesPage.goToTaxRulesPage(page);
 
-    const pageTitle = await taxRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+    const pageTitle = await boTaxRulesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxRulesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -339,10 +343,10 @@ describe('BO - International', async () => {
   it('should go to \'International > TaxRules > Add Tax Rule Group\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddTaxRulePageToCreate', baseContext);
 
-    await taxRulesPage.goToAddNewTaxRulesGroupPage(page);
+    await boTaxRulesPage.goToAddNewTaxRulesGroupPage(page);
 
-    const pageTitle = await addTaxRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
+    const pageTitle = await boTaxRulesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxRulesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -351,11 +355,11 @@ describe('BO - International', async () => {
   it('should go to \'International > TaxRules > Edit Tax Rule Group\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditTaxRulesPage', baseContext);
 
-    await taxesPage.goToTaxRulesPage(page);
-    await taxRulesPage.goToEditTaxRulePage(page, 1);
+    await boTaxesPage.goToTaxRulesPage(page);
+    await boTaxRulesPage.goToEditTaxRulePage(page, 1);
 
-    const pageTitle = await addTaxRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addTaxRulesPage.pageTitleEdit);
+    const pageTitle = await boTaxRulesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxRulesCreatePage.pageTitleEdit);
   });
 
   it('should go to \'International > Translations\' page', async function () {

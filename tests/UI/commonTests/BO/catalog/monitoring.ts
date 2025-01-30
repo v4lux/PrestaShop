@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import monitoringPage from '@pages/BO/catalog/monitoring';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boMonitoringPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -52,21 +49,21 @@ function bulkDeleteProductsTest(tableID: string, baseContext: string = `commonTe
         boDashboardPage.monitoringLink,
       );
 
-      const pageTitle = await monitoringPage.getPageTitle(page);
-      expect(pageTitle).to.contains(monitoringPage.pageTitle);
+      const pageTitle = await boMonitoringPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMonitoringPage.pageTitle);
     });
 
     it('should bulk delete elements on table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteElements', baseContext);
 
-      const textResult = await monitoringPage.bulkDeleteElementsInTable(page, tableID);
-      expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
+      const textResult = await boMonitoringPage.bulkDeleteElementsInTable(page, tableID);
+      expect(textResult).to.equal(boMonitoringPage.successfulDeleteMessage);
     });
 
     it('should check number of elements on table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'reset', baseContext);
 
-      const numberOfElementsAfterDelete = await monitoringPage.resetAndGetNumberOfLines(page, tableID);
+      const numberOfElementsAfterDelete = await boMonitoringPage.resetAndGetNumberOfLines(page, tableID);
       expect(numberOfElementsAfterDelete).to.be.equal(0);
     });
   });

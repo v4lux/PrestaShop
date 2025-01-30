@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-
 import {expect} from 'chai';
+
 import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -55,31 +52,31 @@ function createCartRuleTest(cartRuleData: FakerCartRule, baseContext: string = '
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should reset and get number of cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+      numberOfCartRules = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRules).to.be.at.least(0);
     });
 
     it('should go to new cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
 
-      await cartRulesPage.goToAddNewCartRulesPage(page);
+      await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-      const pageTitle = await addCartRulePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
     });
 
     it('should create new cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
-      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleData);
-      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, cartRuleData);
+      expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
     });
   });
 }
@@ -120,28 +117,28 @@ function deleteCartRuleTest(cartRuleName: string, baseContext : string = 'common
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should reset and get number of cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+      numberOfCartRules = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRules).to.be.at.least(0);
     });
 
     it('should delete cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
-      const validationMessage = await cartRulesPage.deleteCartRule(page, 1, cartRuleName);
-      expect(validationMessage).to.contains(cartRulesPage.successfulDeleteMessage);
+      const validationMessage = await boCartRulesPage.deleteCartRule(page, 1, cartRuleName);
+      expect(validationMessage).to.contains(boCartRulesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
+      const numberOfCartRulesAfterDelete = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules - 1);
     });
   });
@@ -182,28 +179,28 @@ function bulkDeleteCartRuleTest(baseContext: string = 'commonTests-bulkDeleteCar
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should reset and get number of cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+      numberOfCartRules = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRules).to.be.at.least(0);
     });
 
     it('should bulk delete cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
 
-      const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-      expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCartRulesPage.bulkDeleteCartRules(page);
+      expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
+      const numberOfCartRulesAfterDelete = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRulesAfterDelete).to.equal(0);
     });
   });

@@ -36,13 +36,36 @@ use Symfony\Component\Serializer\Attribute\Context;
  *
  *   {names: {"2": "english name", "4": "nom français"}} => {"names": {"en-US": "english name", "fr-FR": "nom français"}}
  */
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class LocalizedValue extends Context
 {
     public const IS_LOCALIZED_VALUE = 'is_localized_value';
 
-    public function __construct(array $context = [], array $normalizationContext = [], array $denormalizationContext = [], array|string $groups = [])
+    public const LOCALIZED_VALUE_PARAMETERS = 'localized_value_parameters';
+
+    public const DENORMALIZED_KEY = 'denormalized_key';
+
+    public const NORMALIZED_KEY = 'normalized_key';
+
+    public const LOCALE_KEY = 'locale_key';
+
+    public const ID_KEY = 'id_key';
+
+    public function __construct(string $denormalizedKey = self::LOCALE_KEY, string $normalizedKey = self::LOCALE_KEY, array $localizedParameters = [], array $context = [], array $normalizationContext = [], array $denormalizationContext = [], array|string $groups = [])
     {
-        parent::__construct([self::IS_LOCALIZED_VALUE => true] + $context, $normalizationContext, $denormalizationContext, $groups);
+        $localeValueContext = [
+            // Indicate if denormalized value should use locale or ID
+            self::DENORMALIZED_KEY => $denormalizedKey,
+            // Indicate if normalized value should use locale or ID
+            self::NORMALIZED_KEY => $normalizedKey,
+            // Default behaviour is to add the attribute on a property so this context option is true
+            self::IS_LOCALIZED_VALUE => empty($localizedParameters),
+            // You can set the attribute on a class and define a list of localized parameters
+            // (also used to dynamically change the context without using this Attribute)
+            // The array is an array where key is the attribute name and value is either true or an array with extra context
+            self::LOCALIZED_VALUE_PARAMETERS => $localizedParameters,
+        ];
+
+        parent::__construct($localeValueContext + $context, $normalizationContext, $denormalizationContext, $groups);
     }
 }

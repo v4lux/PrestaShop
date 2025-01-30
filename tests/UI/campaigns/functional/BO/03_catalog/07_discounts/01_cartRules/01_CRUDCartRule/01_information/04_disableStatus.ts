@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-
 import {expect} from 'chai';
+
 import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -76,24 +73,24 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should go to new cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
-      await cartRulesPage.goToAddNewCartRulesPage(page);
+      await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-      const pageTitle = await addCartRulePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
     });
 
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule2', baseContext);
 
-      const validationMessage = await addCartRulePage.createEditCartRules(page, disabledCartRule);
-      expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, disabledCartRule);
+      expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
     });
   });
 
@@ -102,7 +99,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       // View my shop and init pages
-      page = await addCartRulePage.viewMyShop(page);
+      page = await boCartRulesCreatePage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -158,15 +155,15 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with disabled status', asyn
       // Close tab and init other page objects with new current tab
       page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should delete cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
 
-      const deleteTextResult = await cartRulesPage.deleteCartRule(page);
-      expect(deleteTextResult).to.be.contains(cartRulesPage.successfulDeleteMessage);
+      const deleteTextResult = await boCartRulesPage.deleteCartRule(page);
+      expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulDeleteMessage);
     });
   });
 });

@@ -1,14 +1,14 @@
 import {expect} from 'chai';
-import addOrderPage from '@pages/BO/orders/add';
-import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
-import invoicesPage from '@pages/BO/orders/invoices';
 import testContext from '@utils/testContext';
 
 import {
+  boCreditSlipsPage,
   boDashboardPage,
+  boDeliverySlipsPage,
+  boInvoicesPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersCreatePage,
   boOrdersViewBlockTabListPage,
   boShoppingCartsPage,
   type BrowserContext,
@@ -31,6 +31,10 @@ describe('BO - Orders', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  beforeEach(async () => {
+    utilsPlaywright.resetJsErrors();
   });
 
   it('should login in BO', async function () {
@@ -67,8 +71,8 @@ describe('BO - Orders', async () => {
 
     await boOrdersPage.goToCreateOrderPage(page);
 
-    const pageTitle = await addOrderPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addOrderPage.pageTitle);
+    const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -82,10 +86,10 @@ describe('BO - Orders', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.invoicesLink,
     );
-    await invoicesPage.closeSfToolBar(page);
+    await boInvoicesPage.closeSfToolBar(page);
 
-    const pageTitle = await invoicesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(invoicesPage.pageTitle);
+    const pageTitle = await boInvoicesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -99,10 +103,10 @@ describe('BO - Orders', async () => {
       boDashboardPage.ordersParentLink,
       boDashboardPage.creditSlipsLink,
     );
-    await creditSlipsPage.closeSfToolBar(page);
+    await boCreditSlipsPage.closeSfToolBar(page);
 
-    const pageTitle = await creditSlipsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+    const pageTitle = await boCreditSlipsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCreditSlipsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -116,10 +120,10 @@ describe('BO - Orders', async () => {
       boOrdersViewBlockTabListPage.ordersParentLink,
       boOrdersViewBlockTabListPage.deliverySlipslink,
     );
-    await deliverySlipsPage.closeSfToolBar(page);
+    await boDeliverySlipsPage.closeSfToolBar(page);
 
-    const pageTitle = await deliverySlipsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+    const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

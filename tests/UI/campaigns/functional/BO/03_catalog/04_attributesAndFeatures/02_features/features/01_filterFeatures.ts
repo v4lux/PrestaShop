@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import featuresPage from '@pages/BO/catalog/features';
-
 import {expect} from 'chai';
+
 import {
   boAttributesPage,
   boDashboardPage,
+  boFeaturesPage,
   boLoginPage,
   type BrowserContext,
   dataFeatures,
@@ -62,14 +59,14 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
 
     await boAttributesPage.goToFeaturesPage(page);
 
-    const pageTitle = await featuresPage.getPageTitle(page);
-    expect(pageTitle).to.contains(featuresPage.pageTitle);
+    const pageTitle = await boFeaturesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
   });
 
   it('should reset all filters and get number of features in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
+    numberOfFeatures = await boFeaturesPage.resetAndGetNumberOfLines(page);
     expect(numberOfFeatures).to.be.above(0);
   });
 
@@ -98,16 +95,16 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await featuresPage.filterTable(
+        await boFeaturesPage.filterTable(
           page,
           test.args.filterBy,
           typeof test.args.filterValue === 'number' ? test.args.filterValue.toString() : test.args.filterValue,
         );
 
-        const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
+        const numberOfFeaturesAfterFilter = await boFeaturesPage.getNumberOfElementInGrid(page);
         expect(numberOfFeaturesAfterFilter).to.be.at.most(numberOfFeatures);
 
-        const textColumn = await featuresPage.getTextColumn(
+        const textColumn = await boFeaturesPage.getTextColumn(
           page,
           1,
           test.args.filterBy,
@@ -118,7 +115,7 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfFeaturesAfterReset = await featuresPage.resetAndGetNumberOfLines(page);
+        const numberOfFeaturesAfterReset = await boFeaturesPage.resetAndGetNumberOfLines(page);
         expect(numberOfFeaturesAfterReset).to.equal(numberOfFeatures);
       });
     });

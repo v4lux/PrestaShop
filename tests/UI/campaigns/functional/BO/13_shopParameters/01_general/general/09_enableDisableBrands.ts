@@ -1,10 +1,6 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import {siteMapPage} from '@pages/FO/classic/siteMap';
-
 import {expect} from 'chai';
+
 import {
   boBrandsPage,
   boDashboardPage,
@@ -12,6 +8,7 @@ import {
   boShopParametersPage,
   type BrowserContext,
   foClassicHomePage,
+  foClassicSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -115,10 +112,10 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
 
         await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
-        const pageTitle = await siteMapPage.getPageTitle(page);
-        expect(pageTitle).to.equal(siteMapPage.pageTitle);
+        const pageTitle = await foClassicSitemapPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
 
-        const exist = await siteMapPage.isBrandsLinkVisible(page);
+        const exist = await foClassicSitemapPage.isBrandsLinkVisible(page);
         expect(exist).to.be.equal(test.args.exist);
       });
 
@@ -126,7 +123,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-          page = await siteMapPage.closePage(browserContext, page, 0);
+          page = await foClassicSitemapPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boBrandsPage.getPageTitle(page);
           expect(pageTitle).to.contains(boBrandsPage.pageTitle);

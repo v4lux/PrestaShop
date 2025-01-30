@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import featuresPage from '@pages/BO/catalog/features';
-import addFeaturePage from '@pages/BO/catalog/features/addFeature';
-
 import {expect} from 'chai';
+
 import {
   boAttributesPage,
   boDashboardPage,
+  boFeaturesPage,
+  boFeaturesCreatePage,
   boLoginPage,
   type BrowserContext,
   type FakerFeature,
@@ -67,27 +64,27 @@ function createFeatureTest(createFeatureData: FakerFeature, baseContext: string 
 
       await boAttributesPage.goToFeaturesPage(page);
 
-      const pageTitle = await featuresPage.getPageTitle(page);
-      expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await boFeaturesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
 
-      numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
+      numberOfFeatures = await boFeaturesPage.resetAndGetNumberOfLines(page);
       expect(numberOfFeatures).to.be.above(0);
     });
 
     it('should go to add new feature page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewFeaturePage', baseContext);
 
-      await featuresPage.goToAddFeaturePage(page);
+      await boFeaturesPage.goToAddFeaturePage(page);
 
-      const pageTitle = await addFeaturePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addFeaturePage.createPageTitle);
+      const pageTitle = await boFeaturesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesCreatePage.createPageTitle);
     });
 
     it('should create feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewFeature', baseContext);
 
-      const textResult = await addFeaturePage.setFeature(page, createFeatureData);
-      expect(textResult).to.contains(featuresPage.successfulCreationMessage);
+      const textResult = await boFeaturesCreatePage.setFeature(page, createFeatureData);
+      expect(textResult).to.contains(boFeaturesPage.successfulCreationMessage);
     });
   });
 }
@@ -138,33 +135,33 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
 
       await boAttributesPage.goToFeaturesPage(page);
 
-      const pageTitle = await featuresPage.getPageTitle(page);
-      expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await boFeaturesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
 
-      numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
+      numberOfFeatures = await boFeaturesPage.resetAndGetNumberOfLines(page);
       expect(numberOfFeatures).to.be.above(0);
     });
 
     it(`should filter by feature name '${featureName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await featuresPage.filterTable(page, 'name', featureName);
+      await boFeaturesPage.filterTable(page, 'name', featureName);
 
-      numberOfFeaturesToDelete = await featuresPage.getNumberOfElementInGrid(page);
+      numberOfFeaturesToDelete = await boFeaturesPage.getNumberOfElementInGrid(page);
       expect(numberOfFeaturesToDelete).to.be.above(0);
     });
 
     it('should delete features by Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
 
-      const deleteTextResult = await featuresPage.bulkDeleteFeatures(page);
-      expect(deleteTextResult).to.be.contains(featuresPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boFeaturesPage.bulkDeleteFeatures(page);
+      expect(deleteTextResult).to.be.contains(boFeaturesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfFeaturesAfterDelete = await featuresPage.resetAndGetNumberOfLines(page);
+      const numberOfFeaturesAfterDelete = await boFeaturesPage.resetAndGetNumberOfLines(page);
       expect(numberOfFeaturesAfterDelete).to.equal(numberOfFeatures - numberOfFeaturesToDelete);
     });
   });

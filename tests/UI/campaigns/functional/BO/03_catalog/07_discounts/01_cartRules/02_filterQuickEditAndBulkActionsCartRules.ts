@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-
 import {expect} from 'chai';
+
 import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -70,14 +67,14 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
       boDashboardPage.discountsLink,
     );
 
-    const pageTitle = await cartRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    const pageTitle = await boCartRulesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
   });
 
   it('should reset and get number of cart rules', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+    numberOfCartRules = await boCartRulesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCartRules).to.be.at.least(0);
   });
 
@@ -87,19 +84,19 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
         it('should go to new cart rule page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToNewCartRulePage${index}`, baseContext);
 
-          await cartRulesPage.goToAddNewCartRulesPage(page);
+          await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-          const pageTitle = await addCartRulePage.getPageTitle(page);
-          expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+          const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
         });
 
         it('should create new cart rule', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createCartRule${index}`, baseContext);
 
-          const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleToCreate);
-          expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+          const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, cartRuleToCreate);
+          expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
 
-          const numberOfCartRulesAfterCreation = await cartRulesPage.getNumberOfElementInGrid(page);
+          const numberOfCartRulesAfterCreation = await boCartRulesPage.getNumberOfElementInGrid(page);
           expect(numberOfCartRulesAfterCreation).to.be.at.most(numberOfCartRules + index + 1);
         });
       });
@@ -138,22 +135,22 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await cartRulesPage.filterCartRules(
+        await boCartRulesPage.filterCartRules(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
+        const numberOfCartRulesAfterFilter = await boCartRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfCartRulesAfterFilter).to.be.at.most(numberOfCartRules + 2);
 
         for (let row = 1; row <= numberOfCartRulesAfterFilter; row++) {
           if (test.args.filterBy === 'active') {
-            const cartRuleStatus = await cartRulesPage.getCartRuleStatus(page, row);
+            const cartRuleStatus = await boCartRulesPage.getCartRuleStatus(page, row);
             expect(cartRuleStatus).to.equal(test.args.filterValue === '1');
           } else {
-            const textColumn = await cartRulesPage.getTextColumn(
+            const textColumn = await boCartRulesPage.getTextColumn(
               page,
               row,
               test.args.filterBy,
@@ -166,7 +163,7 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfCartRulesAfterReset = await cartRulesPage.resetAndGetNumberOfLines(page);
+        const numberOfCartRulesAfterReset = await boCartRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfCartRulesAfterReset).to.equal(numberOfCartRules + 2);
       });
     });
@@ -176,9 +173,9 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
     it(`should filter by name '${firstCartRule.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await cartRulesPage.filterCartRules(page, 'input', 'name', firstCartRule.name);
+      await boCartRulesPage.filterCartRules(page, 'input', 'name', firstCartRule.name);
 
-      const textColumn = await cartRulesPage.getTextColumn(page, 1, 'name');
+      const textColumn = await boCartRulesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(firstCartRule.name);
     });
 
@@ -189,9 +186,9 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
       it(`should ${status.args.status} the first cart rule`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}CartRule`, baseContext);
 
-        await cartRulesPage.setCartRuleStatus(page, 1, status.args.enable);
+        await boCartRulesPage.setCartRuleStatus(page, 1, status.args.enable);
 
-        const currentStatus = await cartRulesPage.getCartRuleStatus(page, 1);
+        const currentStatus = await boCartRulesPage.getCartRuleStatus(page, 1);
         expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
@@ -199,7 +196,7 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfCartRulesAfterReset = await cartRulesPage.resetAndGetNumberOfLines(page);
+      const numberOfCartRulesAfterReset = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRulesAfterReset).to.equal(numberOfCartRules + 2);
     });
   });
@@ -208,18 +205,18 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
     it('should filter by name \'todelete\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkActions', baseContext);
 
-      await cartRulesPage.filterCartRules(
+      await boCartRulesPage.filterCartRules(
         page,
         'input',
         'name',
         'todelete',
       );
 
-      const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
+      const numberOfCartRulesAfterFilter = await boCartRulesPage.getNumberOfElementInGrid(page);
       expect(numberOfCartRulesAfterFilter).to.be.at.most(numberOfCartRules + 2);
 
       for (let row = 1; row <= numberOfCartRulesAfterFilter; row++) {
-        const textColumn = await cartRulesPage.getTextColumn(page, row, 'name');
+        const textColumn = await boCartRulesPage.getTextColumn(page, row, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });
@@ -231,12 +228,12 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
       it(`should ${test.action} cart rules with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}CartRules`, baseContext);
 
-        await cartRulesPage.bulkSetStatus(page, test.wantedStatus);
+        await boCartRulesPage.bulkSetStatus(page, test.wantedStatus);
 
-        const numberOfCartRulesBulkActions = await cartRulesPage.getNumberOfElementInGrid(page);
+        const numberOfCartRulesBulkActions = await boCartRulesPage.getNumberOfElementInGrid(page);
 
         for (let row = 1; row <= numberOfCartRulesBulkActions; row++) {
-          const rowStatus = await cartRulesPage.getCartRuleStatus(page, row);
+          const rowStatus = await boCartRulesPage.getCartRuleStatus(page, row);
           expect(rowStatus).to.equal(test.wantedStatus);
         }
       });
@@ -245,14 +242,14 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
     it('should bulk delete cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
 
-      const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-      expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCartRulesPage.bulkDeleteCartRules(page);
+      expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
+      const numberOfCartRulesAfterDelete = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules);
     });
   });

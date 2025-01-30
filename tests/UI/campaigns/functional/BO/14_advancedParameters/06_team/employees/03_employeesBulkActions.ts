@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
+  boEmployeesCreatePage,
   boLoginPage,
   type BrowserContext,
   dataEmployees,
@@ -121,14 +118,14 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
 
         await boEmployeesPage.goToAddNewEmployeePage(page);
 
-        const pageTitle = await addEmployeePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+        const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleCreate);
       });
 
       it('should create employee', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
 
-        const textResult = await addEmployeePage.createEditEmployee(page, employeeToCreate);
+        const textResult = await boEmployeesCreatePage.createEditEmployee(page, employeeToCreate);
         expect(textResult).to.equal(boEmployeesPage.successfulCreationMessage);
       });
     });

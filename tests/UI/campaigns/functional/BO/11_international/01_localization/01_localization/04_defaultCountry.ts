@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addressesPage from '@pages/BO/customers/addresses';
-import addAddressPage from '@pages/BO/customers/addresses/add';
+import {expect} from 'chai';
 
 import {
+  boAddressesPage,
+  boAddressesCreatePage,
   boDashboardPage,
   boLocalizationPage,
   boLoginPage,
@@ -14,8 +12,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_international_localization_localization_defaultCountry';
 
@@ -86,23 +82,23 @@ describe('BO - International - Localization : Update default country', async () 
           boLocalizationPage.addressesLink,
         );
 
-        const pageTitle = await addressesPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addressesPage.pageTitle);
+        const pageTitle = await boAddressesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAddressesPage.pageTitle);
       });
 
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);
 
-        await addressesPage.goToAddNewAddressPage(page);
+        await boAddressesPage.goToAddNewAddressPage(page);
 
-        const pageTitle = await addAddressPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
+        const pageTitle = await boAddressesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleCreate);
       });
 
       it('should check default country', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkSelectedCountry${index}`, baseContext);
 
-        const selectedCountry = await addAddressPage.getSelectedCountry(page);
+        const selectedCountry = await boAddressesCreatePage.getSelectedCountry(page);
         expect(selectedCountry).to.equal(country);
       });
     });

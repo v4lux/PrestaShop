@@ -1,23 +1,18 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import BO pages
-import addAttributePage from '@pages/BO/catalog/attributes/addAttribute';
-import viewAttributePage from '@pages/BO/catalog/attributes/view';
-import addValuePage from '@pages/BO/catalog/attributes/addValue';
-import createProductsPage from '@pages/BO/catalog/products/add';
-import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-
 import {expect} from 'chai';
+
 import {
   boAttributesPage,
+  boAttributesCreatePage,
+  boAttributesValueCreatePage,
+  boAttributesViewPage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
+  boProductsCreateTabCombinationsPage,
   type BrowserContext,
   FakerAttribute,
   FakerAttributeValue,
@@ -128,14 +123,14 @@ describe('FO - Product page - Product page : Change combination', async () => {
 
       await boAttributesPage.goToAddAttributePage(page);
 
-      const pageTitle = await addAttributePage.getPageTitle(page);
-      expect(pageTitle).to.equal(addAttributePage.createPageTitle);
+      const pageTitle = await boAttributesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.equal(boAttributesCreatePage.createPageTitle);
     });
 
     it('should create new attribute', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewAttribute', baseContext);
 
-      const textResult = await addAttributePage.addEditAttribute(page, createAttributeData);
+      const textResult = await boAttributesCreatePage.addEditAttribute(page, createAttributeData);
       expect(textResult).to.contains(boAttributesPage.successfulCreationMessage);
 
       const numberOfAttributesAfterCreation = await boAttributesPage.getNumberOfElementInGrid(page);
@@ -159,17 +154,17 @@ describe('FO - Product page - Product page : Change combination', async () => {
 
       await boAttributesPage.viewAttribute(page, 1);
 
-      const pageTitle = await viewAttributePage.getPageTitle(page);
-      expect(pageTitle).to.equal(viewAttributePage.pageTitle(createAttributeData.name));
+      const pageTitle = await boAttributesViewPage.getPageTitle(page);
+      expect(pageTitle).to.equal(boAttributesViewPage.pageTitle(createAttributeData.name));
     });
 
     it('should go to add new value page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateValuePage', baseContext);
 
-      await viewAttributePage.goToAddNewValuePage(page);
+      await boAttributesViewPage.goToAddNewValuePage(page);
 
-      const pageTitle = await addValuePage.getPageTitle(page);
-      expect(pageTitle).to.equal(addValuePage.createPageTitle);
+      const pageTitle = await boAttributesValueCreatePage.getPageTitle(page);
+      expect(pageTitle).to.equal(boAttributesValueCreatePage.createPageTitle);
     });
 
     valuesToCreate.forEach((valueToCreate: FakerAttributeValue, index: number) => {
@@ -177,8 +172,8 @@ describe('FO - Product page - Product page : Change combination', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `createValue${index}`, baseContext);
 
         valueToCreate.setAttributeId(attributeId);
-        const textResult = await addValuePage.addEditValue(page, valueToCreate, index === 0);
-        expect(textResult).to.contains(viewAttributePage.successfulCreationMessage);
+        const textResult = await boAttributesValueCreatePage.addEditValue(page, valueToCreate, index === 0);
+        expect(textResult).to.contains(boAttributesViewPage.successfulCreationMessage);
       });
     });
   });
@@ -220,34 +215,34 @@ describe('FO - Product page - Product page : Change combination', async () => {
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      await createProductsPage.closeSfToolBar(page);
+      await boProductsCreatePage.closeSfToolBar(page);
 
-      const createProductMessage = await createProductsPage.setProduct(page, newProductData);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should create combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
 
-      const generateCombinationsButton = await combinationsTab.setProductAttributes(
+      const generateCombinationsButton = await boProductsCreateTabCombinationsPage.setProductAttributes(
         page,
         newProductData.attributes,
       );
-      expect(generateCombinationsButton).to.equal(combinationsTab.generateCombinationsMessage(8));
+      expect(generateCombinationsButton).to.equal(boProductsCreateTabCombinationsPage.generateCombinationsMessage(8));
     });
 
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
-      const successMessage = await combinationsTab.generateCombinations(page);
-      expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(8));
+      const successMessage = await boProductsCreateTabCombinationsPage.generateCombinations(page);
+      expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulGenerateCombinationsMessage(8));
     });
   });
 
@@ -255,7 +250,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      page = await addValuePage.viewMyShop(page);
+      page = await boAttributesValueCreatePage.viewMyShop(page);
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
@@ -319,14 +314,14 @@ describe('FO - Product page - Product page : Change combination', async () => {
 
       page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to attributes page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToAttributesPageToDelete', baseContext);
 
-      await createProductsPage.goToSubMenu(
+      await boProductsCreatePage.goToSubMenu(
         page,
         boDashboardPage.catalogParentLink,
         boDashboardPage.attributesAndFeaturesLink,

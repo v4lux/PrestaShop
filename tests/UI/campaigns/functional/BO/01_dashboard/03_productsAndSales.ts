@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boOrdersViewBasePage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -53,14 +50,14 @@ describe('BO - Dashboard : Products and sales', async () => {
 
         await boDashboardPage.clickOnDetailsButtonOfRecentOrdersTable(page, 1);
 
-        const pageTitle = await viewOrderBasePage.getPageTitle(page);
-        expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+        const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
       });
 
       it('should go back to dashboard page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToDashboard', baseContext);
 
-        await viewOrderBasePage.goToDashboardPage(page);
+        await boOrdersViewBasePage.goToDashboardPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
         expect(pageTitle).to.eq(boDashboardPage.pageTitle);

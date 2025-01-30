@@ -35,6 +35,7 @@ use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use PrestaShopException;
 use ReflectionException;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\Integration\Utility\LoginTrait;
 use Tests\TestCase\SymfonyIntegrationTestCase;
 
@@ -419,6 +420,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertTrue($response->isRedirection());
+        $this->assertEquals(Response::HTTP_PERMANENTLY_REDIRECT, $response->getStatusCode());
         $location = $response->headers->get('location');
         $this->assertSameUrl('/configure/advanced/administration/', $location);
     }
@@ -432,6 +434,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertTrue($response->isRedirection());
+        $this->assertEquals(Response::HTTP_PERMANENTLY_REDIRECT, $response->getStatusCode());
         $location = $response->headers->get('location');
 
         $this->client->request('GET', $location . '&controller=AdminAdminPreferences');
@@ -449,11 +452,27 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
     public function testPostParameters()
     {
+        $this->loginUser($this->client);
+        $this->client->disableReboot();
+
+        // submitAddToHook is passed as an action and must be taken into account (meaning it doesn't mean the action is empty which would result into redirection towards
+        // /improve/design/modules/positions mapped to the fallback index action, here the action is addToHook so no redirection - even if it means a 404)
         $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminModulesPositions');
         $this->client->request('POST', $legacyUrl, ['submitAddToHook' => '']);
         $response = $this->client->getResponse();
         $this->assertFalse($response->isRedirection());
         $this->assertNull($response->headers->get('location'));
+
+        // If the action posted matches with a route then it must be redirected, the GET parameters stay in the URL
+        // And we use a 308 redirection to keep posted data that remain unchanged
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminModulesPositions') . '&extra_get_param=test';
+        $this->client->request('POST', $legacyUrl, ['unhook' => '', 'extraPostParam' => 'test']);
+        $response = $this->client->getResponse();
+        $this->assertTrue($response->isRedirection());
+        $this->assertEquals(Response::HTTP_PERMANENTLY_REDIRECT, $response->getStatusCode());
+        $locationUrl = $response->headers->get('location');
+        $this->assertNotNull($locationUrl);
+        $this->assertSameUrl('/improve/design/modules/positions/unhook?extra_get_param=test', $locationUrl);
     }
 
     /**

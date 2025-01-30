@@ -1,9 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import FO pages
-import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
@@ -14,11 +10,10 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyOrderHistoryPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_orderSettings_general_disableReorderingOption';
 
@@ -104,7 +99,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
       // Check reorder link
-      const isReorderLinkVisible = await orderHistoryPage.isReorderLinkVisible(page);
+      const isReorderLinkVisible = await foClassicMyOrderHistoryPage.isReorderLinkVisible(page);
       expect(isReorderLinkVisible).to.be.equal(test.args.reorderOption);
     });
 
@@ -112,8 +107,8 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Logout FO
-      await orderHistoryPage.logout(page);
-      page = await orderHistoryPage.closePage(browserContext, page, 0);
+      await foClassicMyOrderHistoryPage.logout(page);
+      page = await foClassicMyOrderHistoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boOrderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);

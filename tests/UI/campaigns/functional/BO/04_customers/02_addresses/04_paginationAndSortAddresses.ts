@@ -5,14 +5,13 @@ import testContext from '@utils/testContext';
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import {bulkDeleteAddressesTest} from '@commonTests/BO/customers/address';
 
-// Import pages
-import addressesPage from '@pages/BO/customers/addresses';
-
 // Import data
 import ImportAddresses from '@data/import/addresses';
 
 import {expect} from 'chai';
+
 import {
+  boAddressesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -80,14 +79,14 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
       );
       await boDashboardPage.closeSfToolBar(page);
 
-      const pageTitle = await addressesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addressesPage.pageTitle);
+      const pageTitle = await boAddressesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
     });
 
     it('should reset all filters and get number of addresses in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
+      numberOfAddresses = await boAddressesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAddresses).to.be.above(0);
     });
   });
@@ -97,28 +96,28 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await addressesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boAddressesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await addressesPage.paginationNext(page);
+      const paginationNumber = await boAddressesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await addressesPage.paginationPrevious(page);
+      const paginationNumber = await boAddressesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await addressesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boAddressesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -154,11 +153,11 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await addressesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boAddressesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await addressesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boAddressesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await addressesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boAddressesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));

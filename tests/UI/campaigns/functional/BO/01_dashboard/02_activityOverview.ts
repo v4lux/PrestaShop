@@ -1,20 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import statsPage from '@pages/BO/stats';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import monitoringPage from '@pages/BO/catalog/monitoring';
-import createProductPage from '@pages/BO/catalog/products/add';
-import customerServicePage from '@pages/BO/customerService/customerService';
-import productCommentsPage from '@pages/BO/modules/productComments';
-
-// Import FO pages
-import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
-import addCustomerPage from '@pages/BO/customers/add';
+import {expect} from 'chai';
 
 // Import common tests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
@@ -23,11 +8,18 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
 import {
   boCustomersPage,
+  boCustomersCreatePage,
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
+  boMerchandiseReturnsPage,
+  boMonitoringPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   boProductsPage,
+  boProductsCreatePage,
   boShoppingCartsPage,
+  boStatisticsPage,
   type BrowserContext,
   dataCustomers,
   dataOrders,
@@ -43,13 +35,15 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyMerchandiseReturnsPage,
+  foClassicMyOrderDetailsPage,
+  foClassicMyOrderHistoryPage,
   foClassicProductPage,
+  modProductCommentsBoMain,
   modPsEmailSubscriptionBoMain,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_dashboard_activityOverview';
 
@@ -271,8 +265,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnReturnExchangeLink(page);
 
-        const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+        const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
       });
 
       it('should go to orders page', async function () {
@@ -307,7 +301,7 @@ describe('BO - Dashboard : Activity overview', async () => {
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop3', baseContext);
 
-        page = await viewOrderBasePage.viewMyShop(page);
+        page = await boOrdersViewBasePage.viewMyShop(page);
         await foClassicHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -328,32 +322,32 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-        const pageTitle = await orderHistoryPage.getPageTitle(page);
-        expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+        const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
       });
 
       it('should go to the first order in the list and check the existence of order return form', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-        await orderHistoryPage.goToDetailsPage(page, 1);
+        await foClassicMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-        const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+        const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
         expect(result).to.eq(true);
       });
 
       it('should create a merchandise return', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-        await orderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
+        await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
 
-        const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+        const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
       });
 
       it('should close the FO page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'closeFoAndGoBackToBO', baseContext);
 
-        page = await orderDetailsPage.closePage(browserContext, page, 0);
+        page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
         await boDashboardPage.reloadPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
@@ -407,8 +401,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnOutOfStockProductsLink(page);
 
-        const pageTitle = await monitoringPage.getPageTitle(page);
-        expect(pageTitle).to.contains(monitoringPage.pageTitle);
+        const pageTitle = await boMonitoringPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMonitoringPage.pageTitle);
       });
 
       it('should go to \'Catalog > Products\' page', async function () {
@@ -438,15 +432,15 @@ describe('BO - Dashboard : Activity overview', async () => {
         await boProductsPage.selectProductType(page, productData.type);
         await boProductsPage.clickOnAddNewProduct(page);
 
-        const pageTitle = await createProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(createProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
 
       it('should create out of stock product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-        const createProductMessage = await createProductPage.setProduct(page, productData);
-        expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+        const createProductMessage = await boProductsCreatePage.setProduct(page, productData);
+        expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
       });
 
       it('should go back to dashboard page', async function () {
@@ -480,8 +474,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnNewMessagesLink(page);
 
-        const pageTitle = await customerServicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(customerServicePage.pageTitle);
+        const pageTitle = await boCustomerServicePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
       });
 
       it('should view my store', async function () {
@@ -517,8 +511,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         page = await foClassicContactUsPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await customerServicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(customerServicePage.pageTitle);
+        const pageTitle = await boCustomerServicePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
       });
 
       it('should go back to dashboard page', async function () {
@@ -551,8 +545,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnProductReviewsLink(page);
 
-        const pageTitle = await productCommentsPage.getPageSubTitle(page);
-        expect(pageTitle).to.eq(productCommentsPage.pageTitle);
+        const pageTitle = await modProductCommentsBoMain.getPageSubTitle(page);
+        expect(pageTitle).to.eq(modProductCommentsBoMain.pageTitle);
       });
     });
   });
@@ -600,7 +594,7 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boCustomersPage.goToAddNewCustomerPage(page);
 
-        const textResult = await addCustomerPage.createEditCustomer(page, createCustomerData);
+        const textResult = await boCustomersCreatePage.createEditCustomer(page, createCustomerData);
         expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
         await boCustomersPage.setNewsletterStatus(page, 1, true);
@@ -636,8 +630,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnNewSubscriptionsLink(page);
 
-        const pageTitle = await statsPage.getPageTitle(page);
-        expect(pageTitle).to.eq(statsPage.pageTitle);
+        const pageTitle = await boStatisticsPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boStatisticsPage.pageTitle);
       });
 
       it('should go back to dashboard page', async function () {
@@ -691,8 +685,8 @@ describe('BO - Dashboard : Activity overview', async () => {
 
         await boDashboardPage.clickOnVisitsLink(page);
 
-        const pageTitle = await statsPage.getPageTitle(page);
-        expect(pageTitle).to.eq(statsPage.pageTitle);
+        const pageTitle = await boStatisticsPage.getPageTitle(page);
+        expect(pageTitle).to.eq(boStatisticsPage.pageTitle);
       });
 
       it('should go back to dashboard page', async function () {

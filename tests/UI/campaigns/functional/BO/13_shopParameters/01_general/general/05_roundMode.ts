@@ -1,17 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-
-// Import BO pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabPricingPage,
   boShopParametersPage,
   type BrowserContext,
@@ -180,8 +175,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
         await boProductsPage.goToProductPage(page, 1);
 
-        const pageTitle = await createProductsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
 
       it('should edit the product price', async function () {
@@ -189,8 +184,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
         await boProductsCreateTabPricingPage.setProductPricing(page, pricingData);
 
-        const updateProductMessage = await createProductsPage.saveProduct(page);
-        expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+        const updateProductMessage = await boProductsCreatePage.saveProduct(page);
+        expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
       });
     });
 
@@ -299,8 +294,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
         await boProductsPage.goToProductPage(page, 1);
 
-        const pageTitle = await createProductsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
 
       it('should edit the product price', async function () {
@@ -308,8 +303,8 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
         await boProductsCreateTabPricingPage.setProductPricing(page, pricingData);
 
-        const updateProductMessage = await createProductsPage.saveProduct(page);
-        expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+        const updateProductMessage = await boProductsCreatePage.saveProduct(page);
+        expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
       });
     });
 

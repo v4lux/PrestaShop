@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import featuresPage from '@pages/BO/catalog/features';
-import viewFeaturePage from '@pages/BO/catalog/features/view';
-
 import {expect} from 'chai';
+
 import {
   boAttributesPage,
   boDashboardPage,
+  boFeaturesPage,
+  boFeaturesViewPage,
   boLoginPage,
   type BrowserContext,
   dataFeatures,
@@ -67,23 +64,23 @@ describe('BO - Catalog - Attributes & Features : Change features values position
 
     await boAttributesPage.goToFeaturesPage(page);
 
-    const pageTitle = await featuresPage.getPageTitle(page);
-    expect(pageTitle).to.contains(featuresPage.pageTitle);
+    const pageTitle = await boFeaturesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFeaturesPage.pageTitle);
   });
 
   it('should view feature', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewFeature', baseContext);
 
-    await featuresPage.viewFeature(page, 1);
+    await boFeaturesPage.viewFeature(page, 1);
 
-    const pageTitle = await viewFeaturePage.getPageTitle(page);
+    const pageTitle = await boFeaturesViewPage.getPageTitle(page);
     expect(pageTitle).to.contains(`${dataFeatures.composition.name} • ${global.INSTALL.SHOP_NAME}`);
   });
 
   it('should reset all filters and get number of feature values in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    const numberOfFeaturesValues = await viewFeaturePage.resetAndGetNumberOfLines(page);
+    const numberOfFeaturesValues = await boFeaturesViewPage.resetAndGetNumberOfLines(page);
     expect(numberOfFeaturesValues).to.be.above(0);
   });
 
@@ -91,16 +88,16 @@ describe('BO - Catalog - Attributes & Features : Change features values position
     await testContext.addContextItem(this, 'testIdentifier', 'changeValuePosition', baseContext);
 
     // Get first row attribute name
-    const firstRowValue = await viewFeaturePage.getTextColumn(page, 1, 'value');
+    const firstRowValue = await boFeaturesViewPage.getTextColumn(page, 1, 'value');
 
     // Change position and check successful message
-    const textResult = await viewFeaturePage.changePosition(page, 1, 3);
-    expect(textResult, 'Unable to change position').to.contains(viewFeaturePage.successfulUpdateMessage);
+    const textResult = await boFeaturesViewPage.changePosition(page, 1, 3);
+    expect(textResult, 'Unable to change position').to.contains(boFeaturesViewPage.successfulUpdateMessage);
 
-    await viewFeaturePage.closeAlertBlock(page);
+    await boFeaturesViewPage.closeAlertBlock(page);
 
     // Get third row attribute name and check if is equal the first row attribute name before changing position
-    const thirdRowValue = await viewFeaturePage.getTextColumn(page, 3, 'value');
+    const thirdRowValue = await boFeaturesViewPage.getTextColumn(page, 3, 'value');
     expect(thirdRowValue, 'Changing position was done wrongly').to.equal(firstRowValue);
   });
 
@@ -108,16 +105,16 @@ describe('BO - Catalog - Attributes & Features : Change features values position
     await testContext.addContextItem(this, 'testIdentifier', 'resetValuePosition', baseContext);
 
     // Get third row feature value
-    const thirdRowValue = await viewFeaturePage.getTextColumn(page, 3, 'value');
+    const thirdRowValue = await boFeaturesViewPage.getTextColumn(page, 3, 'value');
 
     // Change position and check successful message
-    const textResult = await viewFeaturePage.changePosition(page, 3, 1);
-    expect(textResult, 'Unable to change position').to.contains(viewFeaturePage.successfulUpdateMessage);
+    const textResult = await boFeaturesViewPage.changePosition(page, 3, 1);
+    expect(textResult, 'Unable to change position').to.contains(boFeaturesViewPage.successfulUpdateMessage);
 
-    await viewFeaturePage.closeAlertBlock(page);
+    await boFeaturesViewPage.closeAlertBlock(page);
 
     // Get first row feature value and check if is equal the first row feature value before changing position
-    const firstRowValue = await viewFeaturePage.getTextColumn(page, 1, 'value');
+    const firstRowValue = await boFeaturesViewPage.getTextColumn(page, 1, 'value');
     expect(firstRowValue, 'Changing position was done wrongly').to.equal(thirdRowValue);
   });
 });

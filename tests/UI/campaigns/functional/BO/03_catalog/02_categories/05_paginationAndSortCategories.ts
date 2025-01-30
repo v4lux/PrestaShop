@@ -1,18 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
 
-// Import pages
-import categoriesPage from '@pages/BO/catalog/categories';
-
 // Import data
 import ImportCategories from '@data/import/categories';
 
-import {expect} from 'chai';
 import {
+  boCategoriesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -83,14 +80,14 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
       );
       await boDashboardPage.closeSfToolBar(page);
 
-      const pageTitle = await categoriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      const pageTitle = await boCategoriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
     });
 
     it('should reset all filters and get number of categories in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
+      numberOfCategories = await boCategoriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCategories).to.be.above(0);
     });
   });
@@ -100,28 +97,28 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await categoriesPage.selectPaginationLimit(page, 10);
+      const paginationNumber = await boCategoriesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await categoriesPage.paginationNext(page);
+      const paginationNumber = await boCategoriesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await categoriesPage.paginationPrevious(page);
+      const paginationNumber = await boCategoriesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await categoriesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCategoriesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -171,10 +168,10 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await categoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await categoriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boCategoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boCategoriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await categoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCategoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));

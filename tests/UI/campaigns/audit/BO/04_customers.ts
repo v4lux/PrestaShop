@@ -1,12 +1,12 @@
 import {expect} from 'chai';
-import addCustomerPage from '@pages/BO/customers/add';
-import viewCustomerPage from '@pages/BO/customers/view';
-import addressesPage from '@pages/BO/customers/addresses';
-import addAddressPage from '@pages/BO/customers/addresses/add';
 import testContext from '@utils/testContext';
 
 import {
+  boAddressesPage,
+  boAddressesCreatePage,
   boCustomersPage,
+  boCustomersCreatePage,
+  boCustomersViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -29,6 +29,10 @@ describe('BO - Customers', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  beforeEach(async () => {
+    utilsPlaywright.resetJsErrors();
   });
 
   it('should login in BO', async function () {
@@ -66,8 +70,8 @@ describe('BO - Customers', async () => {
 
     await boCustomersPage.goToViewCustomerPage(page, 1);
 
-    const pageTitle = await viewCustomerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(viewCustomerPage.pageTitle('J. DOE'));
+    const pageTitle = await boCustomersViewPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersViewPage.pageTitle('J. DOE'));
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -76,10 +80,10 @@ describe('BO - Customers', async () => {
   it('should go to \'Customers > Customers > Edit Customer\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerEditPage', baseContext);
 
-    await viewCustomerPage.goToEditCustomerPage(page);
+    await boCustomersViewPage.goToEditCustomerPage(page);
 
-    const pageTitle = await addCustomerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCustomerPage.pageTitleEdit);
+    const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -95,8 +99,8 @@ describe('BO - Customers', async () => {
     );
     await boCustomersPage.goToAddNewCustomerPage(page);
 
-    const pageTitle = await addCustomerPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+    const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -111,8 +115,8 @@ describe('BO - Customers', async () => {
       boDashboardPage.addressesLink,
     );
 
-    const pageTitle = await addressesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addressesPage.pageTitle);
+    const pageTitle = await boAddressesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAddressesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -121,10 +125,10 @@ describe('BO - Customers', async () => {
   it('should go to \'Customers > Addresses > Edit Address\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressEditPage', baseContext);
 
-    await addressesPage.goToEditAddressPage(page, 1);
+    await boAddressesPage.goToEditAddressPage(page, 1);
 
-    const pageTitle = await addAddressPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addAddressPage.pageTitleEdit);
+    const pageTitle = await boAddressesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -138,10 +142,10 @@ describe('BO - Customers', async () => {
       boDashboardPage.customersParentLink,
       boDashboardPage.addressesLink,
     );
-    await addressesPage.goToAddNewAddressPage(page);
+    await boAddressesPage.goToAddNewAddressPage(page);
 
-    const pageTitle = await addAddressPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
+    const pageTitle = await boAddressesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleCreate);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);

@@ -4,10 +4,8 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import creditSlipsPage from '@pages/BO/orders/creditSlips';
-
 import {
+  boCreditSlipsPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
@@ -132,17 +130,17 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         boOrdersViewBlockTabListPage.ordersParentLink,
         boOrdersViewBlockTabListPage.creditSlipsLink,
       );
-      await creditSlipsPage.closeSfToolBar(page);
+      await boCreditSlipsPage.closeSfToolBar(page);
 
-      const pageTitle = await creditSlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      const pageTitle = await boCreditSlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCreditSlipsPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generatePdfFileExistence', baseContext);
 
       // Generate credit slip
-      const filePath = await creditSlipsPage.generatePDFByDateAndDownload(page);
+      const filePath = await boCreditSlipsPage.generatePDFByDateAndDownload(page);
 
       const exist = await utilsFile.doesFileExist(filePath);
       expect(exist).to.eq(true);
@@ -152,8 +150,8 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
 
       // Generate credit slip and get error message
-      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-      expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
+      const textMessage = await boCreditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      expect(textMessage).to.equal(boCreditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

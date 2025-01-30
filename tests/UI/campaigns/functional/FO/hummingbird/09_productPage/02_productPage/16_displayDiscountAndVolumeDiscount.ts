@@ -1,21 +1,14 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import BO pages
-import createProductPage from '@pages/BO/catalog/products/add';
-
-// Import FO pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabPricingPage,
   type BrowserContext,
   FakerProduct,
@@ -129,27 +122,27 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createPackOfProducts', baseContext);
 
-      await createProductPage.closeSfToolBar(page);
+      await boProductsCreatePage.closeSfToolBar(page);
 
-      const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should go to pricing tab and set the retail price tax excl.', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setRetailPrice', baseContext);
 
-      await createProductPage.goToTab(page, 'pricing');
+      await boProductsCreatePage.goToTab(page, 'pricing');
       await boProductsCreateTabPricingPage.setRetailPrice(page, false, 20);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should create new specific price', async function () {
@@ -158,7 +151,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
       await boProductsCreateTabPricingPage.clickOnAddSpecificPriceButton(page);
 
       const createProductMessage = await boProductsCreateTabPricingPage.setSpecificPrice(page, newProductData.specificPrice);
-      expect(createProductMessage).to.equal(createProductPage.successfulCreationMessage);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulCreationMessage);
     });
   });
 
@@ -166,7 +159,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should preview product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
@@ -257,8 +250,8 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
       page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create a second specific price', async function () {
@@ -270,7 +263,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
         page,
         secondSpecificPriceData.specificPrice,
       );
-      expect(createProductMessage).to.equal(createProductPage.successfulCreationMessage);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulCreationMessage);
     });
 
     it('should go to the second tab', async function () {
@@ -283,7 +276,7 @@ describe('FO - Product page - Product page : Display discount', async () => {
     it('should preview product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);

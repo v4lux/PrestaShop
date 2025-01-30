@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boDeliverySlipsPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
@@ -16,8 +14,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_deliverySlips_generateDeliverySlipByDate';
 
@@ -101,15 +97,15 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
         boOrdersViewBlockTabListPage.deliverySlipslink,
       );
 
-      const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateDeliverySlips', baseContext);
 
       // Generate delivery slips
-      const filePath = await deliverySlipsPage.generatePDFByDateAndDownload(page);
+      const filePath = await boDeliverySlipsPage.generatePDFByDateAndDownload(page);
 
       const exist = await utilsFile.doesFileExist(filePath);
       expect(exist).to.eq(true);
@@ -119,8 +115,8 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDeliverySlipsErrorMessage', baseContext);
 
       // Generate delivery slips and get error message
-      const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-      expect(textMessage).to.equal(deliverySlipsPage.errorMessageWhenGenerateFileByDate);
+      const textMessage = await boDeliverySlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      expect(textMessage).to.equal(boDeliverySlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

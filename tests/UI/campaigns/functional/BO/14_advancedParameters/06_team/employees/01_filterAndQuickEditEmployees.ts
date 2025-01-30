@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
+  boEmployeesCreatePage,
   boLoginPage,
   type BrowserContext,
   dataEmployees,
@@ -79,14 +76,14 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
 
       await boEmployeesPage.goToAddNewEmployeePage(page);
 
-      const pageTitle = await addEmployeePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleCreate);
     });
 
     it('should create employee', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
-      const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
+      const textResult = await boEmployeesCreatePage.createEditEmployee(page, createEmployeeData);
       expect(textResult).to.equal(boEmployeesPage.successfulCreationMessage);
 
       const numberOfEmployeesAfterCreation = await boEmployeesPage.getNumberOfElementInGrid(page);

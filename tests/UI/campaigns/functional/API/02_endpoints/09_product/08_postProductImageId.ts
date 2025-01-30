@@ -5,9 +5,6 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
 import fs from 'fs';
 import {
@@ -17,6 +14,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   dataLanguages,
@@ -193,8 +191,8 @@ describe('API : POST /product/image/{imageId}', async () => {
 
         await boProductsPage.goToProductPage(page, 1);
 
-        const pageTitle: string = await createProductsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
 
         const numImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
         expect(numImages).to.be.equals(0);

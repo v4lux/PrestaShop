@@ -5,24 +5,24 @@ import opsBulkDeleteAttributes from '@commonTests/BO/catalog/attributes';
 import opsBulkDeleteBrands from '@commonTests/BO/catalog/brands';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import boBrandsCreatePage from '@pages/BO/catalog/brands/add';
-import boCategoriesPage from '@pages/BO/catalog/categories';
-import boCategoriesCreatePage from '@pages/BO/catalog/categories/add';
-import boAttributesCreatePage from '@pages/BO/catalog/attributes/addAttribute';
-import boAttributesViewPage from '@pages/BO/catalog/attributes/view';
-import boAttributeValuesCreatePage from '@pages/BO/catalog/attributes/addValue';
-import boFeaturesPage from '@pages/BO/catalog/features';
-import boFeaturesCreatePage from '@pages/BO/catalog/features/addFeature';
-import boFeaturesViewPage from '@pages/BO/catalog/features/view';
-import boFeatureValuesCreatePage from '@pages/BO/catalog/features/addValue';
-import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
 import testContext from '@utils/testContext';
 
 import {
   boAttributesPage,
+  boAttributesCreatePage,
+  boAttributesValueCreatePage,
+  boAttributesViewPage,
   boBrandsPage,
+  boCategoriesPage,
+  boCategoriesCreatePage,
   boDashboardPage,
+  boFeaturesPage,
+  boFeaturesCreatePage,
+  boFeaturesValueCreatePage,
+  boFeaturesViewPage,
   boLoginPage,
   boProductsCreatePage,
+  boProductsCreateTabCombinationsPage,
   boProductsPage,
   boSearchPage,
   type BrowserContext,
@@ -358,8 +358,8 @@ describe('BO - Shop Parameters - Search: Weight', async () => {
 
         await boAttributesViewPage.goToAddNewValuePage(page);
 
-        const pageTitle = await boAttributeValuesCreatePage.getPageTitle(page);
-        expect(pageTitle).to.equal(boAttributeValuesCreatePage.createPageTitle);
+        const pageTitle = await boAttributesValueCreatePage.getPageTitle(page);
+        expect(pageTitle).to.equal(boAttributesValueCreatePage.createPageTitle);
       });
 
       it('should create value', async function () {
@@ -367,7 +367,7 @@ describe('BO - Shop Parameters - Search: Weight', async () => {
 
         attributeValueData.setAttributeId(attributeId);
 
-        const textResult = await boAttributeValuesCreatePage.addEditValue(page, attributeValueData);
+        const textResult = await boAttributesValueCreatePage.addEditValue(page, attributeValueData);
         expect(textResult).to.contains(boAttributesViewPage.successfulCreationMessage);
       });
     });
@@ -442,15 +442,15 @@ describe('BO - Shop Parameters - Search: Weight', async () => {
 
         await boFeaturesViewPage.goToAddNewValuePage(page);
 
-        const pageTitle = await boFeatureValuesCreatePage.getPageTitle(page);
-        expect(pageTitle).to.eq(boFeatureValuesCreatePage.createPageTitle);
+        const pageTitle = await boFeaturesValueCreatePage.getPageTitle(page);
+        expect(pageTitle).to.eq(boFeaturesValueCreatePage.createPageTitle);
       });
 
       it('should create value', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createNewValue', baseContext);
 
-        const textResult = await boFeatureValuesCreatePage.addEditValue(page, featureValueData);
-        expect(textResult).to.contains(boFeatureValuesCreatePage.successfulCreationMessage);
+        const textResult = await boFeaturesValueCreatePage.addEditValue(page, featureValueData);
+        expect(textResult).to.contains(boFeaturesValueCreatePage.successfulCreationMessage);
       });
     });
 
@@ -527,7 +527,7 @@ describe('BO - Shop Parameters - Search: Weight', async () => {
             it('should create combinations and check generate combinations button', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
 
-              const generateCombinationsButton = await combinationsTab.setProductAttributes(
+              const generateCombinationsButton = await boProductsCreateTabCombinationsPage.setProductAttributes(
                 page,
                 product.attributes,
               );
@@ -537,20 +537,20 @@ describe('BO - Shop Parameters - Search: Weight', async () => {
             it('should click on generate combinations button', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
-              const successMessage = await combinationsTab.generateCombinations(page);
-              expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(1));
+              const successMessage = await boProductsCreateTabCombinationsPage.generateCombinations(page);
+              expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulGenerateCombinationsMessage(1));
             });
 
             it('should close combinations generation modal', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed', baseContext);
 
-              const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
+              const isModalClosed = await boProductsCreateTabCombinationsPage.generateCombinationModalIsClosed(page);
               expect(isModalClosed).to.be.eq(true);
 
-              await combinationsTab.editCombinationRowQuantity(page, 1, product.quantity);
+              await boProductsCreateTabCombinationsPage.editCombinationRowQuantity(page, 1, product.quantity);
 
-              const successMessage = await combinationsTab.saveCombinationsForm(page);
-              expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
+              const successMessage = await boProductsCreateTabCombinationsPage.saveCombinationsForm(page);
+              expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulUpdateMessage);
 
               const updateProductMessage = await boProductsCreatePage.saveProduct(page);
               expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);

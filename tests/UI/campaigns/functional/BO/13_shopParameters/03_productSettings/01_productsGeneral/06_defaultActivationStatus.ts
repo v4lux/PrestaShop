@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addProductPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductSettingsPage,
   type BrowserContext,
   type Page,
@@ -106,14 +103,14 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable default activ
         await boProductsPage.selectProductType(page, 'standard');
         await boProductsPage.clickOnAddNewProduct(page);
 
-        const pageTitle = await addProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
 
       it('should check the new product online status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
 
-        const online = await addProductPage.getProductStatus(page);
+        const online = await boProductsCreatePage.getProductStatus(page);
         expect(online).to.be.equal(test.args.enable);
       });
     });

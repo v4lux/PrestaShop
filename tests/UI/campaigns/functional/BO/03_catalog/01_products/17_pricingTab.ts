@@ -1,19 +1,14 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import createProductPage from '@pages/BO/catalog/products/add';
-import createCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
-import cartRulesPage from '@pages/BO/catalog/discounts';
-
-// Import FO pages
-import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
-
 import {expect} from 'chai';
+
 import {
+  boCartRulesPage,
+  boCatalogPriceRulesPage,
+  boCatalogPriceRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabPricingPage,
   type BrowserContext,
   FakerCatalogPriceRule,
@@ -116,15 +111,15 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await boProductsPage.selectProductType(page, newProductData.type);
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-      const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -146,7 +141,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -165,8 +160,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should edit the product price and the tax rule', async function () {
@@ -174,8 +169,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       await boProductsCreateTabPricingPage.setTaxRule(page, 'FR Taux standard (20%)');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should check summary block', async function () {
@@ -194,7 +189,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -213,8 +208,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should add a cost price', async function () {
@@ -222,8 +217,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       await boProductsCreateTabPricingPage.setCostPrice(page, 35);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should check summary block', async function () {
@@ -245,8 +240,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await boProductsCreateTabPricingPage.setDisplayRetailPricePerUnit(page, true);
       await boProductsCreateTabPricingPage.setRetailPricePerUnit(page, true, 10, 'per unit');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should check summary block', async function () {
@@ -268,7 +263,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct3', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -287,8 +282,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should check Display On sale flag', async function () {
@@ -296,14 +291,14 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       await boProductsCreateTabPricingPage.setDisplayOnSaleFlag(page);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct4', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -322,8 +317,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should add a specific price', async function () {
@@ -332,13 +327,13 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await boProductsCreateTabPricingPage.clickOnAddSpecificPriceButton(page);
 
       const message = await boProductsCreateTabPricingPage.setSpecificPrice(page, specificPriceData.specificPrice);
-      expect(message).to.equal(createProductPage.successfulCreationMessage);
+      expect(message).to.equal(boProductsCreatePage.successfulCreationMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct5', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -357,8 +352,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should edit specific price', async function () {
@@ -373,7 +368,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct6', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -392,8 +387,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should delete specific price', async function () {
@@ -406,7 +401,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct7', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -425,8 +420,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should click on show catalog price rule button then on manage catalog price rules', async function () {
@@ -435,27 +430,27 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await boProductsCreateTabPricingPage.clickOnShowCatalogPriceRuleButton(page);
       page = await boProductsCreateTabPricingPage.clickOnManageCatalogPriceRuleLink(page);
 
-      const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+      const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);
     });
 
     it('should create a new catalog price rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCatalogPriceRule', baseContext);
 
-      await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
+      await boCatalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
 
-      const validationMessage = await createCatalogPriceRulePage.setCatalogPriceRule(page, newCatalogPriceRuleData);
-      expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+      const validationMessage = await boCatalogPriceRulesCreatePage.setCatalogPriceRule(page, newCatalogPriceRuleData);
+      expect(validationMessage).to.contains(boCatalogPriceRulesPage.successfulCreationMessage);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
-      page = await catalogPriceRulesPage.closePage(browserContext, page, 0);
-      await createProductPage.reloadPage(page);
+      page = await boCatalogPriceRulesPage.closePage(browserContext, page, 0);
+      await boProductsCreatePage.reloadPage(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should click on show catalog price rule button and check the catalog price rule', async function () {
@@ -488,7 +483,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const deleteProductMessage = await createProductPage.deleteProduct(page);
+      const deleteProductMessage = await boProductsCreatePage.deleteProduct(page);
       expect(deleteProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
@@ -504,24 +499,24 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
 
     it('should go to \'Catalog Price Rules\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCatalogPriceRulesTab', baseContext);
 
-      await cartRulesPage.goToCatalogPriceRulesTab(page);
+      await boCartRulesPage.goToCatalogPriceRulesTab(page);
 
-      const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+      const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);
     });
 
     it('should delete catalog price rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCatalogPriceRule', baseContext);
 
-      const deleteTextResult = await catalogPriceRulesPage.deleteCatalogPriceRule(page, newCatalogPriceRuleData.name);
-      expect(deleteTextResult).to.contains(catalogPriceRulesPage.successfulDeleteMessage);
+      const deleteTextResult = await boCatalogPriceRulesPage.deleteCatalogPriceRule(page, newCatalogPriceRuleData.name);
+      expect(deleteTextResult).to.contains(boCatalogPriceRulesPage.successfulDeleteMessage);
     });
   });
 });

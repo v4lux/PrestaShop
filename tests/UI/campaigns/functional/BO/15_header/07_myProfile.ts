@@ -1,16 +1,12 @@
 import {expect} from 'chai';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import BO commons tests
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 
-// Import pages
-import creditSlipsPage from '@pages/BO/orders/creditSlips';
-
 import {
+  boCreditSlipsPage,
   boDashboardPage,
   boEmployeesPage,
   boLoginPage,
@@ -224,8 +220,8 @@ describe('BO - Header : My profile', async () => {
       await boLoginPage.goTo(page, global.BO.URL);
       await boLoginPage.successLogin(page, employeeData.email, employeeData.password);
 
-      const pageTitle = await creditSlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      const pageTitle = await boCreditSlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCreditSlipsPage.pageTitle);
     });
 
     it('should reset the language', async function () {

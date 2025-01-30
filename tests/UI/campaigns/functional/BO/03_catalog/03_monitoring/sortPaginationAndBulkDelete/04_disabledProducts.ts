@@ -4,18 +4,14 @@ import testContext from '@utils/testContext';
 // Import common tests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteProductsTest from '@commonTests/BO/catalog/monitoring';
-
-// Import pages
-import addProductPage from '@pages/BO/catalog/products/add';
-import monitoringPage from '@pages/BO/catalog/monitoring';
-
-// Import data
 import ImportDisabledProducts from '@data/import/disabledProducts';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boMonitoringPage,
+  boProductsCreatePage,
   type BrowserContext,
   type Page,
   utilsCore,
@@ -75,20 +71,20 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
     it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
-      await addProductPage.goToSubMenu(
+      await boProductsCreatePage.goToSubMenu(
         page,
         boDashboardPage.catalogParentLink,
         boDashboardPage.monitoringLink,
       );
 
-      const pageTitle = await monitoringPage.getPageTitle(page);
-      expect(pageTitle).to.contains(monitoringPage.pageTitle);
+      const pageTitle = await boMonitoringPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMonitoringPage.pageTitle);
     });
 
     it('should check that the number of imported products is greater than 10', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-      const numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, tableName);
+      const numberOfProductsIngrid = await boMonitoringPage.resetAndGetNumberOfLines(page, tableName);
       expect(numberOfProductsIngrid).to.be.at.least(10);
     });
 
@@ -115,20 +111,20 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-          const nonSortedTable = await monitoringPage.getAllRowsColumnContent(
+          const nonSortedTable = await boMonitoringPage.getAllRowsColumnContent(
             page,
             tableName,
             test.args.sortBy,
           );
 
-          await monitoringPage.sortTable(
+          await boMonitoringPage.sortTable(
             page,
             tableName,
             test.args.sortBy,
             test.args.sortDirection,
           );
 
-          const sortedTable = await monitoringPage.getAllRowsColumnContent(
+          const sortedTable = await boMonitoringPage.getAllRowsColumnContent(
             page,
             tableName,
             test.args.sortBy,
@@ -164,28 +160,28 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, 10);
+      const paginationNumber = await boMonitoringPage.selectPaginationLimit(page, tableName, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await monitoringPage.paginationNext(page, tableName);
+      const paginationNumber = await boMonitoringPage.paginationNext(page, tableName);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await monitoringPage.paginationPrevious(page, tableName);
+      const paginationNumber = await boMonitoringPage.paginationPrevious(page, tableName);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, 20);
+      const paginationNumber = await boMonitoringPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });

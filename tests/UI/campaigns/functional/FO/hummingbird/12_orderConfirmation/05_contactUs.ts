@@ -1,17 +1,18 @@
 // Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 // BO pages
-import customerServiceMainPage from '@pages/BO/customerService/customerService';
 import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
 
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -32,9 +33,6 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-import {expect} from 'chai';
-
-// context
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_contactUs';
 
 /*
@@ -237,14 +235,14 @@ describe('FO - Order confirmation : Contact us', async () => {
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServiceMainPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServiceMainPage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
 
     it('should go to the message detailed view', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMessageView', baseContext);
 
-      await customerServiceMainPage.goToViewMessagePage(page);
+      await boCustomerServicePage.goToViewMessagePage(page);
 
       const pageTitle = await customerServiceMessageViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(customerServiceMessageViewPage.pageTitle);
@@ -267,15 +265,15 @@ describe('FO - Order confirmation : Contact us', async () => {
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServiceMainPage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServiceMainPage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-      const deleteMessageSuccessText = await customerServiceMainPage.deleteMessage(page, 1);
-      expect(deleteMessageSuccessText).to.contains(customerServiceMainPage.deleteMessageSuccessAlertText);
+      const deleteMessageSuccessText = await boCustomerServicePage.deleteMessage(page, 1);
+      expect(deleteMessageSuccessText).to.contains(boCustomerServicePage.deleteMessageSuccessAlertText);
     });
   });
 

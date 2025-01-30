@@ -148,6 +148,11 @@ class CQRSCommand extends AbstractCQRSOperation
         unset($passedArguments['CQRSCommand']);
         unset($passedArguments['CQRSCommandMapping']);
 
+        // By default, the CQRS command is used as the input base class as it contains the exact available parameters for this operation
+        if (empty($passedArguments['input']) && !empty($passedArguments['extraProperties']['CQRSCommand'])) {
+            $passedArguments['input'] = $passedArguments['extraProperties']['CQRSCommand'];
+        }
+
         parent::__construct(...$passedArguments);
     }
 
@@ -160,6 +165,9 @@ class CQRSCommand extends AbstractCQRSOperation
     {
         $self = clone $this;
         $self->extraProperties['CQRSCommand'] = $CQRSCommand;
+        if ($this->input === $this->extraProperties['CQRSCommand']) {
+            $self->input = $CQRSCommand;
+        }
 
         return $self;
     }

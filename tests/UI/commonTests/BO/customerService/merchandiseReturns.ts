@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boMerchandiseReturnsPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -50,17 +47,17 @@ function enableMerchandiseReturns(baseContext: string = 'commonTests-enableMerch
         boDashboardPage.customerServiceParentLink,
         boDashboardPage.merchandiseReturnsLink,
       );
-      await merchandiseReturnsPage.closeSfToolBar(page);
+      await boMerchandiseReturnsPage.closeSfToolBar(page);
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should enable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, true);
+      expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 }
@@ -100,15 +97,15 @@ function disableMerchandiseReturns(baseContext: string = 'commonTests-disableMer
         boDashboardPage.merchandiseReturnsLink,
       );
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should disable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, false);
+      expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 }

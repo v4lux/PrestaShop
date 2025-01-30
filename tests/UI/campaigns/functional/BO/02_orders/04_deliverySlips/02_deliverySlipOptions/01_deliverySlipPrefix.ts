@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boDeliverySlipsPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
@@ -15,8 +13,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_deliverySlips_deliverySlipOptions_deliverySlipPrefix';
 
@@ -63,19 +59,19 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
         boDashboardPage.ordersParentLink,
         boDashboardPage.deliverySlipslink,
       );
-      await deliverySlipsPage.closeSfToolBar(page);
+      await boDeliverySlipsPage.closeSfToolBar(page);
 
-      const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
     });
 
     it(`should update the delivery slip prefix to ${deliverySlipData.prefix}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDeliverySlipsPrefix', baseContext);
 
-      await deliverySlipsPage.changePrefix(page, deliverySlipData.prefix);
+      await boDeliverySlipsPage.changePrefix(page, deliverySlipData.prefix);
 
-      const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-      expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+      const textMessage = await boDeliverySlipsPage.saveDeliverySlipOptions(page);
+      expect(textMessage).to.contains(boDeliverySlipsPage.successfulUpdateMessage);
     });
   });
 
@@ -83,10 +79,10 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await deliverySlipsPage.goToSubMenu(
+      await boDeliverySlipsPage.goToSubMenu(
         page,
-        deliverySlipsPage.ordersParentLink,
-        deliverySlipsPage.ordersLink,
+        boDeliverySlipsPage.ordersParentLink,
+        boDeliverySlipsPage.ordersLink,
       );
 
       const pageTitle = await boOrdersPage.getPageTitle(page);
@@ -127,19 +123,19 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
         boOrdersViewBlockTabListPage.ordersParentLink,
         boOrdersViewBlockTabListPage.deliverySlipslink,
       );
-      await deliverySlipsPage.closeSfToolBar(page);
+      await boDeliverySlipsPage.closeSfToolBar(page);
 
-      const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
     });
 
     it(`should update the delivery slip prefix to '${defaultPrefix}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultPrefixValue', baseContext);
 
-      await deliverySlipsPage.changePrefix(page, defaultPrefix);
+      await boDeliverySlipsPage.changePrefix(page, defaultPrefix);
 
-      const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-      expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+      const textMessage = await boDeliverySlipsPage.saveDeliverySlipOptions(page);
+      expect(textMessage).to.contains(boDeliverySlipsPage.successfulUpdateMessage);
     });
   });
 });

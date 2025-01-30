@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import addressesPage from '@pages/BO/customers/addresses';
-import addAddressPage from '@pages/BO/customers/addresses/add';
+import {expect} from 'chai';
 
 import {
+  boAddressesPage,
+  boAddressesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -13,8 +11,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -56,35 +52,35 @@ function createAddressTest(addressData: FakerAddress, baseContext: string = 'com
         boDashboardPage.addressesLink,
       );
 
-      await addressesPage.closeSfToolBar(page);
+      await boAddressesPage.closeSfToolBar(page);
 
-      const pageTitle = await addressesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addressesPage.pageTitle);
+      const pageTitle = await boAddressesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
+      numberOfAddresses = await boAddressesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAddresses).to.be.above(0);
     });
 
     it('should go to add new address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
 
-      await addressesPage.goToAddNewAddressPage(page);
+      await boAddressesPage.goToAddNewAddressPage(page);
 
-      const pageTitle = await addAddressPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
+      const pageTitle = await boAddressesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleCreate);
     });
 
     it('should create address and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-      const textResult = await addAddressPage.createEditAddress(page, addressData);
-      expect(textResult).to.equal(addressesPage.successfulCreationMessage);
+      const textResult = await boAddressesCreatePage.createEditAddress(page, addressData);
+      expect(textResult).to.equal(boAddressesPage.successfulCreationMessage);
 
-      const numberOfAddressesAfterCreation = await addressesPage.getNumberOfElementInGrid(page);
+      const numberOfAddressesAfterCreation = await boAddressesPage.getNumberOfElementInGrid(page);
       expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
     });
   });
@@ -131,39 +127,39 @@ function bulkDeleteAddressesTest(
         boDashboardPage.addressesLink,
       );
 
-      await addressesPage.closeSfToolBar(page);
+      await boAddressesPage.closeSfToolBar(page);
 
-      const pageTitle = await addressesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addressesPage.pageTitle);
+      const pageTitle = await boAddressesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
+      numberOfAddresses = await boAddressesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAddresses).to.be.above(0);
     });
 
     it(`should filter list by '${filterBy}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await addressesPage.filterAddresses(page, 'input', filterBy, value);
+      await boAddressesPage.filterAddresses(page, 'input', filterBy, value);
 
-      const address = await addressesPage.getTextColumnFromTableAddresses(page, 1, filterBy);
+      const address = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, filterBy);
       expect(address).to.contains(value);
     });
 
     it('should delete addresses with bulk actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAddresses', baseContext);
 
-      const deleteTextResult = await addressesPage.deleteAddressesBulkActions(page);
-      expect(deleteTextResult).to.be.equal(addressesPage.successfulDeleteMessage);
+      const deleteTextResult = await boAddressesPage.deleteAddressesBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boAddressesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
+      const numberOfAddressesAfterReset = await boAddressesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAddressesAfterReset).to.be.above(0);
     });
   });

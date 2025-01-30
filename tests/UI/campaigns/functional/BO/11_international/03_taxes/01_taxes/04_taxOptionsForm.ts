@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import taxesPage from '@pages/BO/international/taxes';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boTaxesPage,
   type BrowserContext,
   dataTaxOptions,
   FakerTaxOption,
@@ -50,10 +47,10 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
       boDashboardPage.internationalParentLink,
       boDashboardPage.taxesLink,
     );
-    await taxesPage.closeSfToolBar(page);
+    await boTaxesPage.closeSfToolBar(page);
 
-    const pageTitle = await taxesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(taxesPage.pageTitle);
+    const pageTitle = await boTaxesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxesPage.pageTitle);
   });
 
   // Testing all options of EcoTax
@@ -67,7 +64,7 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
       \tEcotax: '${taxOption.ecoTax}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateForm${index + 1}`, baseContext);
 
-        const textResult = await taxesPage.updateTaxOption(page, taxOption);
+        const textResult = await boTaxesPage.updateTaxOption(page, taxOption);
         expect(textResult).to.be.equal('Update successful');
       });
     });

@@ -1,16 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import addProductPage from '@pages/BO/catalog/products/add';
-import combinationsTab from '@pages/BO/catalog/products/add/combinationsTab';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
+  boProductsCreateTabCombinationsPage,
   boProductsCreateTabPricingPage,
   boProductSettingsPage,
   type BrowserContext,
@@ -154,35 +150,38 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       await boProductsPage.selectProductType(page, productWithCombinations.type);
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create product with combinations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      const createProductMessage = await addProductPage.setProduct(page, productWithCombinations);
-      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productWithCombinations);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should create combinations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombination', baseContext);
 
-      const createProductMessage = await combinationsTab.setProductAttributes(page, productWithCombinations.attributes);
-      expect(createProductMessage).to.equal(combinationsTab.generateCombinationsMessage(2));
+      const createProductMessage = await boProductsCreateTabCombinationsPage.setProductAttributes(
+        page,
+        productWithCombinations.attributes,
+      );
+      expect(createProductMessage).to.equal(boProductsCreateTabCombinationsPage.generateCombinationsMessage(2));
 
-      const successMessage = await combinationsTab.generateCombinations(page);
-      expect(successMessage).to.equal(combinationsTab.successfulGenerateCombinationsMessage(2));
+      const successMessage = await boProductsCreateTabCombinationsPage.generateCombinations(page);
+      expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulGenerateCombinationsMessage(2));
     });
 
     it('should edit the quantity', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editQuantity', baseContext);
 
-      await combinationsTab.editCombinationRowQuantity(page, 1, 5);
-      await combinationsTab.editCombinationRowQuantity(page, 2, 5);
+      await boProductsCreateTabCombinationsPage.editCombinationRowQuantity(page, 1, 5);
+      await boProductsCreateTabCombinationsPage.editCombinationRowQuantity(page, 2, 5);
 
-      const successMessage = await combinationsTab.saveCombinationsForm(page);
-      expect(successMessage).to.equal(combinationsTab.successfulUpdateMessage);
+      const successMessage = await boProductsCreateTabCombinationsPage.saveCombinationsForm(page);
+      expect(successMessage).to.equal(boProductsCreateTabCombinationsPage.successfulUpdateMessage);
     });
 
     it('should add specific price', async function () {
@@ -194,20 +193,20 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
         page,
         productWithCombinations.specificPrice,
       );
-      expect(createProductMessage).to.equal(addProductPage.successfulCreationMessage);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulCreationMessage);
     });
 
     it('should save the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
 
-      const updateProductMessage = await addProductPage.saveProduct(page);
-      expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+      const updateProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product and check price ATI in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceATI', baseContext);
 
-      page = await addProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
       await foClassicProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
@@ -220,10 +219,10 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage2', baseContext);
 
-      await addProductPage.goToSubMenu(
+      await boProductsCreatePage.goToSubMenu(
         page,
-        addProductPage.shopParametersParentLink,
-        addProductPage.productSettingsLink,
+        boProductsCreatePage.shopParametersParentLink,
+        boProductsCreatePage.productSettingsLink,
       );
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);

@@ -6,9 +6,8 @@ import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/prod
 import {disableMerchandiseReturns, enableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import addProductPage from '@pages/BO/catalog/products/add';
+import {expect} from 'chai';
+import {faker} from '@faker-js/faker';
 
 import {
   boDashboardPage,
@@ -18,6 +17,7 @@ import {
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabStocksPage,
   boStockPage,
   type BrowserContext,
@@ -41,9 +41,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
-import {faker} from '@faker-js/faker';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_customerNotifications_enableDisableProductAvailability';
 
@@ -363,8 +360,8 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await boProductsPage.goToProductPage(page, 1);
       await boProductsCreateTabStocksPage.setProductQuantity(page, 1);
 
-      const message = await addProductPage.saveProduct(page);
-      expect(message).to.eq(addProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should check received email', async function () {
@@ -378,7 +375,7 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     it('should add the created product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      page = await addProductPage.changePage(browserContext, 1);
+      page = await boProductsCreatePage.changePage(browserContext, 1);
       await page.reload();
 
       // Add the product to the cart
@@ -520,14 +517,14 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
       await boProductsPage.goToProductPage(page, 1);
       await boProductsCreateTabStocksPage.setProductQuantity(page, 0);
 
-      const message = await addProductPage.saveProduct(page);
-      expect(message).to.eq(addProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should click on \'Notify me when available\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickNotifyButton1', baseContext);
 
-      page = await addProductPage.changePage(browserContext, 1);
+      page = await boProductsCreatePage.changePage(browserContext, 1);
       await page.reload();
 
       const textMessage = await foClassicProductPage.notifyEmailAlert(page);

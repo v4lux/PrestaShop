@@ -1,18 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import commonTests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
 import imageSettingsPage from '@pages/BO/design/imageSettings';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   FakerProduct,
@@ -201,8 +196,8 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
 
           await boProductsPage.selectProductType(page, arg.product.type);
 
-          const pageTitle = await createProductsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(createProductsPage.pageTitle);
+          const pageTitle = await boProductsCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
         });
 
         it('should go to new product page', async function () {
@@ -210,26 +205,26 @@ describe('BO - Design - Image Settings - Check base image format', async () => {
 
           await boProductsPage.clickOnAddNewProduct(page);
 
-          const pageTitle = await createProductsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(createProductsPage.pageTitle);
+          const pageTitle = await boProductsCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
         });
 
         it('should create standard product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createStandardProduct${index}`, baseContext);
 
-          await createProductsPage.closeSfToolBar(page);
+          await boProductsCreatePage.closeSfToolBar(page);
 
-          const createProductMessage = await createProductsPage.setProduct(page, arg.product);
-          expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+          const createProductMessage = await boProductsCreatePage.setProduct(page, arg.product);
+          expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
         });
 
         it('should check that the save button is changed to \'Save and publish\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkSaveButton${index}`, baseContext);
 
-          const saveButtonName = await createProductsPage.getSaveButtonName(page);
+          const saveButtonName = await boProductsCreatePage.getSaveButtonName(page);
           expect(saveButtonName).to.equal('Save and publish');
 
-          idProduct = await createProductsPage.getProductID(page);
+          idProduct = await boProductsCreatePage.getProductID(page);
           idProductImage = await boProductsCreateTabDescriptionPage.getProductIDImageCover(page);
           expect(idProduct).to.be.gt(0);
         });

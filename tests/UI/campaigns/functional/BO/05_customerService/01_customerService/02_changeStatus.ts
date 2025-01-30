@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
+import {expect} from 'chai';
 
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -20,8 +17,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_customerService_customerService_changeStatus';
 
@@ -122,8 +117,8 @@ describe('BO - Customer Service : Change status', async () => {
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
     [
       {args: {status: 'Handled', statusToCheck: 'Re-open'}},
@@ -134,7 +129,7 @@ describe('BO - Customer Service : Change status', async () => {
       it('should go to view message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToViewMessagePage${index}`, baseContext);
 
-        await customerServicePage.goToViewMessagePage(page);
+        await boCustomerServicePage.goToViewMessagePage(page);
 
         const pageTitle = await viewPage.getPageTitle(page);
         expect(pageTitle).to.contains(viewPage.pageTitle);
@@ -156,14 +151,14 @@ describe('BO - Customer Service : Change status', async () => {
           boDashboardPage.customerServiceLink,
         );
 
-        const pageTitle = await customerServicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(customerServicePage.pageTitle);
+        const pageTitle = await boCustomerServicePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
       });
 
       it('should check if the status color is changed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkStatusColor${index}`, baseContext);
 
-        const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.status);
+        const isChanged = await boCustomerServicePage.isStatusChanged(page, 1, test.args.status);
         expect(isChanged).to.eq(true);
       });
     });
@@ -173,7 +168,7 @@ describe('BO - Customer Service : Change status', async () => {
     it('should go to view message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
-      await customerServicePage.goToViewMessagePage(page);
+      await boCustomerServicePage.goToViewMessagePage(page);
 
       const pageTitle = await viewPage.getPageTitle(page);
       expect(pageTitle).to.contains(viewPage.pageTitle);
@@ -219,15 +214,15 @@ describe('BO - Customer Service : Change status', async () => {
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-      const textResult = await customerServicePage.deleteMessage(page, 1);
-      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+      expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
     });
   });
 });

@@ -1,5 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -7,18 +7,16 @@ import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import addProductPage from '@pages/BO/catalog/products/add';
-import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
-
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBlockCustomersPage,
+  boOrdersViewBlockPaymentsPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDetailsPage,
   boProductsCreateTabPricingPage,
   type BrowserContext,
@@ -39,8 +37,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 
@@ -218,8 +214,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           await boProductsPage.selectProductType(page, product.type);
 
-          const pageTitle = await addProductPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addProductPage.pageTitle);
+          const pageTitle = await boProductsCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
         });
       }
 
@@ -227,59 +223,59 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewProductPage${index}`, baseContext);
 
         if (index !== 0) {
-          await addProductPage.clickOnNewProductButton(page);
+          await boProductsCreatePage.clickOnNewProductButton(page);
         } else {
           await boProductsPage.clickOnAddNewProduct(page);
         }
 
-        const pageTitle = await addProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
 
       if (index !== 0) {
         it(`should choose '${product.type} product'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `chooseTypeOfProduct2${index}`, baseContext);
 
-          await addProductPage.chooseProductType(page, product.type);
-          await addProductPage.closeSfToolBar(page);
+          await boProductsCreatePage.chooseProductType(page, product.type);
+          await boProductsCreatePage.closeSfToolBar(page);
 
-          const pageTitle = await addProductPage.getPageTitle(page);
-          expect(pageTitle).to.contains(addProductPage.pageTitle);
+          const pageTitle = await boProductsCreatePage.getPageTitle(page);
+          expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
         });
       }
 
       it(`should create product '${product.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct2${index}`, baseContext);
 
-        createProductMessage = await addProductPage.setProduct(page, product);
-        expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+        createProductMessage = await boProductsCreatePage.setProduct(page, product);
+        expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
 
         // Add specific price
         if (product === productWithSpecificPrice) {
-          await addProductPage.goToTab(page, 'pricing');
+          await boProductsCreatePage.goToTab(page, 'pricing');
           await boProductsCreateTabPricingPage.clickOnAddSpecificPriceButton(page);
 
           createProductMessage = await boProductsCreateTabPricingPage.setSpecificPrice(
             page,
             productWithSpecificPrice.specificPrice,
           );
-          expect(createProductMessage).to.equal(addProductPage.successfulCreationMessage);
+          expect(createProductMessage).to.equal(boProductsCreatePage.successfulCreationMessage);
         }
         // Add eco tax
         if (product === productWithEcoTax) {
-          await addProductPage.goToTab(page, 'pricing');
+          await boProductsCreatePage.goToTab(page, 'pricing');
           await boProductsCreateTabPricingPage.addEcoTax(page, productWithEcoTax.ecoTax);
 
-          updateProductMessage = await addProductPage.saveProduct(page);
-          expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+          updateProductMessage = await boProductsCreatePage.saveProduct(page);
+          expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
         }
         // Add customization
         if (product === customizedProduct) {
-          await addProductPage.goToTab(page, 'details');
+          await boProductsCreatePage.goToTab(page, 'details');
           await boProductsCreateTabDetailsPage.addNewCustomizations(page, product);
 
-          updateProductMessage = await addProductPage.saveProduct(page);
-          expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+          updateProductMessage = await boProductsCreatePage.saveProduct(page);
+          expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
         }
       });
     });
@@ -362,8 +358,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress} `
           + `${dataAddresses.address_5.postalCode} ${dataAddresses.address_5.city}`;
 
-        const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
-        expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
+        const alertMessage = await boOrdersViewBlockCustomersPage.selectAnotherInvoiceAddress(page, addressToSelect);
+        expect(alertMessage).to.contains(boOrdersViewBlockCustomersPage.successfulUpdateMessage);
       });
 
       it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}'`, async function () {
@@ -1252,8 +1248,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress} `
             + `${dataAddresses.address_5.postalCode} ${dataAddresses.address_5.city}`;
 
-          const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
-          expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
+          const alertMessage = await boOrdersViewBlockCustomersPage.selectAnotherShippingAddress(page, addressToSelect);
+          expect(alertMessage).to.contains(boOrdersViewBlockCustomersPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
@@ -1289,8 +1285,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${dataAddresses.address_5.address} ${dataAddresses.address_5.secondAddress} `
             + `${dataAddresses.address_5.postalCode} ${dataAddresses.address_5.city}`;
 
-          const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
-          expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
+          const alertMessage = await boOrdersViewBlockCustomersPage.selectAnotherInvoiceAddress(page, addressToSelect);
+          expect(alertMessage).to.contains(boOrdersViewBlockCustomersPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
@@ -1537,11 +1533,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should add payment', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'addPayment', baseContext);
 
-          const validationMessage = await orderPagePaymentBlock.addPayment(page, paymentData);
+          const validationMessage = await boOrdersViewBlockPaymentsPage.addPayment(page, paymentData);
           expect(
             validationMessage,
             'Successful message is not correct!',
-          ).to.equal(orderPagePaymentBlock.successfulUpdateMessage);
+          ).to.equal(boOrdersViewBlockPaymentsPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {

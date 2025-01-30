@@ -109,6 +109,7 @@ class CQRSCommandTest extends TestCase
         $this->assertNull($operation->getProvider());
         $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyCommand'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operation->getInput());
 
         // Extra properties parameters in constructor
         $operation = new CQRSCommand(
@@ -116,6 +117,7 @@ class CQRSCommandTest extends TestCase
         );
         $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyCommand'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operation->getInput());
 
         // Extra properties AND CQRS query parameters in constructor, both values are equals no problem
         $operation = new CQRSCommand(
@@ -124,15 +126,34 @@ class CQRSCommandTest extends TestCase
         );
         $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyCommand'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operation->getInput());
 
         // Use with method, returned object is a clone All values are replaced
         $operation2 = $operation->withCQRSCommand('My\\Namespace\\MyOtherCommand');
         $this->assertNotEquals($operation2, $operation);
         $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyOtherCommand'], $operation2->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyOtherCommand', $operation2->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyOtherCommand', $operation2->getInput());
+
         // Initial operation not modified of course
         $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyCommand'], $operation->getExtraProperties());
         $this->assertEquals('My\\Namespace\\MyCommand', $operation->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operation->getInput());
+
+        // When input is manually specified it is kept over the CQRSCommand
+        $operationInput = new CQRSCommand(
+            input: 'My\\Namespace\\MyOtherCommand',
+            CQRSCommand: 'My\\Namespace\\MyCommand',
+        );
+        $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyCommand'], $operationInput->getExtraProperties());
+        $this->assertEquals('My\\Namespace\\MyCommand', $operationInput->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyOtherCommand', $operationInput->getInput());
+        // Clone value keeps the initial different input value
+        $operationInput2 = $operationInput->withCQRSCommand('My\\Namespace\\MyThirdCommand');
+        $this->assertNotEquals($operationInput2, $operationInput);
+        $this->assertEquals(['CQRSCommand' => 'My\\Namespace\\MyThirdCommand'], $operationInput2->getExtraProperties());
+        $this->assertEquals('My\\Namespace\\MyThirdCommand', $operationInput2->getCQRSCommand());
+        $this->assertEquals('My\\Namespace\\MyOtherCommand', $operationInput2->getInput());
 
         // When both values are specified, but they are different trigger an exception
         $caughtException = null;

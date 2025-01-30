@@ -4,11 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boDeliverySlipsPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
@@ -22,8 +22,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_deliverySlips_deliverySlipOptions_deliverySlipNumber';
 
@@ -85,19 +83,19 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
         boDashboardPage.ordersParentLink,
         boDashboardPage.deliverySlipslink,
       );
-      await deliverySlipsPage.closeSfToolBar(page);
+      await boDeliverySlipsPage.closeSfToolBar(page);
 
-      const pageTitle = await deliverySlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
+      const pageTitle = await boDeliverySlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDeliverySlipsPage.pageTitle);
     });
 
     it('should change the Delivery slip number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDeliverySlipsNumber', baseContext);
 
-      await deliverySlipsPage.changeNumber(page, deliverySlipData.number);
+      await boDeliverySlipsPage.changeNumber(page, deliverySlipData.number);
 
-      const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
-      expect(textMessage).to.contains(deliverySlipsPage.successfulUpdateMessage);
+      const textMessage = await boDeliverySlipsPage.saveDeliverySlipOptions(page);
+      expect(textMessage).to.contains(boDeliverySlipsPage.successfulUpdateMessage);
     });
   });
 
@@ -105,10 +103,10 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
     it('should go to the \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await deliverySlipsPage.goToSubMenu(
+      await boDeliverySlipsPage.goToSubMenu(
         page,
-        deliverySlipsPage.ordersParentLink,
-        deliverySlipsPage.ordersLink,
+        boDeliverySlipsPage.ordersParentLink,
+        boDeliverySlipsPage.ordersLink,
       );
 
       const pageTitle = await boOrdersPage.getPageTitle(page);

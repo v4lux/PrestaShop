@@ -5,17 +5,11 @@ import testContext from '@utils/testContext';
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
-// Import FO pages
-import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
-import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-
 import {
   boDashboardPage,
   boLoginPage,
+  boMerchandiseReturnsPage,
+  boMerchandiseReturnsEditPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
   type BrowserContext,
@@ -28,6 +22,9 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyMerchandiseReturnsPage,
+  foClassicMyOrderDetailsPage,
+  foClassicMyOrderHistoryPage,
   type Page,
   utilsDate,
   utilsPlaywright,
@@ -199,32 +196,32 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
       await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await orderHistoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-      await orderHistoryPage.goToDetailsPage(page, 1);
+      await foClassicMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+      const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
       expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      await orderDetailsPage.requestMerchandiseReturn(page, 'Test merchandise returns');
+      await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page, 'Test merchandise returns');
 
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
     });
 
     it('should close the FO page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFoAndGoBackToBO', baseContext);
 
-      page = await orderDetailsPage.closePage(browserContext, page, 0);
+      page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
       expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
@@ -357,15 +354,15 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
         await boMerchandiseReturnsPage.goToMerchandiseReturnPage(page);
 
-        const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
+        const pageTitle = await boMerchandiseReturnsEditPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMerchandiseReturnsEditPage.pageTitle);
       });
 
       it('should edit merchandise returns status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `editReturnStatus${index}`, baseContext);
 
-        const textResult = await editMerchandiseReturnsPage.setStatus(page, test.args.status);
-        expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+        const textResult = await boMerchandiseReturnsEditPage.setStatus(page, test.args.status);
+        expect(textResult).to.contains(boMerchandiseReturnsEditPage.successfulUpdateMessage);
       });
     });
 
@@ -451,21 +448,21 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
         await foClassicMyAccountPage.goToMerchandiseReturnsPage(page);
 
-        const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+        const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
       });
 
       it('should verify order return status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderReturnStatus${index}`, baseContext);
 
-        const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
+        const fileName = await foClassicMyMerchandiseReturnsPage.getTextColumn(page, 'status');
         expect(fileName).to.be.equal(test.args.status);
       });
 
       it('should close the FO page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `closeFoAndGoBackToBO${index}`, baseContext);
 
-        page = await orderDetailsPage.closePage(browserContext, page, 0);
+        page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
         expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);

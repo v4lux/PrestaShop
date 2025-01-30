@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   dataCategories,
@@ -218,8 +215,8 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
 
             await boProductsPage.goToProductPage(page, idxProduct);
 
-            const pageTitle: string = await createProductsPage.getPageTitle(page);
-            expect(pageTitle).to.contains(createProductsPage.pageTitle);
+            const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+            expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
           });
 
           it('should check the category in categories of the product', async function () {
@@ -242,7 +239,7 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
               baseContext,
             );
 
-            await createProductsPage.goToCatalogPage(page);
+            await boProductsCreatePage.goToCatalogPage(page);
 
             const pageTitle = await boProductsPage.getPageTitle(page);
             expect(pageTitle).to.contains(boProductsPage.pageTitle);

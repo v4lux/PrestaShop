@@ -1,21 +1,20 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
-import statsPage from '@pages/BO/stats';
-import newCategoryPage from '@pages/BO/catalog/categories/add';
-import newVoucherPage from '@pages/BO/catalog/discounts/add';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
-import newCustomerPage from '@pages/BO/customers/add';
 
-import {expect} from 'chai';
 import {
+  boCartRulesCreatePage,
+  boCategoriesCreatePage,
+  boCustomersCreatePage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
   boModuleManagerPage,
   boProductsPage,
   boQuickAccessPage,
+  boStatisticsPage,
   type BrowserContext,
   FakerQuickAccess,
   type Page,
@@ -56,12 +55,12 @@ describe('BO - Header : Quick access links', async () => {
     });
 
     [
-      {args: {pageName: 'Catalog evaluation', pageTitle: statsPage.pageTitle}},
+      {args: {pageName: 'Catalog evaluation', pageTitle: boStatisticsPage.pageTitle}},
       {args: {pageName: 'Installed modules', pageTitle: boModuleManagerPage.pageTitle}},
-      {args: {pageName: 'New category', pageTitle: newCategoryPage.pageTitleCreate}},
+      {args: {pageName: 'New category', pageTitle: boCategoriesCreatePage.pageTitleCreate}},
       {args: {pageName: 'New product', pageTitle: boProductsPage.pageTitle}},
       {args: {pageName: 'Orders', pageTitle: boOrdersPage.pageTitle}},
-      {args: {pageName: 'New voucher', pageTitle: newVoucherPage.pageTitle}},
+      {args: {pageName: 'New voucher', pageTitle: boCartRulesCreatePage.pageTitle}},
     ].forEach((test, index: number) => {
       it(`should check '${test.args.pageName}' link from Quick access`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
@@ -86,24 +85,24 @@ describe('BO - Header : Quick access links', async () => {
     it('should remove the last link \'New voucher\' from Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeLinkFromQuickAccess', baseContext);
 
-      const validationMessage = await newVoucherPage.removeLinkFromQuickAccess(page);
-      expect(validationMessage).to.contains(newVoucherPage.successfulUpdateMessage);
+      const validationMessage = await boCartRulesCreatePage.removeLinkFromQuickAccess(page);
+      expect(validationMessage).to.contains(boCartRulesCreatePage.successfulUpdateMessage);
     });
 
     it('should refresh the page and add current page to Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageToQuickAccess', baseContext);
 
-      await newVoucherPage.reloadPage(page);
+      await boCartRulesCreatePage.reloadPage(page);
 
-      const validationMessage = await newVoucherPage.addCurrentPageToQuickAccess(page, 'New voucher');
-      expect(validationMessage).to.contains(newVoucherPage.successfulUpdateMessage);
+      const validationMessage = await boCartRulesCreatePage.addCurrentPageToQuickAccess(page, 'New voucher');
+      expect(validationMessage).to.contains(boCartRulesCreatePage.successfulUpdateMessage);
     });
 
     it('should go to \'Manage quick access\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToCreateLink', baseContext);
 
-      await newVoucherPage.reloadPage(page);
-      await newVoucherPage.goToManageQuickAccessPage(page);
+      await boCartRulesCreatePage.reloadPage(page);
+      await boCartRulesCreatePage.goToManageQuickAccessPage(page);
 
       const pageTitle = await boQuickAccessPage.getPageTitle(page);
       expect(pageTitle).to.contains(boQuickAccessPage.pageTitle);
@@ -130,14 +129,14 @@ describe('BO - Header : Quick access links', async () => {
 
       page = await boDashboardPage.quickAccessToPageNewWindow(page, quickAccessLinkData.name);
 
-      const pageTitle = await newCustomerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
+      const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
     });
 
     it('should go to \'Manage quick access\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToDeleteLink', baseContext);
 
-      await newCustomerPage.goToManageQuickAccessPage(page);
+      await boCustomersCreatePage.goToManageQuickAccessPage(page);
 
       const pageTitle = await boQuickAccessPage.getPageTitle(page);
       expect(pageTitle).to.contains(boQuickAccessPage.pageTitle);

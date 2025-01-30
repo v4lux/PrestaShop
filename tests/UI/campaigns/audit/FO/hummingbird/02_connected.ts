@@ -3,8 +3,6 @@ import {disableHummingbird, enableHummingbird} from '@commonTests/BO/design/humm
 import foHummingbirdAddressesPage from '@pages/FO/hummingbird/myAccount/addresses';
 import foHummingbirdAddressesCreatePage from '@pages/FO/hummingbird/myAccount/addAddress';
 import foHummingbirdAccountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
-import foHummingbirdOrderHistoryPage from '@pages/FO/hummingbird/myAccount/orderHistory';
-import foHummingbirdOrderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 import foHummingbirdCreditSlipsPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import foHummingbirdGdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 import testContext from '@utils/testContext';
@@ -15,6 +13,8 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderDetailsPage,
+  foHummingbirdMyOrderHistoryPage,
   foHummingbirdMyWishlistsPage,
   foHummingbirdMyWishlistsViewPage,
   type Page,
@@ -40,6 +40,10 @@ describe('Check FO connected pages', async () => {
 
     after(async () => {
       await utilsPlaywright.closeBrowserContext(browserContext);
+    });
+
+    beforeEach(async () => {
+      utilsPlaywright.resetJsErrors();
     });
 
     it('should go to the home page', async function () {
@@ -133,8 +137,8 @@ describe('Check FO connected pages', async () => {
       await foHummingbirdAccountIdentityPage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await foHummingbirdOrderHistoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foHummingbirdOrderHistoryPage.pageTitle);
+      const pageTitle = await foHummingbirdMyOrderHistoryPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyOrderHistoryPage.pageTitle);
 
       const jsErrors = utilsPlaywright.getJsErrors();
       expect(jsErrors.length).to.equals(0);
@@ -143,10 +147,10 @@ describe('Check FO connected pages', async () => {
     it('should go to the "Order details" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDetailsPage', baseContext);
 
-      await foHummingbirdOrderHistoryPage.goToDetailsPage(page, 1);
+      await foHummingbirdMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-      const pageTitle = await foHummingbirdOrderDetailsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHummingbirdOrderDetailsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyOrderDetailsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyOrderDetailsPage.pageTitle);
 
       const jsErrors = utilsPlaywright.getJsErrors();
       expect(jsErrors.length).to.equals(0);

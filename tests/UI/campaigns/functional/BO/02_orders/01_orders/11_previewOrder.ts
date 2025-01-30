@@ -1,17 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import commonTests
+import {expect} from 'chai';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-
-// Import pages
-// Import BO pages
-import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBlockCustomersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   type BrowserContext,
@@ -30,8 +25,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_orders_previewOrder';
 
@@ -332,7 +325,7 @@ describe('BO - Orders : Preview order', async () => {
       it('should edit the shipping address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editShippingAddress', baseContext);
 
-        const shippingAddress = await orderPageCustomerBlock.editExistingShippingAddress(page, editShippingAddressData);
+        const shippingAddress = await boOrdersViewBlockCustomersPage.editExistingShippingAddress(page, editShippingAddressData);
         expect(shippingAddress, 'Shipping address is not correct!')
           .to.contain(editShippingAddressData.firstName)
           .and.to.contain(editShippingAddressData.lastName)
@@ -345,7 +338,7 @@ describe('BO - Orders : Preview order', async () => {
       it('should edit the delivery address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editDeliveryAddress', baseContext);
 
-        const invoiceAddress = await orderPageCustomerBlock.editExistingInvoiceAddress(page, editInvoiceAddressData);
+        const invoiceAddress = await boOrdersViewBlockCustomersPage.editExistingInvoiceAddress(page, editInvoiceAddressData);
         expect(invoiceAddress, 'Invoice address is not correct!')
           .to.contain(editInvoiceAddressData.firstName)
           .and.to.contain(editInvoiceAddressData.lastName)

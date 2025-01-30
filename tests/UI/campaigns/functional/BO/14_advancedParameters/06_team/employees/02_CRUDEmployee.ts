@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
+  boEmployeesCreatePage,
   boLoginPage,
   boOrdersPage,
   boProductsPage,
@@ -90,14 +87,14 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
 
       await boEmployeesPage.goToAddNewEmployeePage(page);
 
-      const pageTitle = await addEmployeePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleCreate);
     });
 
     it('should create employee and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
-      const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
+      const textResult = await boEmployeesCreatePage.createEditEmployee(page, createEmployeeData);
       expect(textResult).to.equal(boEmployeesPage.successfulCreationMessage);
 
       const numberOfEmployeesAfterCreation = await boEmployeesPage.getNumberOfElementInGrid(page);
@@ -172,22 +169,22 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
 
         await boEmployeesPage.goToEditEmployeePage(page, 1);
 
-        const pageTitle = await addEmployeePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
+        const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleEdit(
           createEmployeeData.lastName, createEmployeeData.firstName));
       });
 
       it('should update the employee account', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateEmployee', baseContext);
 
-        const textResult = await addEmployeePage.createEditEmployee(page, firstEditEmployeeData);
-        expect(textResult).to.equal(addEmployeePage.successfulUpdateMessage);
+        const textResult = await boEmployeesCreatePage.createEditEmployee(page, firstEditEmployeeData);
+        expect(textResult).to.equal(boEmployeesCreatePage.successfulUpdateMessage);
       });
 
       it('should click on cancel and verify the new employee\'s number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'verifyNumberOfEmployeeAfterUpdate', baseContext);
 
-        await addEmployeePage.cancel(page);
+        await boEmployeesCreatePage.cancel(page);
 
         const numberOfEmployeesAfterUpdate = await boEmployeesPage.resetAndGetNumberOfLines(page);
         expect(numberOfEmployeesAfterUpdate).to.be.equal(numberOfEmployees + 1);
@@ -259,16 +256,16 @@ describe('BO - Advanced Parameters - Team : CRUD Employee', async () => {
 
         await boEmployeesPage.goToEditEmployeePage(page, 1);
 
-        const pageTitle = await addEmployeePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit(
+        const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleEdit(
           firstEditEmployeeData.lastName, firstEditEmployeeData.firstName));
       });
 
       it('should disable the employee account', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'disableEmployee', baseContext);
 
-        const textResult = await addEmployeePage.createEditEmployee(page, secondEditEmployeeData);
-        expect(textResult).to.equal(addEmployeePage.successfulUpdateMessage);
+        const textResult = await boEmployeesCreatePage.createEditEmployee(page, secondEditEmployeeData);
+        expect(textResult).to.equal(boEmployeesCreatePage.successfulUpdateMessage);
       });
 
       it('should logout from BO', async function () {

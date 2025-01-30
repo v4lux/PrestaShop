@@ -1,13 +1,13 @@
 import {expect} from 'chai';
-import customerServicePage from '@pages/BO/customerService/customerService';
-import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
-import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import testContext from '@utils/testContext';
 
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
+  boMerchandiseReturnsPage,
+  boOrderMessagesPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -28,6 +28,10 @@ describe('BO - Customer Service', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  beforeEach(async () => {
+    utilsPlaywright.resetJsErrors();
   });
 
   it('should login in BO', async function () {
@@ -52,8 +56,8 @@ describe('BO - Customer Service', async () => {
       boDashboardPage.customerServiceLink,
     );
 
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    const pageTitle = await boCustomerServicePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -68,8 +72,8 @@ describe('BO - Customer Service', async () => {
       boDashboardPage.orderMessagesLink,
     );
 
-    const pageTitle = await orderMessagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
+    const pageTitle = await boOrderMessagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderMessagesPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -78,7 +82,7 @@ describe('BO - Customer Service', async () => {
   it('should go to \'Customer Service > Order messages > Order message\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesEditPage', baseContext);
 
-    await orderMessagesPage.gotoEditOrderMessage(page, 1);
+    await boOrderMessagesPage.gotoEditOrderMessage(page, 1);
 
     const pageTitle = await addOrderMessagePage.getPageTitle(page);
     expect(pageTitle).to.contains(addOrderMessagePage.pageTitleEdit);
@@ -95,7 +99,7 @@ describe('BO - Customer Service', async () => {
       boDashboardPage.customerServiceParentLink,
       boDashboardPage.orderMessagesLink,
     );
-    await orderMessagesPage.goToAddNewOrderMessagePage(page);
+    await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
     const pageTitle = await addOrderMessagePage.getPageTitle(page);
     expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);

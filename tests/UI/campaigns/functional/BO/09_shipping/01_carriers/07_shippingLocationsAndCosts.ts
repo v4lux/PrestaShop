@@ -1,17 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
 
-// Import data
 import {
   boCarriersCreatePage,
   boCarriersPage,
   boDashboardPage,
   boLoginPage,
+  boProductsCreatePage,
   boProductsCreateTabShippingPage,
   boProductsPage,
   type BrowserContext,
@@ -745,8 +740,8 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
 
     await boProductsPage.goToProductPage(page, 1);
 
-    const pageTitle: string = await createProductsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
   });
 
   it('should go to shipping tab and edit package dimension', async function () {
@@ -754,14 +749,14 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
 
     await boProductsCreateTabShippingPage.setPackageDimension(page, editProductData);
 
-    const message = await createProductsPage.saveProduct(page);
-    expect(message).to.eq(createProductsPage.successfulUpdateMessage);
+    const message = await boProductsCreatePage.saveProduct(page);
+    expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
   });
 
   it('should check the carriers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersProductWeight', baseContext);
 
-    page = await createProductsPage.changePage(browserContext, 1);
+    page = await boProductsCreatePage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
 
     const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
@@ -833,7 +828,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should check the carriers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersRanges', baseContext);
 
-    page = await createProductsPage.changePage(browserContext, 1);
+    page = await boProductsCreatePage.changePage(browserContext, 1);
     await foClassicCheckoutPage.reloadPage(page);
 
     const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
@@ -1052,8 +1047,8 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
 
     await boProductsPage.goToProductPage(page, 1);
 
-    const pageTitle: string = await createProductsPage.getPageTitle(page);
-    expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
   });
 
   it('should go to shipping tab and edit package dimension', async function () {
@@ -1061,7 +1056,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
 
     await boProductsCreateTabShippingPage.setPackageDimension(page, dataProducts.demo_11);
 
-    const message = await createProductsPage.saveProduct(page);
-    expect(message).to.eq(createProductsPage.successfulUpdateMessage);
+    const message = await boProductsCreatePage.saveProduct(page);
+    expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
   });
 });

@@ -662,6 +662,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `id_customer_message` int(10) unsigned NOT NULL auto_increment,
   `id_customer_thread` int(11) DEFAULT NULL,
   `id_employee` int(10) unsigned DEFAULT NULL,
+  `id_product` int(10) unsigned DEFAULT NULL,
   `message` MEDIUMTEXT NOT NULL,
   `file_name` varchar(18) DEFAULT NULL,
   `ip_address` varchar(16) DEFAULT NULL,
@@ -672,7 +673,8 @@ CREATE TABLE `PREFIX_customer_message` (
   `read` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_customer_message`),
   KEY `id_customer_thread` (`id_customer_thread`),
-  KEY `id_employee` (`id_employee`)
+  KEY `id_employee` (`id_employee`),
+  KEY `id_product` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* store the header of already fetched emails from imap support messaging */
