@@ -46,7 +46,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -72,32 +71,24 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     protected $configuration;
 
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
-     * @param UrlGeneratorInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
-        ConfigurationInterface $configuration,
-        UrlGeneratorInterface $router
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
-        $this->router = $router;
     }
 
     /**
