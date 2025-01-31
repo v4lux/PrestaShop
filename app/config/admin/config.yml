@@ -22,6 +22,7 @@ api_platform:
   enable_entrypoint: false
   enable_swagger: true
   enable_swagger_ui: true
+  enable_re_doc: true
   docs_formats:
     # This is used to allow using the Swagger UI in HTML presentation
     html: [ 'text/html' ]

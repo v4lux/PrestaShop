@@ -1,15 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/add';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   boOrderSettingsPage,
   type BrowserContext,
   FakerOrderStatus,
@@ -17,8 +17,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_statuses_statuses_CRUDOrderStatus';
 
@@ -140,14 +138,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status',
 
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
 
     it(`should check if the order status '${createOrderStatusData.name}' is visible`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDoesStatusVisible', baseContext);
 
-      const isStatusExist = await viewOrderBasePage.doesStatusExist(page, createOrderStatusData.name);
+      const isStatusExist = await boOrdersViewBasePage.doesStatusExist(page, createOrderStatusData.name);
       expect(isStatusExist, 'Status does not exist').to.eq(true);
     });
   });

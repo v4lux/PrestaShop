@@ -1,13 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
 
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
+  boFilesPage,
   boLoginPage,
   type BrowserContext,
   FakerFile,
@@ -70,17 +69,17 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       boDashboardPage.catalogParentLink,
       boDashboardPage.filesLink,
     );
-    await filesPage.closeSfToolBar(page);
+    await boFilesPage.closeSfToolBar(page);
 
-    const pageTitle = await filesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(filesPage.pageTitle);
+    const pageTitle = await boFilesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFilesPage.pageTitle);
   });
 
   describe('Create file', async () => {
     it('should go to new file page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewFilePage', baseContext);
 
-      await filesPage.goToAddNewFilePage(page);
+      await boFilesPage.goToAddNewFilePage(page);
 
       const pageTitle = await addFilePage.getPageTitle(page);
       expect(pageTitle).to.contains(addFilePage.pageTitle);
@@ -90,7 +89,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createFile', baseContext);
 
       const result = await addFilePage.createEditFile(page, createFileData);
-      expect(result).to.equal(filesPage.successfulCreationMessage);
+      expect(result).to.equal(boFilesPage.successfulCreationMessage);
     });
   });
 
@@ -98,7 +97,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedFile', baseContext);
 
-      const filePath = await filesPage.viewFile(page, 1);
+      const filePath = await boFilesPage.viewFile(page, 1);
 
       const found = await utilsFile.doesFileExist(filePath);
       expect(found, `${createFileData.filename} was not downloaded`).to.eq(true);
@@ -109,7 +108,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     it('should go to edit first file page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditFilePage', baseContext);
 
-      await filesPage.goToEditFilePage(page, 1);
+      await boFilesPage.goToEditFilePage(page, 1);
 
       const pageTitle = await addFilePage.getPageTitle(page);
       expect(pageTitle).to.contains(addFilePage.pageTitleEdit);
@@ -119,7 +118,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'updateFile', baseContext);
 
       const result = await addFilePage.createEditFile(page, editFileData);
-      expect(result).to.equal(filesPage.successfulUpdateMessage);
+      expect(result).to.equal(boFilesPage.successfulUpdateMessage);
     });
   });
 
@@ -127,7 +126,7 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedFile', baseContext);
 
-      const filePath = await filesPage.viewFile(page, 1);
+      const filePath = await boFilesPage.viewFile(page, 1);
 
       const found = await utilsFile.doesFileExist(filePath);
       expect(found, `${editFileData.filename} was not downloaded`).to.eq(true);
@@ -139,8 +138,8 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFile', baseContext);
 
       // delete file in first row
-      const result = await filesPage.deleteFile(page, 1);
-      expect(result).to.be.equal(filesPage.successfulDeleteMessage);
+      const result = await boFilesPage.deleteFile(page, 1);
+      expect(result).to.be.equal(boFilesPage.successfulDeleteMessage);
     });
   });
 });

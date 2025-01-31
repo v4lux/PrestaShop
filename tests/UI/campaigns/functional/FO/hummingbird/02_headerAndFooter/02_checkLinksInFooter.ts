@@ -18,12 +18,10 @@ import addAddressPage from '@pages/FO/hummingbird/myAccount/addAddress';
 import addressesPage from '@pages/FO/hummingbird/myAccount/addresses';
 import creditSlipsPage from '@pages/FO/hummingbird/myAccount/creditSlips';
 import personalInfoPage from '@pages/FO/hummingbird/myAccount/identity';
-import ordersPage from '@pages/FO/hummingbird/myAccount/orderHistory';
 import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrderTracking';
 import newProductsPage from '@pages/FO/hummingbird/newProducts';
 import pricesDropPage from '@pages/FO/hummingbird/pricesDrop';
 import securePaymentPage from '@pages/FO/hummingbird/securePayment';
-import siteMapPage from '@pages/FO/hummingbird/siteMap';
 import storesPage from '@pages/FO/hummingbird/stores';
 import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndConditionsOfUse';
 
@@ -35,7 +33,9 @@ import {
   foHummingbirdContactUsPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
+  foHummingbirdMyOrderHistoryPage,
   foHummingbirdMyWishlistsPage,
+  foHummingbirdSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -122,7 +122,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'About us', pageTitle: foHummingbirdAboutUsPage.pageTitle},
       {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
-      {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
+      {linkSelector: 'Sitemap', pageTitle: foHummingbirdSitemapPage.pageTitle},
       {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -173,7 +173,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
       {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
+      {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
@@ -211,7 +211,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
       {linkSelector: 'Add first address', pageTitle: addAddressPage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
+      {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},

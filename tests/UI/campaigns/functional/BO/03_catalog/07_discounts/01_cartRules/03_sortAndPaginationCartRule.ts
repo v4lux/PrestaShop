@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import addCartRulePage from '@pages/BO/catalog/discounts/add';
-
 import {expect} from 'chai';
+
 import {
+  boCartRulesPage,
+  boCartRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -58,14 +55,14 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
       boDashboardPage.discountsLink,
     );
 
-    const pageTitle = await cartRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    const pageTitle = await boCartRulesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
   });
 
   it('should reset filter and get number of cart rules', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+    numberOfCartRules = await boCartRulesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCartRules).to.be.at.least(0);
   });
 
@@ -82,19 +79,19 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
       it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewCartRulePage${index}`, baseContext);
 
-        await cartRulesPage.goToAddNewCartRulesPage(page);
+        await boCartRulesPage.goToAddNewCartRulesPage(page);
 
-        const pageTitle = await addCartRulePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+        const pageTitle = await boCartRulesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCartRulesCreatePage.pageTitle);
       });
 
       it(`should create cart rule n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCartRule${index}`, baseContext);
 
-        const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleData);
-        expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+        const validationMessage = await boCartRulesCreatePage.createEditCartRules(page, cartRuleData);
+        expect(validationMessage).to.contains(boCartRulesCreatePage.successfulCreationMessage);
 
-        const numberOfCartRulesAfterCreation = await cartRulesPage.getNumberOfElementInGrid(page);
+        const numberOfCartRulesAfterCreation = await boCartRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfCartRulesAfterCreation).to.be.equal(numberOfCartRules + 1 + index);
       });
     });
@@ -105,28 +102,28 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await cartRulesPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boCartRulesPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await cartRulesPage.paginationNext(page);
+      const paginationNumber = await boCartRulesPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await cartRulesPage.paginationPrevious(page);
+      const paginationNumber = await boCartRulesPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await cartRulesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCartRulesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -199,11 +196,11 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await cartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await cartRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCartRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await cartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -242,12 +239,12 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await cartRulesPage.filterCartRules(page, 'input', 'name', 'todelete');
+      await boCartRulesPage.filterCartRules(page, 'input', 'name', 'todelete');
 
-      const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
+      const numberOfCartRulesAfterFilter = await boCartRulesPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfCartRulesAfterFilter; i++) {
-        const textColumn = await cartRulesPage.getTextColumn(page, i, 'name');
+        const textColumn = await boCartRulesPage.getTextColumn(page, i, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });
@@ -255,14 +252,14 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
     it('should delete cart rules and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
 
-      const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-      expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCartRulesPage.bulkDeleteCartRules(page);
+      expect(deleteTextResult).to.be.contains(boCartRulesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkDelete', baseContext);
 
-      const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
+      const numberOfCartRulesAfterDelete = await boCartRulesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules);
     });
   });

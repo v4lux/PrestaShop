@@ -1,23 +1,19 @@
-// Import utils
+import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
-// Import BO pages
-import addOrderPage from '@pages/BO/orders/add';
-
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersCreatePage,
   type BrowserContext,
   FakerCustomer,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_createCustomer';
 
@@ -71,23 +67,23 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
 
     await boOrdersPage.goToCreateOrderPage(page);
 
-    const pageTitle = await addOrderPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addOrderPage.pageTitle);
+    const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
   });
 
   it('should create customer and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
-    const customerName = await addOrderPage.addNewCustomer(page, customerData);
+    const customerName = await boOrdersCreatePage.addNewCustomer(page, customerData);
     expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
   });
 
   it('should search for the new customer and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchCustomer', baseContext);
 
-    await addOrderPage.searchCustomer(page, customerData.email);
+    await boOrdersCreatePage.searchCustomer(page, customerData.email);
 
-    const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
+    const customerName = await boOrdersCreatePage.getCustomerNameFromResult(page, 1);
     expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
   });
 

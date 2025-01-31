@@ -1,16 +1,16 @@
 // Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-// Import BO pages
-import customerServicePage from '@pages/BO/customerService/customerService';
 import contactFormPage from '@pages/BO/modules/contactForm';
 
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
@@ -29,8 +29,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_hummingbird_contactUs_sendMessageWithCustomer';
 
@@ -238,43 +236,43 @@ describe('FO - Contact us : Send message from contact us page with customer logg
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
 
     it('should check customer name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
-      const email = await customerServicePage.getTextColumn(page, 1, 'customer');
+      const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
       expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
-      const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
+      const email = await boCustomerServicePage.getTextColumn(page, 1, 'a!email');
       expect(email).to.contain(contactUsData.emailAddress);
     });
 
     it('should check message type', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
 
-      const subject = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
+      const subject = await boCustomerServicePage.getTextColumn(page, 1, 'cl!id_contact');
       expect(subject).to.contain(contactUsData.subject);
     });
 
     it('should check message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
-      const message = await customerServicePage.getTextColumn(page, 1, 'message');
+      const message = await boCustomerServicePage.getTextColumn(page, 1, 'message');
       expect(message).to.contain(contactUsData.message);
     });
 
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-      const textResult = await customerServicePage.deleteMessage(page, 1);
-      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+      expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
     });
   });
 

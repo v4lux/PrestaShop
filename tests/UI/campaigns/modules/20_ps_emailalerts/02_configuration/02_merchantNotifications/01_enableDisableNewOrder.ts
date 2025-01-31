@@ -1,18 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-
-// Import pages
-// Import BO pages
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   type BrowserContext,
   dataCustomers,
   dataModules,
@@ -32,8 +29,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_merchantNotifications_enableDisableNewOrder';
 
@@ -150,7 +145,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await viewOrderBasePage.viewMyShop(page);
+      page = await boOrdersViewBasePage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -319,7 +314,7 @@ describe('Mail alerts module - Enable/Disable new order', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
-      page = await viewOrderBasePage.viewMyShop(page);
+      page = await boOrdersViewBasePage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);

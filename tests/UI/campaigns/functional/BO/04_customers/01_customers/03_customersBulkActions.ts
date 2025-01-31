@@ -1,11 +1,9 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import pages
-import addCustomerPage from '@pages/BO/customers/add';
-
 import {
   boCustomersPage,
+  boCustomersCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -82,14 +80,14 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
 
         await boCustomersPage.goToAddNewCustomerPage(page);
 
-        const pageTitle = await addCustomerPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+        const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
       });
 
       it(`should create customer n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index + 1}`, baseContext);
 
-        const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerToCreate);
+        const textResult = await boCustomersCreatePage.createEditCustomer(page, test.args.customerToCreate);
         expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
         const numberOfCustomersAfterCreation = await boCustomersPage.getNumberOfElementInGrid(page);

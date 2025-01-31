@@ -4,9 +4,6 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
 import {
   type APIRequestContext,
@@ -15,6 +12,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   dataLanguages,
@@ -175,23 +173,23 @@ describe('API : GET /product/{productId}', async () => {
 
       await boProductsPage.goToProductPage(page, 1);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should fetch informations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fetchInformations', baseContext);
 
-      productType = await createProductsPage.getProductType(page);
+      productType = await boProductsCreatePage.getProductType(page);
       expect(productType).to.be.a('string');
 
-      productActive = await createProductsPage.getProductStatus(page);
+      productActive = await boProductsCreatePage.getProductStatus(page);
       expect(productActive).to.be.a('boolean');
 
-      productNameEn = await createProductsPage.getProductName(page, dataLanguages.english.isoCode);
+      productNameEn = await boProductsCreatePage.getProductName(page, dataLanguages.english.isoCode);
       expect(productNameEn).to.be.a('string');
 
-      productNameFr = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
+      productNameFr = await boProductsCreatePage.getProductName(page, dataLanguages.french.isoCode);
       expect(productNameFr).to.be.a('string');
 
       productDescriptionEn = await boProductsCreateTabDescriptionPage.getValue(

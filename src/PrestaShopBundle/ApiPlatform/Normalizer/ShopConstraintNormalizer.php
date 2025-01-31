@@ -81,13 +81,11 @@ class ShopConstraintNormalizer implements DenormalizerInterface, NormalizerInter
         return $data instanceof ShopConstraint;
     }
 
-    /**
-     * Set higher priority than ObjectDenormalizer.
-     *
-     * @return int
-     */
-    public static function getNormalizerPriority(): int
+    public function getSupportedTypes(?string $format): array
     {
-        return 10;
+        return [
+            ShopConstraint::class => true,
+            ShopCollection::class => true,
+        ];
     }
 }

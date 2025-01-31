@@ -1,17 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-
-// Import BO pages
-import createProductPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   type BrowserContext,
   FakerProduct,
   foClassicCategoryPage,
@@ -112,17 +107,17 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createPackOfProducts', baseContext);
 
-      await createProductPage.closeSfToolBar(page);
+      await boProductsCreatePage.closeSfToolBar(page);
 
-      const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -131,7 +126,7 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       // Click on preview button
-      page = await createProductPage.viewMyShop(page);
+      page = await boProductsCreatePage.viewMyShop(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);

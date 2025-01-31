@@ -1,18 +1,14 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import multiStorePage from '@pages/BO/advancedParameters/multistore';
-import shopPage from '@pages/BO/advancedParameters/multistore/shop';
-import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
-import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  boMultistorePage,
+  boMultistoreShopPage,
+  boMultistoreShopCreatePage,
+  boMultistoreShopUrlCreatePage,
   boShopParametersPage,
   type BrowserContext,
   dataModules,
@@ -165,60 +161,60 @@ describe('BO - Modules - GDPR : Multistore', async () => {
           boDashboardPage.advancedParametersLink,
           boDashboardPage.multistoreLink,
         );
-        await multiStorePage.closeSfToolBar(page);
+        await boMultistorePage.closeSfToolBar(page);
 
-        const pageTitle = await multiStorePage.getPageTitle(page);
-        expect(pageTitle).to.contains(multiStorePage.pageTitle);
+        const pageTitle = await boMultistorePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMultistorePage.pageTitle);
       });
 
       it('should go to add new shop page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopPage${index}`, baseContext);
 
-        await multiStorePage.goToNewShopPage(page);
+        await boMultistorePage.goToNewShopPage(page);
 
-        const pageTitle = await addShopPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
+        const pageTitle = await boMultistoreShopCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMultistoreShopCreatePage.pageTitleCreate);
       });
 
       it('should create the shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createShop${index}`, baseContext);
 
-        const textResult = await addShopPage.setShop(page, shop);
-        expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
+        const textResult = await boMultistoreShopCreatePage.setShop(page, shop);
+        expect(textResult).to.contains(boMultistorePage.successfulCreationMessage);
       });
 
       it('should get the id of the new shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `getShopID${index}`, baseContext);
 
-        const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
+        const numberOfShops = await boMultistoreShopPage.getNumberOfElementInGrid(page);
         expect(numberOfShops).to.be.above(0);
 
-        const shopID = parseInt(await shopPage.getTextColumn(page, 1, 'id_shop'), 10);
+        const shopID = parseInt(await boMultistoreShopPage.getTextColumn(page, 1, 'id_shop'), 10);
         shop.setID(shopID);
       });
 
       it('should go to add URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddURL${index}`, baseContext);
 
-        await shopPage.filterTable(page, 'a!name', shop.name);
-        await shopPage.goToSetURL(page, 1);
+        await boMultistoreShopPage.filterTable(page, 'a!name', shop.name);
+        await boMultistoreShopPage.goToSetURL(page, 1);
 
-        const pageTitle = await addShopUrlPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
+        const pageTitle = await boMultistoreShopUrlCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMultistoreShopUrlCreatePage.pageTitleCreate);
       });
 
       it('should set URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addURL${index}`, baseContext);
 
-        const textResult = await addShopUrlPage.setVirtualUrl(page, shop.name);
-        expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
+        const textResult = await boMultistoreShopUrlCreatePage.setVirtualUrl(page, shop.name);
+        expect(textResult).to.contains(boMultistoreShopUrlCreatePage.successfulCreationMessage);
       });
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageShopContext', baseContext);
 
-      await addShopUrlPage.goToSubMenu(
+      await boMultistoreShopUrlCreatePage.goToSubMenu(
         page,
         boDashboardPage.modulesParentLink,
         boDashboardPage.moduleManagerLink,

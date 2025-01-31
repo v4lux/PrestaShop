@@ -1,11 +1,9 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import BO pages
-import addCustomerPage from '@pages/BO/customers/add';
-
 import {
   boCustomersPage,
+  boCustomersCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -63,14 +61,14 @@ function createCustomerTest(customerData: FakerCustomer, baseContext: string = '
 
       await boCustomersPage.goToAddNewCustomerPage(page);
 
-      const pageTitle = await addCustomerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+      const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
     });
 
     it('should create customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
-      const textResult = await addCustomerPage.createEditCustomer(page, customerData);
+      const textResult = await boCustomersCreatePage.createEditCustomer(page, customerData);
       expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
     });
   });
@@ -119,14 +117,14 @@ function createCustomerB2BTest(customerData: FakerCustomer, baseContext: string 
 
       await boCustomersPage.goToAddNewCustomerPage(page);
 
-      const pageTitle = await addCustomerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+      const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
     });
 
     it('should create B2B customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
 
-      const textResult = await addCustomerPage.createEditB2BCustomer(page, customerData);
+      const textResult = await boCustomersCreatePage.createEditB2BCustomer(page, customerData);
       expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
     });
   });

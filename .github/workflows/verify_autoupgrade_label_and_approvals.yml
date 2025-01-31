@@ -32,11 +32,15 @@ jobs:
           APPROVAL_COUNT=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews \
             --jq '[.[] | select(.state == "APPROVED")] | length')
 
+           PR_AUTHOR=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER --jq '.user.login')
+
           LABEL_PRESENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/labels \
             --jq '[.[] | select(.name == "${{ env.LABELS }}")] | length')
 
           echo $APPROVAL_COUNT > ./approvals
           echo $LABEL_PRESENT > ./label
+          echo $PR_NUMBER > ./pr_number
+          echo $PR_AUTHOR > ./author
 
       - name: Upload
         uses: actions/upload-artifact@v4
@@ -45,3 +49,5 @@ jobs:
           path: |
             approvals
             label
+            pr_number
+            author

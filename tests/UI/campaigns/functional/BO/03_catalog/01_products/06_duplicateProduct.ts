@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   type BrowserContext,
   dataProducts,
   type Page,
@@ -84,20 +81,20 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'duplicateProduct', baseContext);
 
       const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
-      expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
+      expect(textMessage).to.equal(boProductsCreatePage.successfulDuplicateMessage);
     });
 
     it('should click on duplicate button from the footer of create product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickDuplicateFromFooterPage', baseContext);
 
-      const textMessage = await createProductsPage.duplicateProduct(page);
-      expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
+      const textMessage = await boProductsCreatePage.duplicateProduct(page);
+      expect(textMessage).to.equal(boProductsCreatePage.successfulDuplicateMessage);
     });
 
     it('should click on \'Go to catalog\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCatalogPage', baseContext);
 
-      await createProductsPage.goToCatalogPage(page);
+      await boProductsCreatePage.goToCatalogPage(page);
 
       const pageTitle = await boProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductsPage.pageTitle);

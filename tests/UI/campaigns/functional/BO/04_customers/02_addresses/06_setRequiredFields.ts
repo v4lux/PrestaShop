@@ -2,13 +2,12 @@
 import testContext from '@utils/testContext';
 
 // Import pages
-// Import BO pages
-import addressesPage from '@pages/BO/customers/addresses';
 // Import FO pages
 import {addressesPage as foAddressesPage} from '@pages/FO/classic/myAccount/addresses';
 import {addAddressPage} from '@pages/FO/classic/myAccount/addAddress';
 
 import {
+  boAddressesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -66,10 +65,10 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       boDashboardPage.customersParentLink,
       boDashboardPage.addressesLink,
     );
-    await addressesPage.closeSfToolBar(page);
+    await boAddressesPage.closeSfToolBar(page);
 
-    const pageTitle = await addressesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addressesPage.pageTitle);
+    const pageTitle = await boAddressesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAddressesPage.pageTitle);
   });
 
   [
@@ -79,15 +78,15 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
     it(`should ${test.args.action} 'Vat number' as required fields`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}VatNumber`, baseContext);
 
-      const textResult = await addressesPage.setRequiredFields(page, 6, test.args.exist);
-      expect(textResult).to.equal(addressesPage.successfulUpdateMessage);
+      const textResult = await boAddressesPage.setRequiredFields(page, 6, test.args.exist);
+      expect(textResult).to.equal(boAddressesPage.successfulUpdateMessage);
     });
 
     it('should view my shop and login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // View shop
-      page = await addressesPage.viewMyShop(page);
+      page = await boAddressesPage.viewMyShop(page);
       // Change language in FO
       await foClassicHomePage.changeLanguage(page, 'en');
 
@@ -147,8 +146,8 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       // Go back to BO
       page = await addAddressPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await addressesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addressesPage.pageTitle);
+      const pageTitle = await boAddressesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
     });
   });
 });

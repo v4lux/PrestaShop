@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import invoicesPage from '@pages/BO/orders/invoices';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boInvoicesPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
@@ -15,8 +13,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_invoices_invoiceOptions_invoicePrefix';
 
@@ -64,19 +60,19 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
         boDashboardPage.ordersParentLink,
         boDashboardPage.invoicesLink,
       );
-      await invoicesPage.closeSfToolBar(page);
+      await boInvoicesPage.closeSfToolBar(page);
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      const pageTitle = await boInvoicesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
     });
 
     it(`should update the invoice prefix to ${invoiceData.prefix}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateInvoicePrefix', baseContext);
 
-      await invoicesPage.changePrefix(page, invoiceData.prefix);
+      await boInvoicesPage.changePrefix(page, invoiceData.prefix);
 
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      const textMessage = await boInvoicesPage.saveInvoiceOptions(page);
+      expect(textMessage).to.contains(boInvoicesPage.successfulUpdateMessage);
     });
   });
 
@@ -84,10 +80,10 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
 
-      await invoicesPage.goToSubMenu(
+      await boInvoicesPage.goToSubMenu(
         page,
-        invoicesPage.ordersParentLink,
-        invoicesPage.ordersLink,
+        boInvoicesPage.ordersParentLink,
+        boInvoicesPage.ordersLink,
       );
 
       const pageTitle = await boOrdersPage.getPageTitle(page);
@@ -130,17 +126,17 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
         boOrdersViewBlockTabListPage.invoicesLink,
       );
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      const pageTitle = await boInvoicesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
     });
 
     it(`should change the invoice prefix to '${defaultPrefix}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultPrefix', baseContext);
 
-      await invoicesPage.changePrefix(page, defaultPrefix);
+      await boInvoicesPage.changePrefix(page, defaultPrefix);
 
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      const textMessage = await boInvoicesPage.saveInvoiceOptions(page);
+      expect(textMessage).to.contains(boInvoicesPage.successfulUpdateMessage);
     });
   });
 
@@ -148,10 +144,10 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForDefaultPrefix', baseContext);
 
-      await invoicesPage.goToSubMenu(
+      await boInvoicesPage.goToSubMenu(
         page,
-        invoicesPage.ordersParentLink,
-        invoicesPage.ordersLink,
+        boInvoicesPage.ordersParentLink,
+        boInvoicesPage.ordersLink,
       );
 
       const pageTitle = await boOrdersPage.getPageTitle(page);

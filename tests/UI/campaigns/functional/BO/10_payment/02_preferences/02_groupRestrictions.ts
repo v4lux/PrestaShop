@@ -3,11 +3,11 @@ import testContext from '@utils/testContext';
 
 // Import pages
 // Import BO pages
-import addCustomerPage from '@pages/BO/customers/add';
 import preferencesPage from '@pages/BO/payment/preferences';
 
 import {
   boCustomersPage,
+  boCustomersCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -87,15 +87,15 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
         await boCustomersPage.goToAddNewCustomerPage(page);
 
-        const pageTitle = await addCustomerPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+        const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
       });
 
       it(`should create customer n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index}`, baseContext);
 
         // Create customer
-        const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerData);
+        const textResult = await boCustomersCreatePage.createEditCustomer(page, test.args.customerData);
         expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
         // Check number of customers

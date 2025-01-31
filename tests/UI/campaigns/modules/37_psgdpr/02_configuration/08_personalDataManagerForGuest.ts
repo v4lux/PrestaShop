@@ -1,19 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import commonTests
+import {expect} from 'chai';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
-// Import pages
-// Import BO pages
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-
-import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   type BrowserContext,
   dataModules,
   dataOrderStatuses,
@@ -179,14 +173,14 @@ describe('BO - Modules - GDPR: Personal data manager for guest', async () => {
       // View order
       await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
 
     it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderBasePage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+      const result = await boOrdersViewBasePage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
       expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
     });
 

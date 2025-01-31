@@ -4,10 +4,8 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import creditSlipsPage from '@pages/BO/orders/creditSlips';
-
 import {
+  boCreditSlipsPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
@@ -168,10 +166,10 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         boOrdersViewBlockTabListPage.ordersParentLink,
         boOrdersViewBlockTabListPage.creditSlipsLink,
       );
-      await creditSlipsPage.closeSfToolBar(page);
+      await boCreditSlipsPage.closeSfToolBar(page);
 
-      const pageTitle = await creditSlipsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
+      const pageTitle = await boCreditSlipsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCreditSlipsPage.pageTitle);
     });
 
     it('should reset all filters and get number of credit slips', async function () {
@@ -182,7 +180,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
+      numberOfCreditSlips = await boCreditSlipsPage.resetAndGetNumberOfLines(page);
       expect(numberOfCreditSlips).to.be.above(0);
     });
 
@@ -194,7 +192,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, 100);
+      const paginationNumber = await boCreditSlipsPage.selectPaginationLimit(page, 100);
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
 
@@ -240,11 +238,11 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           baseContext,
         );
 
-        const nonSortedTable = await creditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCreditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await creditSlipsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCreditSlipsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await creditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCreditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -279,8 +277,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      const numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
-      const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, 10);
+      const numberOfCreditSlips = await boCreditSlipsPage.resetAndGetNumberOfLines(page);
+      const paginationNumber = await boCreditSlipsPage.selectPaginationLimit(page, 10);
       expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`);
     });
@@ -293,8 +291,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      const numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
-      const paginationNumber = await creditSlipsPage.paginationNext(page);
+      const numberOfCreditSlips = await boCreditSlipsPage.resetAndGetNumberOfLines(page);
+      const paginationNumber = await boCreditSlipsPage.paginationNext(page);
       expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOfCreditSlips / 10)})`)
         .to.contains(`(page 2 / ${Math.ceil(numberOfCreditSlips / 10)})`);
     });
@@ -307,7 +305,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      const paginationNumber = await creditSlipsPage.paginationPrevious(page);
+      const paginationNumber = await boCreditSlipsPage.paginationPrevious(page);
       expect(paginationNumber, `Number of pages is not (page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`);
     });
@@ -320,7 +318,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         baseContext,
       );
 
-      const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCreditSlipsPage.selectPaginationLimit(page, 50);
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
   });

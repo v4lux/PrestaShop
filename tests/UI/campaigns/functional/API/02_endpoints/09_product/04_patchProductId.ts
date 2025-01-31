@@ -1,14 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import commonTests
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   type APIRequestContext,
   boApiClientsPage,
@@ -16,6 +10,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   dataLanguages,
@@ -181,8 +176,8 @@ describe('API : PATCH /product/{productId}', async () => {
 
         await boProductsPage.goToProductPage(page, 1);
 
-        const pageTitle: string = await createProductsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(createProductsPage.pageTitle);
+        const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
     });
 
@@ -239,14 +234,14 @@ describe('API : PATCH /product/{productId}', async () => {
           await boApiClientsCreatePage.reloadPage(page);
 
           if (data.propertyName === 'type') {
-            const valueProperty = await createProductsPage.getProductType(page);
+            const valueProperty = await boProductsCreatePage.getProductType(page);
             expect(valueProperty).to.equal(data.propertyValue);
           } else if (data.propertyName === 'active') {
-            const valueProperty = await createProductsPage.getProductStatus(page);
+            const valueProperty = await boProductsCreatePage.getProductStatus(page);
             expect(valueProperty).to.equal(data.propertyValue);
           } else if (data.propertyName === 'names') {
-            const valuePropertyEN = await createProductsPage.getProductName(page, dataLanguages.english.isoCode);
-            const valuePropertyFR = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
+            const valuePropertyEN = await boProductsCreatePage.getProductName(page, dataLanguages.english.isoCode);
+            const valuePropertyFR = await boProductsCreatePage.getProductName(page, dataLanguages.french.isoCode);
             expect({
               [dataLanguages.english.locale]: valuePropertyEN,
               [dataLanguages.french.locale]: valuePropertyFR,

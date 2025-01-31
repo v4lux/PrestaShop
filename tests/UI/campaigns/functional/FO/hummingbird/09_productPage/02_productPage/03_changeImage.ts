@@ -1,18 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import BO pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   FakerProduct,
@@ -112,20 +107,20 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
       await boProductsPage.selectProductType(page, newProductData.type);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to new product page and set product name and status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
       await boProductsPage.clickOnAddNewProduct(page);
-      await createProductsPage.setProductName(page, newProductData.name);
+      await boProductsCreatePage.setProductName(page, newProductData.name);
 
-      await createProductsPage.setProductStatus(page, newProductData.status);
+      await boProductsCreatePage.setProductStatus(page, newProductData.status);
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should add 7 images', async function () {

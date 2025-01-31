@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-import catalogPriceRulesPage from '@pages/BO/catalog/discounts/catalogPriceRules';
-import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRules/add';
-
 import {expect} from 'chai';
+
 import {
+  boCartRulesPage,
+  boCatalogPriceRulesPage,
+  boCatalogPriceRulesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -67,19 +64,19 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       boDashboardPage.discountsLink,
     );
 
-    const pageTitle = await cartRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    const pageTitle = await boCartRulesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
   });
 
   it('should go to \'Catalog Price Rules\' tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCatalogPriceRulesTab', baseContext);
 
-    await cartRulesPage.goToCatalogPriceRulesTab(page);
+    await boCartRulesPage.goToCatalogPriceRulesTab(page);
 
-    numberOfCatalogPriceRules = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
+    numberOfCatalogPriceRules = await boCatalogPriceRulesPage.resetAndGetNumberOfLines(page);
 
-    const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+    const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);
   });
 
   // 1 - Create 21 catalog price rules
@@ -95,19 +92,19 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       it('should go to new catalog price rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
 
-        await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
+        await boCatalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
 
-        const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
-        expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
+        const pageTitle = await boCatalogPriceRulesCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCatalogPriceRulesCreatePage.pageTitle);
       });
 
       it(`should create catalog price rule n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCatalogPriceRule${index}`, baseContext);
 
-        const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, priceRuleData);
-        expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+        const validationMessage = await boCatalogPriceRulesCreatePage.setCatalogPriceRule(page, priceRuleData);
+        expect(validationMessage).to.contains(boCatalogPriceRulesPage.successfulCreationMessage);
 
-        const numberOfCatalogPriceRulesAfterCreation = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
+        const numberOfCatalogPriceRulesAfterCreation = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfCatalogPriceRulesAfterCreation).to.be.at.most(numberOfCatalogPriceRules + index + 1);
       });
     });
@@ -177,18 +174,18 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await catalogPriceRulesPage.filterPriceRules(
+        await boCatalogPriceRulesPage.filterPriceRules(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfPriceRulesAfterFilter = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
+        const numberOfPriceRulesAfterFilter = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 21);
 
         for (let row = 1; row <= numberOfPriceRulesAfterFilter; row++) {
-          const textColumn = await catalogPriceRulesPage.getTextColumn(page, row, test.args.filterBy);
+          const textColumn = await boCatalogPriceRulesPage.getTextColumn(page, row, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -196,7 +193,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
+        const numberOfPriceRulesAfterReset = await boCatalogPriceRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
@@ -224,13 +221,13 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         // Filter by date
-        await catalogPriceRulesPage.filterByDate(page, test.args.filterBy, test.args.firstDate, test.args.secondDate);
+        await boCatalogPriceRulesPage.filterByDate(page, test.args.filterBy, test.args.firstDate, test.args.secondDate);
 
         // Get number of elements
-        const numberOfShoppingCartsAfterFilter = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
+        const numberOfShoppingCartsAfterFilter = await boCatalogPriceRulesPage.getNumberOfElementInGrid(page);
 
         for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-          const textColumn = await catalogPriceRulesPage.getTextColumn(
+          const textColumn = await boCatalogPriceRulesPage.getTextColumn(
             page,
             row,
             test.args.filterBy,
@@ -242,7 +239,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
+        const numberOfPriceRulesAfterReset = await boCatalogPriceRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
@@ -357,11 +354,11 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await catalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCatalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await catalogPriceRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCatalogPriceRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await catalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCatalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
@@ -400,28 +397,28 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await catalogPriceRulesPage.selectPaginationLimit(page, 20);
+      const paginationNumber = await boCatalogPriceRulesPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await catalogPriceRulesPage.paginationNext(page);
+      const paginationNumber = await boCatalogPriceRulesPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await catalogPriceRulesPage.paginationPrevious(page);
+      const paginationNumber = await boCatalogPriceRulesPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await catalogPriceRulesPage.selectPaginationLimit(page, 50);
+      const paginationNumber = await boCatalogPriceRulesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -431,8 +428,8 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     it('should bulk delete cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeletePriceRules', baseContext);
 
-      const deleteTextResult = await catalogPriceRulesPage.bulkDeletePriceRules(page);
-      expect(deleteTextResult).to.be.contains(catalogPriceRulesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCatalogPriceRulesPage.bulkDeletePriceRules(page);
+      expect(deleteTextResult).to.be.contains(boCatalogPriceRulesPage.successfulMultiDeleteMessage);
     });
   });
 });

@@ -31,20 +31,16 @@ namespace PrestaShopBundle\ApiPlatform\Provider;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
-use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
-use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShopBundle\ApiPlatform\ContextParametersTrait;
 use PrestaShopBundle\ApiPlatform\Exception\GridDataFactoryNotFoundException;
-use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
+use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\Pagination\PaginationElements;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
-use PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer;
+use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -53,18 +49,14 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 class QueryListProvider implements ProviderInterface
 {
     use QueryResultSerializerTrait;
-    use ContextParametersTrait;
 
     public const DEFAULT_PAGINATED_ITEM_LIMIT = 50;
 
     public function __construct(
         protected readonly RequestStack $requestStack,
-        protected readonly DomainSerializer $domainSerializer,
+        protected readonly CQRSApiSerializer $domainSerializer,
         protected readonly ContainerInterface $container,
         protected readonly ShopContext $shopContext,
-        protected readonly LanguageContext $languageContext,
-        protected readonly CurrencyContext $currencyContext,
-        protected readonly ApiClientContext $apiClientContext,
         protected readonly FiltersBuilderInterface $filtersBuilder
     ) {
     }
@@ -115,9 +107,9 @@ class QueryListProvider implements ProviderInterface
                 $operation->getClass(),
                 null,
                 [
-                    DomainSerializer::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation),
+                    NormalizationMapper::NORMALIZATION_MAPPING => $this->getApiResourceMapping($operation),
                     // Query list builders return boolean value as tiny int, so we must cast them
-                    CQRSApiNormalizer::CAST_BOOL => true,
+                    CQRSApiSerializer::CAST_BOOL => true,
                 ]
             );
         }
@@ -143,7 +135,7 @@ class QueryListProvider implements ProviderInterface
         $paginationFilters = $this->domainSerializer->normalize(
             $paginationFilters,
             null,
-            [DomainSerializer::NORMALIZATION_MAPPING => $filtersMapping]
+            [NormalizationMapper::NORMALIZATION_MAPPING => $filtersMapping]
         );
 
         $paginationParameters = [

@@ -1,12 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
 // Import BO pages
-import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
 
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -20,8 +20,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_FO_classic_contactUs_addAttachment';
 
@@ -136,37 +134,37 @@ describe('FO - Contact us : Add attachment', async () => {
       boDashboardPage.customerServiceLink,
     );
 
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    const pageTitle = await boCustomerServicePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
   });
 
   it('should check customer name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
-    const email = await customerServicePage.getTextColumn(page, 1, 'customer');
+    const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
     expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
   });
 
   it('should check customer email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
-    const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
+    const email = await boCustomerServicePage.getTextColumn(page, 1, 'a!email');
     expect(email).to.contain(contactUsData.emailAddress);
   });
 
   it('should get the customer service id and the date', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
 
-    idCustomer = await customerServicePage.getTextColumn(page, 1, 'id_customer_thread');
+    idCustomer = await boCustomerServicePage.getTextColumn(page, 1, 'id_customer_thread');
     expect(parseInt(idCustomer, 10)).to.be.at.least(0);
 
-    messageDateTime = await customerServicePage.getTextColumn(page, 1, 'date');
+    messageDateTime = await boCustomerServicePage.getTextColumn(page, 1, 'date');
   });
 
   it('should go to view message page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
-    await customerServicePage.goToViewMessagePage(page);
+    await boCustomerServicePage.goToViewMessagePage(page);
 
     const pageTitle = await viewPage.getPageTitle(page);
     expect(pageTitle).to.contains(viewPage.pageTitle);
@@ -200,14 +198,14 @@ describe('FO - Contact us : Add attachment', async () => {
       boDashboardPage.customerServiceLink,
     );
 
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    const pageTitle = await boCustomerServicePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
   });
 
   it('should delete the message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-    const textResult = await customerServicePage.deleteMessage(page, 1);
-    expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+    const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+    expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
   });
 });

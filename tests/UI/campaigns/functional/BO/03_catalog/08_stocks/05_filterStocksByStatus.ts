@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addProductPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boStockPage,
   type BrowserContext,
   FakerProduct,
@@ -86,8 +83,8 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
 
       await boProductsPage.selectProductType(page, productData.type);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -95,17 +92,17 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-      await addProductPage.closeSfToolBar(page);
+      await boProductsCreatePage.closeSfToolBar(page);
 
-      const createProductMessage = await addProductPage.setProduct(page, productData);
-      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -113,10 +110,10 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-      await addProductPage.goToSubMenu(
+      await boProductsCreatePage.goToSubMenu(
         page,
-        addProductPage.catalogParentLink,
-        addProductPage.stocksLink,
+        boProductsCreatePage.catalogParentLink,
+        boProductsCreatePage.stocksLink,
       );
 
       const pageTitle = await boStockPage.getPageTitle(page);

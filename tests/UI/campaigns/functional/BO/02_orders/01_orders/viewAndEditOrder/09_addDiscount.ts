@@ -1,14 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {bulkDeleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import cartRulesPage from '@pages/BO/catalog/discounts';
-
 import {
+  boCartRulesPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
@@ -25,8 +23,6 @@ import {
   type ProductDiscount,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_orders_viewAndEditOrder_addDiscount';
 
@@ -360,8 +356,8 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
         boDashboardPage.discountsLink,
       );
 
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      const pageTitle = await boCartRulesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCartRulesPage.pageTitle);
     });
     [
       {
@@ -384,18 +380,18 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await cartRulesPage.filterCartRules(
+        await boCartRulesPage.filterCartRules(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
+        const numberOfCartRulesAfterFilter = await boCartRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfCartRulesAfterFilter).to.be.equal(1);
 
         for (let row = 1; row <= numberOfCartRulesAfterFilter; row++) {
-          const textColumn = await cartRulesPage.getTextColumn(page, row, test.args.filterBy);
+          const textColumn = await boCartRulesPage.getTextColumn(page, row, test.args.filterBy);
           expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -403,7 +399,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfCartRulesAfterReset = await cartRulesPage.resetAndGetNumberOfLines(page);
+        const numberOfCartRulesAfterReset = await boCartRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfCartRulesAfterReset).to.equal(numberOfCartRules + 2);
       });
     });

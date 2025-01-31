@@ -1,14 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   type BrowserContext,
   foClassicProductPage,
   type Page,
@@ -243,20 +240,20 @@ describe('BO - Catalog - Products list : Bulk actions, Enable/Disable, 3-dot but
         expect(isModalVisible).to.eq(true);
 
         const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
-        expect(textMessage).to.equal(createProductsPage.successfulDuplicateMessage);
+        expect(textMessage).to.equal(boProductsCreatePage.successfulDuplicateMessage);
       });
 
       it('should check that the product is duplicated', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductDuplicated', baseContext);
 
-        const productName = await createProductsPage.getProductName(page, 'en');
+        const productName = await boProductsCreatePage.getProductName(page, 'en');
         expect(productName).to.contains('copy of');
       });
 
       it('should return to the list', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'returnToTheList', baseContext);
 
-        await createProductsPage.goToCatalogPage(page);
+        await boProductsCreatePage.goToCatalogPage(page);
 
         const pageTitle = await boProductsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductsPage.pageTitle);
@@ -329,7 +326,7 @@ describe('BO - Catalog - Products list : Bulk actions, Enable/Disable, 3-dot but
         expect(isModalVisible).to.eq(true);
 
         const textMessage = await boProductsPage.clickOnConfirmDialogButton(page);
-        expect(textMessage).to.equal(createProductsPage.successfulDeleteMessage);
+        expect(textMessage).to.equal(boProductsCreatePage.successfulDeleteMessage);
       });
 
       it('should reset filter', async function () {

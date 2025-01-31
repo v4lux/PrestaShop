@@ -6,11 +6,9 @@ import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import BO pages
-import viewCustomerPage from '@pages/BO/customers/view';
-
 import {
   boCustomersPage,
+  boCustomersViewPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -127,15 +125,15 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
 
       await boCustomersPage.goToViewCustomerPage(page, 1);
 
-      const pageTitle = await viewCustomerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewCustomerPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
+      const pageTitle = await boCustomersViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomersViewPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
     });
 
     it('should click on transform to customer account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnTransferToCustomerAccount', baseContext);
 
-      const successMessage = await viewCustomerPage.clickOnTransformToCustomerAccount(page);
-      expect(successMessage).to.contains(viewCustomerPage.successfulCreationMessage);
+      const successMessage = await boCustomersViewPage.clickOnTransformToCustomerAccount(page);
+      expect(successMessage).to.contains(boCustomersViewPage.successfulCreationMessage);
     });
 
     it('should check if the mail is in mailbox and check the subject', async function () {
@@ -147,7 +145,7 @@ describe('BO - Customers _ Customers : Transform guest to customer account', asy
     it('should check the transform to customer account button is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isButtonVisible', baseContext);
 
-      const isButtonVisible = await viewCustomerPage.isTransformToCustomerAccountButtonVisible(page);
+      const isButtonVisible = await boCustomersViewPage.isTransformToCustomerAccountButtonVisible(page);
       expect(isButtonVisible).to.eq(false);
     });
 

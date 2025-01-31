@@ -1,17 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   type BrowserContext,
   FakerProduct,
@@ -102,20 +97,20 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
       await boProductsPage.selectProductType(page, productData.type);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to new product page and set product name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
       await boProductsPage.clickOnAddNewProduct(page);
-      await createProductsPage.setProductName(page, productData.name);
+      await boProductsCreatePage.setProductName(page, productData.name);
 
-      await createProductsPage.setProductStatus(page, productData.status);
+      await boProductsCreatePage.setProductStatus(page, productData.status);
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should add 3 images', async function () {
@@ -182,8 +177,8 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
       await boProductsCreateTabDescriptionPage.setProductDescription(page, productData);
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should add category', async function () {
@@ -191,8 +186,8 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
       await boProductsCreateTabDescriptionPage.addNewCategory(page, ['Clothes', 'Men']);
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
 
       const selectedCategories = await boProductsCreateTabDescriptionPage.getSelectedCategories(page);
       expect(selectedCategories).to.eq('Home x Clothes x Men x');
@@ -216,8 +211,8 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
       await boProductsCreateTabDescriptionPage.chooseDefaultCategory(page, 'Clothes');
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should check that we can delete the first and the last category', async function () {
@@ -238,8 +233,8 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
       await boProductsCreateTabDescriptionPage.chooseBrand(page, 'Studio Design');
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should add related product', async function () {
@@ -247,8 +242,8 @@ describe('BO - Catalog - Products : Description tab', async () => {
 
       await boProductsCreateTabDescriptionPage.addRelatedProduct(page, 't-shirt');
 
-      const createProductMessage = await createProductsPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 

@@ -1,12 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import customerServicePage from '@pages/BO/customerService/customerService';
 import viewPage from '@pages/BO/customerService/customerService/view';
-
 import {expect} from 'chai';
+
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -65,15 +62,15 @@ describe('BO - Customer Service : Contact options', async () => {
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
 
     it('should update default message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDefaultMessage', baseContext);
 
-      const result = await customerServicePage.setDefaultMessage(page, 'Test default message');
-      expect(result).to.contains(customerServicePage.successfulUpdateMessage);
+      const result = await boCustomerServicePage.setDefaultMessage(page, 'Test default message');
+      expect(result).to.contains(boCustomerServicePage.successfulUpdateMessage);
     });
   });
 
@@ -81,7 +78,7 @@ describe('BO - Customer Service : Contact options', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
 
-      page = await customerServicePage.viewMyShop(page);
+      page = await boCustomerServicePage.viewMyShop(page);
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
@@ -113,8 +110,8 @@ describe('BO - Customer Service : Contact options', async () => {
     it('should go to view message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
-      await customerServicePage.reloadPage(page);
-      await customerServicePage.goToViewMessagePage(page);
+      await boCustomerServicePage.reloadPage(page);
+      await boCustomerServicePage.goToViewMessagePage(page);
 
       const pageTitle = await viewPage.getPageTitle(page);
       expect(pageTitle).to.contains(viewPage.pageTitle);
@@ -136,15 +133,15 @@ describe('BO - Customer Service : Contact options', async () => {
         boDashboardPage.customerServiceLink,
       );
 
-      const pageTitle = await customerServicePage.getPageTitle(page);
-      expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
     });
 
     it('should go back to default message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToDefaultMessage', baseContext);
 
-      const result = await customerServicePage.setDefaultMessage(page, 'Dear Customer,\n\n Regards,\nCustomer service');
-      expect(result).to.contains(customerServicePage.successfulUpdateMessage);
+      const result = await boCustomerServicePage.setDefaultMessage(page, 'Dear Customer,\n\n Regards,\nCustomer service');
+      expect(result).to.contains(boCustomerServicePage.successfulUpdateMessage);
     });
   });
 
@@ -156,14 +153,14 @@ describe('BO - Customer Service : Contact options', async () => {
       it(`should ${test.args.action} Allow file uploading`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}FileUploading`, baseContext);
 
-        const result = await customerServicePage.allowFileUploading(page, test.args.enable);
-        expect(result).to.contains(customerServicePage.successfulUpdateMessage);
+        const result = await boCustomerServicePage.allowFileUploading(page, test.args.enable);
+        expect(result).to.contains(boCustomerServicePage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-        page = await customerServicePage.viewMyShop(page);
+        page = await boCustomerServicePage.viewMyShop(page);
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
         expect(isHomePage, 'Fail to open FO home page').to.eq(true);
@@ -190,8 +187,8 @@ describe('BO - Customer Service : Contact options', async () => {
 
         page = await foClassicContactUsPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await customerServicePage.getPageTitle(page);
-        expect(pageTitle).to.contains(customerServicePage.pageTitle);
+        const pageTitle = await boCustomerServicePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
       });
     });
   });
@@ -200,8 +197,8 @@ describe('BO - Customer Service : Contact options', async () => {
     it('should delete the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
-      const textResult = await customerServicePage.deleteMessage(page, 1);
-      expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
+      const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+      expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
     });
   });
 });

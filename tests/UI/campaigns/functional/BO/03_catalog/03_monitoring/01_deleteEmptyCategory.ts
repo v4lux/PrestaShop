@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import categoriesPage from '@pages/BO/catalog/categories';
-import addCategoryPage from '@pages/BO/catalog/categories/add';
-import monitoringPage from '@pages/BO/catalog/monitoring';
-
 import {expect} from 'chai';
+
 import {
+  boCategoriesPage,
+  boCategoriesCreatePage,
   boDashboardPage,
   boLoginPage,
+  boMonitoringPage,
   type BrowserContext,
   FakerCategory,
   type Page,
@@ -66,16 +63,16 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
       boDashboardPage.catalogParentLink,
       boDashboardPage.categoriesLink,
     );
-    await categoriesPage.closeSfToolBar(page);
+    await boCategoriesPage.closeSfToolBar(page);
 
-    const pageTitle = await categoriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    const pageTitle = await boCategoriesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
+    numberOfCategories = await boCategoriesPage.resetAndGetNumberOfLines(page);
     expect(numberOfCategories).to.be.above(0);
   });
 
@@ -83,19 +80,19 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
     it('should go to add new category page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddCategoryPage', baseContext);
 
-      await categoriesPage.goToAddNewCategoryPage(page);
+      await boCategoriesPage.goToAddNewCategoryPage(page);
 
-      const pageTitle = await addCategoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
+      const pageTitle = await boCategoriesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCategoriesCreatePage.pageTitleCreate);
     });
 
     it('should create category and check the categories number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCategory', baseContext);
 
-      const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
-      expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
+      const textResult = await boCategoriesCreatePage.createEditCategory(page, createCategoryData);
+      expect(textResult).to.equal(boCategoriesPage.successfulCreationMessage);
 
-      const numberOfCategoriesAfterCreation = await categoriesPage.getNumberOfElementInGrid(page);
+      const numberOfCategoriesAfterCreation = await boCategoriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
   });
@@ -104,23 +101,23 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
     it('should go to \'Catalog > Monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
-      await categoriesPage.goToSubMenu(
+      await boCategoriesPage.goToSubMenu(
         page,
-        categoriesPage.catalogParentLink,
-        categoriesPage.monitoringLink,
+        boCategoriesPage.catalogParentLink,
+        boCategoriesPage.monitoringLink,
       );
 
-      const pageTitle = await monitoringPage.getPageTitle(page);
-      expect(pageTitle).to.contains(monitoringPage.pageTitle);
+      const pageTitle = await boMonitoringPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMonitoringPage.pageTitle);
 
-      numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
+      numberOfEmptyCategories = await boMonitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
       expect(numberOfEmptyCategories).to.be.at.least(1);
     });
 
     it(`should filter categories by Name ${createCategoryData.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCategory', baseContext);
 
-      await monitoringPage.filterTable(
+      await boMonitoringPage.filterTable(
         page,
         'empty_category',
         'input',
@@ -128,14 +125,14 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
         createCategoryData.name,
       );
 
-      const textColumn = await monitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
+      const textColumn = await boMonitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
       expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should reset filter in empty categories grid', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetInMonitoringPage', baseContext);
 
-      numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
+      numberOfEmptyCategories = await boMonitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
       expect(numberOfEmptyCategories).to.be.at.least(1);
     });
   });
@@ -144,7 +141,7 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
     it(`should filter categories by Name ${createCategoryData.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterEmptyCategoriesGridToDelete', baseContext);
 
-      await monitoringPage.filterTable(
+      await boMonitoringPage.filterTable(
         page,
         'empty_category',
         'input',
@@ -152,24 +149,24 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
         createCategoryData.name,
       );
 
-      const textColumn = await monitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
+      const textColumn = await boMonitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
       expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should delete category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCategory', baseContext);
 
-      const textResult = await monitoringPage.deleteCategoryInGrid(page, 'empty_category', 1, 1);
-      expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
+      const textResult = await boMonitoringPage.deleteCategoryInGrid(page, 'empty_category', 1, 1);
+      expect(textResult).to.equal(boMonitoringPage.successfulDeleteMessage);
 
-      const pageTitle = await categoriesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      const pageTitle = await boCategoriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
     });
 
     it('should reset filter check number of categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfCategoriesAfterDelete = await categoriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCategoriesAfterDelete = await boCategoriesPage.resetAndGetNumberOfLines(page);
       expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories);
     });
   });

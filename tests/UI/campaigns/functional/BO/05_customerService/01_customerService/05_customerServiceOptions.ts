@@ -1,11 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import customerServicePage from '@pages/BO/customerService/customerService';
-
 import {expect} from 'chai';
+
 import {
+  boCustomerServicePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -59,21 +56,21 @@ describe('BO - Customer Service : Customer service options', async () => {
       boDashboardPage.customerServiceLink,
     );
 
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    const pageTitle = await boCustomerServicePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
   });
 
   it('should set customer service options', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setOptions', baseContext);
 
-    const successMessage = await customerServicePage.setCustomerServiceOptions(page, optionsData);
-    expect(successMessage).to.eq(customerServicePage.successfulUpdateMessage);
+    const successMessage = await boCustomerServicePage.setCustomerServiceOptions(page, optionsData);
+    expect(successMessage).to.eq(boCustomerServicePage.successfulUpdateMessage);
   });
 
   it('should check that the new block Sync is visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSyncBlockVisible', baseContext);
 
-    const isVisible = await customerServicePage.isRunSyncButtonVisible(page);
+    const isVisible = await boCustomerServicePage.isRunSyncButtonVisible(page);
     expect(isVisible).to.eq(true);
   });
 });

@@ -32,12 +32,17 @@
       <ul>
         <li>
           <a target="_blank" href="{{ path('api_doc', {_format: 'html'}) }}">
-            {{ 'API Documentation (HTML format)'|trans({}, 'Admin.Advparameters.Feature') }}
+            {{ 'API Documentation (Swagger)'|trans({}, 'Admin.Advparameters.Feature') }}
+          </a>
+        </li>
+        <li>
+          <a target="_blank" href="{{ path('api_doc', {_format: 'html', ui: 're_doc'}) }}">
+            {{ 'API Documentation (ReDoc)'|trans({}, 'Admin.Advparameters.Feature') }}
           </a>
         </li>
         <li>
           <a target="_blank" href="{{ path('api_doc', {_format: 'json'}) }}">
-            {{ 'API Documentation (JSON format)'|trans({}, 'Admin.Advparameters.Feature') }}
+            {{ 'API Documentation (JSON)'|trans({}, 'Admin.Advparameters.Feature') }}
           </a>
         </li>
       </ul>

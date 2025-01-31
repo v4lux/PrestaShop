@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import invoicesPage from '@pages/BO/orders/invoices';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boInvoicesPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
@@ -15,8 +13,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_invoices_generateInvoiceByStatus';
 
@@ -93,38 +89,38 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
         boOrdersViewBlockTabListPage.invoicesLink,
       );
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      const pageTitle = await boInvoicesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
     });
 
     it('should check the error message when we don\'t select a status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoSelectedStatusMessageError', baseContext);
 
       // Generate PDF
-      const textMessage = await invoicesPage.generatePDFByStatusAndFail(page);
-      expect(textMessage).to.equal(invoicesPage.errorMessageWhenNotSelectStatus);
+      const textMessage = await boInvoicesPage.generatePDFByStatusAndFail(page);
+      expect(textMessage).to.equal(boInvoicesPage.errorMessageWhenNotSelectStatus);
     });
 
     it('should check the error message when there is no invoice in the status selected', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceMessageError', baseContext);
 
       // Choose one status
-      await invoicesPage.chooseStatus(page, dataOrderStatuses.canceled.name);
+      await boInvoicesPage.chooseStatus(page, dataOrderStatuses.canceled.name);
 
       // Generate PDF
-      const textMessage = await invoicesPage.generatePDFByStatusAndFail(page);
-      expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByStatus);
+      const textMessage = await boInvoicesPage.generatePDFByStatusAndFail(page);
+      expect(textMessage).to.equal(boInvoicesPage.errorMessageWhenGenerateFileByStatus);
     });
 
     it('should choose the statuses, generate the invoice and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectStatusesAndCheckInvoiceExistence', baseContext);
 
       // Choose 2 statuses
-      await invoicesPage.chooseStatus(page, dataOrderStatuses.paymentAccepted.name);
-      await invoicesPage.chooseStatus(page, dataOrderStatuses.shipped.name);
+      await boInvoicesPage.chooseStatus(page, dataOrderStatuses.paymentAccepted.name);
+      await boInvoicesPage.chooseStatus(page, dataOrderStatuses.shipped.name);
 
       // Generate PDF
-      filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
+      filePath = await boInvoicesPage.generatePDFByStatusAndDownload(page);
       expect(filePath).to.not.eq(null);
 
       // Check that file exist
@@ -138,10 +134,10 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'selectOneStatusAndCheckInvoiceExistence', baseContext);
 
       // Choose one status
-      await invoicesPage.chooseStatus(page, dataOrderStatuses.paymentAccepted.name);
+      await boInvoicesPage.chooseStatus(page, dataOrderStatuses.paymentAccepted.name);
 
       // Generate PDF
-      filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
+      filePath = await boInvoicesPage.generatePDFByStatusAndDownload(page);
       expect(filePath).to.not.eq(null);
 
       // Check that file exist

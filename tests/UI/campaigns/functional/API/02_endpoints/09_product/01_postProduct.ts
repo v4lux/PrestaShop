@@ -5,15 +5,13 @@ import testContext from '@utils/testContext';
 import {deleteAPIClientTest} from '@commonTests/BO/advancedParameters/authServer';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 
-// Import pages
-import createProductsPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
 import {
   type APIRequestContext,
   boApiClientsPage,
   boApiClientsCreatePage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   boDashboardPage,
   boLoginPage,
@@ -226,35 +224,35 @@ describe('API : POST /product', async () => {
 
       await boProductsPage.goToProductPage(page, 1);
 
-      const pageTitle: string = await createProductsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should check the JSON Response : `type`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseType', baseContext);
 
-      const value = await createProductsPage.getProductType(page);
+      const value = await boProductsCreatePage.getProductType(page);
       expect(value).to.equal(jsonResponse.type);
     });
 
     it('should check the JSON Response : `active`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseActive', baseContext);
 
-      const value = await createProductsPage.getProductStatus(page);
+      const value = await boProductsCreatePage.getProductStatus(page);
       expect(value).to.equal(jsonResponse.active);
     });
 
     it('should check the JSON Response : `names` (EN)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseNamesEN', baseContext);
 
-      const value = await createProductsPage.getProductName(page, dataLanguages.english.isoCode);
+      const value = await boProductsCreatePage.getProductName(page, dataLanguages.english.isoCode);
       expect(value).to.equal(jsonResponse.names[dataLanguages.english.locale]);
     });
 
     it('should check the JSON Response : `names` (FR)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseNamesFR', baseContext);
 
-      const value = await createProductsPage.getProductName(page, dataLanguages.french.isoCode);
+      const value = await boProductsCreatePage.getProductName(page, dataLanguages.french.isoCode);
       expect(value).to.equal(jsonResponse.names[dataLanguages.french.locale]);
     });
 

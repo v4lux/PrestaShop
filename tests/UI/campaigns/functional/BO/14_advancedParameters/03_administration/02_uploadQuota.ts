@@ -1,17 +1,14 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import createProductPage from '@pages/BO/catalog/products/add';
-import filesPage from '@pages/BO/catalog/files';
 import addFilePage from '@pages/BO/catalog/files/add';
-
 import {expect} from 'chai';
+
 import {
   boAdministrationPage,
   boDashboardPage,
+  boFilesPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   boProductsCreateTabVirtualProductPage,
   type BrowserContext,
@@ -118,16 +115,16 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
         boDashboardPage.catalogParentLink,
         boDashboardPage.filesLink,
       );
-      await filesPage.closeSfToolBar(page);
+      await boFilesPage.closeSfToolBar(page);
 
-      const pageTitle = await filesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(filesPage.pageTitle);
+      const pageTitle = await boFilesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFilesPage.pageTitle);
     });
 
     it('should go to new file page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewFilePage', baseContext);
 
-      await filesPage.goToAddNewFilePage(page);
+      await boFilesPage.goToAddNewFilePage(page);
 
       const pageTitle = await addFilePage.getPageTitle(page);
       expect(pageTitle).to.contains(addFilePage.pageTitle);
@@ -146,14 +143,14 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'createFileAndCheckSuccess', baseContext);
 
       const result = await addFilePage.createEditFile(page, secondFileData);
-      expect(result).to.equal(filesPage.successfulCreationMessage);
+      expect(result).to.equal(boFilesPage.successfulCreationMessage);
     });
 
     it('should delete the created file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFile', baseContext);
 
-      const result = await filesPage.deleteFile(page, 1);
-      expect(result).to.be.equal(filesPage.successfulDeleteMessage);
+      const result = await boFilesPage.deleteFile(page, 1);
+      expect(result).to.be.equal(boFilesPage.successfulDeleteMessage);
     });
   });
 
@@ -205,8 +202,8 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
       await boProductsPage.selectProductType(page, firstVirtualProductData.type);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -214,16 +211,16 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should try to add a file in virtual tab > 2 MB and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct1', baseContext);
 
-      await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
+      await boProductsCreatePage.setProductName(page, firstVirtualProductData.name, 'en');
       await boProductsCreateTabVirtualProductPage.setVirtualProduct(page, firstVirtualProductData);
-      await createProductPage.clickOnSaveProductButton(page);
+      await boProductsCreatePage.clickOnSaveProductButton(page);
 
       const errorMessage = await boProductsCreateTabVirtualProductPage.getErrorMessageInDownloadFileInput(page);
       expect(errorMessage).to.contains('The file is too large')
@@ -235,14 +232,14 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
       await boProductsCreateTabVirtualProductPage.setVirtualProduct(page, secondVirtualProductData);
 
-      const createProductMessage = await createProductPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should delete the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCreatedProduct', baseContext);
 
-      const createProductMessage = await createProductPage.deleteProduct(page);
+      const createProductMessage = await boProductsCreatePage.deleteProduct(page);
       expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });
@@ -295,8 +292,8 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
       await boProductsPage.selectProductType(page, firstStandardProductData.type);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -304,38 +301,38 @@ describe('BO - Advanced Parameters - Administration : Upload quota', async () =>
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create standard product and add an image size > 1MB then check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckErrorMessage', baseContext);
 
-      await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
+      await boProductsCreatePage.setProductName(page, firstVirtualProductData.name, 'en');
       await boProductsCreateTabDescriptionPage.uploadProductImages(
         page,
         [firstStandardProductData.coverImage, firstStandardProductData.thumbImage],
       );
 
-      const message = await createProductPage.getGrowlMessageContent(page);
+      const message = await boProductsCreatePage.getGrowlMessageContent(page);
       expect(message).to.eq('Max file size allowed is "1048576" bytes.');
     });
 
     it('should create standard product and add an image size < 1MB then check the validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addImageAndCheckSuccessMessage', baseContext);
 
-      await createProductPage.setProductName(page, firstVirtualProductData.name, 'en');
+      await boProductsCreatePage.setProductName(page, firstVirtualProductData.name, 'en');
       await boProductsCreateTabDescriptionPage.uploadProductImages(page,
         [secondStandardProductData.coverImage, secondStandardProductData.thumbImage]);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should delete the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFile2', baseContext);
 
-      const createProductMessage = await createProductPage.deleteProduct(page);
+      const createProductMessage = await boProductsCreatePage.deleteProduct(page);
       expect(createProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });

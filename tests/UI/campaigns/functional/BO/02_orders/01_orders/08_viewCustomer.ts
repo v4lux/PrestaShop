@@ -1,10 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import viewCustomerPage from '@pages/BO/customers/view';
+import {expect} from 'chai';
 
 import {
+  boCustomersViewPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
@@ -13,8 +11,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_orders_viewCustomer';
 
@@ -88,9 +84,9 @@ describe('BO - Orders : View customer from orders page', async () => {
     // Click on customer link first row
     page = await boOrdersPage.viewCustomer(page, 1);
 
-    const pageTitle = await viewCustomerPage.getPageTitle(page);
+    const pageTitle = await boCustomersViewPage.getPageTitle(page);
     expect(pageTitle).to
-      .eq(viewCustomerPage.pageTitle(`${dataCustomers.johnDoe.firstName[0]}. ${dataCustomers.johnDoe.lastName}`));
+      .eq(boCustomersViewPage.pageTitle(`${dataCustomers.johnDoe.firstName[0]}. ${dataCustomers.johnDoe.lastName}`));
   });
 
   it('should go back to \'Orders > Orders\' page', async function () {

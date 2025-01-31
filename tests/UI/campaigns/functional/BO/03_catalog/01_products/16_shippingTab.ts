@@ -1,13 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import createProductPage from '@pages/BO/catalog/products/add';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabShippingPage,
   boProductsCreateTabStocksPage,
   boProductSettingsPage,
@@ -21,8 +19,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_catalog_products_shippingTab';
 
@@ -96,15 +92,15 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
       await boProductsPage.selectProductType(page, newProductData.type);
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-      const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -115,8 +111,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabShippingPage.setPackageDimension(page, editProductData);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should edit delivery time to \'None\'', async function () {
@@ -124,14 +120,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabShippingPage.setDeliveryTime(page, editProductData.deliveryTime);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       await foClassicProductPage.changeLanguage(page, 'en');
 
@@ -151,8 +147,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should edit delivery time to \'Default delivery time\'', async function () {
@@ -160,14 +156,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabShippingPage.setDeliveryTime(page, 'Default delivery time');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       await foClassicProductPage.changeLanguage(page, 'en');
 
@@ -187,8 +183,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should click on \'Edit delivery time\' link', async function () {
@@ -205,8 +201,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await boProductSettingsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should edit delivery time to \'Specific delivery time\'', async function () {
@@ -214,8 +210,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabShippingPage.setDeliveryTime(page, 'Specific delivery time');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should set delivery time of in-stock products and out-of-stock products', async function () {
@@ -224,14 +220,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
       await boProductsCreateTabShippingPage.setDeliveryTimeInStockProducts(page, '1 Day');
       await boProductsCreateTabShippingPage.setDeliveryTimeOutOfStockProducts(page, '12 Days');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct3', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       await foClassicProductPage.changeLanguage(page, 'en');
 
@@ -251,8 +247,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should update the product quantity to 0', async function () {
@@ -260,8 +256,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabStocksPage.setProductStock(page, editProductData);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should allow order when out of stock', async function () {
@@ -269,14 +265,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Allow orders');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct4', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       await foClassicProductPage.changeLanguage(page, 'en');
 
@@ -296,8 +292,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should set additional shipping costs', async function () {
@@ -305,14 +301,14 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabShippingPage.setAdditionalShippingCosts(page, 10);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct5', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       await foClassicProductPage.changeLanguage(page, 'en');
 
@@ -368,8 +364,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should select available carrier', async function () {
@@ -377,15 +373,15 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 'Click and collect');
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.eq(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct6', baseContext);
 
       // Click on preview button
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       await foClassicProductPage.changeLanguage(page, 'en');
 
@@ -416,8 +412,8 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
 
       page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
   });
 
@@ -426,7 +422,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const deleteProductMessage = await createProductPage.deleteProduct(page);
+      const deleteProductMessage = await boProductsCreatePage.deleteProduct(page);
       expect(deleteProductMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
   });

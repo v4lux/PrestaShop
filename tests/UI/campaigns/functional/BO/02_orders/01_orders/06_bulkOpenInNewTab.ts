@@ -1,17 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import commonTests
+import {expect} from 'chai';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
-
-// Import BO pages
-import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBlockCustomersPage,
   type BrowserContext,
   dataPaymentMethods,
   dataProducts,
@@ -21,8 +17,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext = 'functional_BO_orders_orders_bulkOpenInNewTab';
 
@@ -118,15 +112,15 @@ describe('BO - Orders : Bulk open on new tab', async () => {
 
       page = await boOrdersPage.bulkOpenInNewTabs(page, false, [1, 2]);
 
-      const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockCustomersPage.pageTitle);
     });
 
     it('should check the first opened order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderPage', baseContext);
 
       // Check second customer information
-      const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(page);
+      const customerInfo = await boOrdersViewBlockCustomersPage.getCustomerInfoBlock(page);
       expect(customerInfo).to.contains(secondCustomerData.socialTitle);
       expect(customerInfo).to.contains(secondCustomerData.firstName);
       expect(customerInfo).to.contains(secondCustomerData.lastName);
@@ -135,17 +129,17 @@ describe('BO - Orders : Bulk open on new tab', async () => {
     it('should close the tab and check that the second order page is opened', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFirstOrderPage', baseContext);
 
-      page = await orderPageCustomerBlock.closePage(browserContext, page, 1);
+      page = await boOrdersViewBlockCustomersPage.closePage(browserContext, page, 1);
 
-      const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
-      expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockCustomersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockCustomersPage.pageTitle);
     });
 
     it('should check the second order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSecondOrderPage', baseContext);
 
       // Check second customer information
-      const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(page);
+      const customerInfo = await boOrdersViewBlockCustomersPage.getCustomerInfoBlock(page);
       expect(customerInfo).to.contains(firstCustomerData.socialTitle);
       expect(customerInfo).to.contains(firstCustomerData.firstName);
       expect(customerInfo).to.contains(firstCustomerData.lastName);

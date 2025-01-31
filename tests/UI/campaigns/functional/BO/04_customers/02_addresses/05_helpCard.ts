@@ -1,11 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import addressesPage from '@pages/BO/customers/addresses';
-
 import {expect} from 'chai';
+
 import {
+  boAddressesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
@@ -49,24 +46,24 @@ describe('BO - Customers - Addresses - Help card on addresses page', async () =>
       boDashboardPage.addressesLink,
     );
 
-    const pageTitle = await addressesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(addressesPage.pageTitle);
+    const pageTitle = await boAddressesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAddressesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await addressesPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await boAddressesPage.openHelpSideBar(page);
     expect(isHelpSidebarVisible).to.eq(true);
 
-    const documentURL = await addressesPage.getHelpDocumentURL(page);
+    const documentURL = await boAddressesPage.getHelpDocumentURL(page);
     expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarNotVisible = await addressesPage.closeHelpSideBar(page);
+    const isHelpSidebarNotVisible = await boAddressesPage.closeHelpSideBar(page);
     expect(isHelpSidebarNotVisible).to.eq(true);
   });
 });

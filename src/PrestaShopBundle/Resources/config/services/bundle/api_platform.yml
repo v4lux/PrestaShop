@@ -2,18 +2,56 @@
 services:
   _defaults:
     public: false
+    bind:
+      $commandsAndQueries: '%prestashop.commands_and_queries%'
 
-  # Configuration to automatically inject normalizers into DomainSerializer
-  PrestaShopBundle\ApiPlatform\Normalizer\:
-    resource: "../../../../ApiPlatform/Normalizer/*"
+  # We have to register the normalizers manually because the autoconfigured priority vie getDefaultPriority doesn't seem to work
+  # Must be the last normalizer executed after all the subtypes hae been handled
+  PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer:
     autowire: true
-    tags: [ 'prestashop.api.normalizers' ]
+    tags:
+      - { name: 'serializer.normalizer', priority: -1 }
+  PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\ShopConstraintNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\UploadedFileNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\ValueObjectNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
 
-  # This is a custom serializer used by our custom providers/processors for ApiPlatform
-  PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer:
-    class: PrestaShopBundle\ApiPlatform\Serializer\DomainSerializer
+  PrestaShopBundle\ApiPlatform\NormalizationMapper:
+    autowire: true
+
+  # This is a custom serializer that handles localized values and normalization mapping
+  PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer:
+    autowire: true
+    decorates: 'api_platform.serializer'
     arguments:
-      - !tagged_iterator { tag: prestashop.api.normalizers, default_priority_method: getNormalizerPriority }
+      $decorated: '@.inner'
+
+  PrestaShopBundle\ApiPlatform\ContextParametersProvider:
+    autowire: true
+  PrestaShopBundle\ApiPlatform\LocalizedValueUpdater:
+    autowire: true
+
+  # This is a custom validator for CQRS commands
+  PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidator:
+    autowire: true
+    arguments:
+      $validatorMetadataFactory: '@validator.mapping.class_metadata_factory'
 
   # Customer provider for CQRS queries
   PrestaShopBundle\ApiPlatform\Provider\QueryProvider:

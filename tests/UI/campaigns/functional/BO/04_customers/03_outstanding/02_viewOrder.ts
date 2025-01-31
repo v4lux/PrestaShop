@@ -1,5 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
@@ -7,12 +7,12 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   type BrowserContext,
   dataCustomers,
   dataOrderStatuses,
@@ -22,8 +22,6 @@ import {
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_customers_outstanding_viewOrder';
 
@@ -162,8 +160,8 @@ describe('BO - Customers - Outstanding : View order', async () => {
 
       await outstandingPage.viewOrder(page, 'actions', 1);
 
-      const outstandingOrderId = await viewOrderBasePage.getOrderID(page);
-      const outstandingOrderReference = await viewOrderBasePage.getOrderReference(page);
+      const outstandingOrderId = await boOrdersViewBasePage.getOrderID(page);
+      const outstandingOrderReference = await boOrdersViewBasePage.getOrderReference(page);
 
       [
         {args: {columnName: outstandingOrderId, result: orderId}},

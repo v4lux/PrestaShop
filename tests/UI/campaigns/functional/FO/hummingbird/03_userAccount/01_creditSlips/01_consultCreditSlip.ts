@@ -10,16 +10,14 @@ import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
-// Import BO pages
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import creditSlipPage from '@pages/FO/hummingbird/myAccount/creditSlips';
-import orderDetailsPage from '@pages/FO/hummingbird/myAccount/orderDetails';
 
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   type BrowserContext,
@@ -32,6 +30,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderDetailsPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -201,28 +200,28 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         // View order
         await boOrdersPage.goToOrder(page, 1);
 
-        const pageTitle = await viewOrderBasePage.getPageTitle(page);
-        expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+        const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
       });
 
       it(`should change the order status to '${dataOrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderBasePage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
+        const result = await boOrdersViewBasePage.modifyOrderStatus(page, dataOrderStatuses.paymentAccepted.name);
         expect(result).to.equal(dataOrderStatuses.paymentAccepted.name);
       });
 
       it('should check if the button \'Partial Refund\' is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton', baseContext);
 
-        const result = await viewOrderBasePage.isPartialRefundButtonVisible(page);
+        const result = await boOrdersViewBasePage.isPartialRefundButtonVisible(page);
         expect(result).to.eq(true);
       });
 
       it('should create \'Partial refund\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
 
-        await viewOrderBasePage.clickOnPartialRefund(page);
+        await boOrdersViewBasePage.clickOnPartialRefund(page);
 
         const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(page, 1, 1);
         expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
@@ -247,7 +246,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
         // Get document name
-        orderReference = await viewOrderBasePage.getOrderReference(page);
+        orderReference = await boOrdersViewBasePage.getOrderReference(page);
         expect(orderReference).is.not.equal('');
       });
 
@@ -269,7 +268,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_1', baseContext);
 
         // View my shop and init pages
-        page = await viewOrderBasePage.viewMyShop(page);
+        page = await boOrdersViewBasePage.viewMyShop(page);
         await foHummingbirdHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foHummingbirdHomePage.isHomePage(page);
@@ -359,8 +358,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await creditSlipPage.clickOrderReference(page, 1);
 
-        const pageTitle = await orderDetailsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+        const pageTitle = await foHummingbirdMyOrderDetailsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdMyOrderDetailsPage.pageTitle);
       });
 
       it('should go to credit slips page', async function () {

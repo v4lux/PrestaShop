@@ -1,24 +1,17 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
-// Import pages
-// Import BO pages
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-// Import FO pages
-import {merchandiseReturnsPage as foMerchandiseReturnsPage} from '@pages/FO/classic/myAccount/merchandiseReturns';
-import {orderDetailsPage} from '@pages/FO/classic/myAccount/orderDetails';
-import {orderHistoryPage} from '@pages/FO/classic/myAccount/orderHistory';
-
 import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
   boOrdersPage,
+  boOrdersViewBasePage,
   type BrowserContext,
   dataCustomers,
   dataModules,
@@ -29,6 +22,9 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyMerchandiseReturnsPage,
+  foClassicMyOrderDetailsPage,
+  foClassicMyOrderHistoryPage,
   type MailDev,
   type MailDevEmail,
   modPsEmailAlertsBoMain,
@@ -36,8 +32,6 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'modules_ps_emailalerts_configuration_merchantNotifications_enableDisableReturn';
 
@@ -222,7 +216,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await viewOrderBasePage.viewMyShop(page);
+      page = await boOrdersViewBasePage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -253,26 +247,26 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await orderHistoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-      await orderHistoryPage.goToDetailsPage(page, 1);
+      await foClassicMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+      const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
       expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      await orderDetailsPage.requestMerchandiseReturn(page, 'message test');
+      await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page, 'message test');
 
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {
@@ -284,10 +278,10 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should close the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeShop', baseContext);
 
-      page = await foMerchandiseReturnsPage.closePage(browserContext, page, 0);
+      page = await foClassicMyMerchandiseReturnsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
   });
 
@@ -334,7 +328,7 @@ describe('Mail alerts module - Enable/Disable return', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
-      page = await viewOrderBasePage.viewMyShop(page);
+      page = await boOrdersViewBasePage.viewMyShop(page);
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
@@ -355,26 +349,26 @@ describe('Mail alerts module - Enable/Disable return', async () => {
 
       await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await orderHistoryPage.getPageTitle(page);
-      expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should go to the second order in the list and check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible2', baseContext);
 
-      await orderHistoryPage.goToDetailsPage(page, 2);
+      await foClassicMyOrderHistoryPage.goToDetailsPage(page, 2);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+      const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
       expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn2', baseContext);
 
-      await orderDetailsPage.requestMerchandiseReturn(page, 'message test');
+      await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page, 'message test');
 
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
     });
 
     it('should check that the confirmation mail is in mailbox', async function () {

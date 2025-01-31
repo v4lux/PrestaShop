@@ -1,15 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
-import addProductPage from '@pages/BO/catalog/products/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabDescriptionPage,
   boShopParametersPage,
   type BrowserContext,
@@ -101,8 +97,8 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
 
         await boProductsPage.goToProductPage(page, 1);
 
-        const pageTitle = await addProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
 
       it('should add an iframe in the product description', async function () {
@@ -113,17 +109,17 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/33921
         // To delete after the fix of the issue
         if (test.args.action === 'Disable') {
-          await addProductPage.clickOnSaveProductButton(page);
+          await boProductsCreatePage.clickOnSaveProductButton(page);
         } else {
-          const message = await addProductPage.saveProduct(page);
-          expect(message).to.eq(addProductPage.successfulUpdateMessage);
+          const message = await boProductsCreatePage.saveProduct(page);
+          expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
         }
       });
 
       it('should preview the product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `previewProduct${index}`, baseContext);
 
-        page = await addProductPage.previewProduct(page);
+        page = await boProductsCreatePage.previewProduct(page);
         await foClassicProductPage.changeLanguage(page, 'en');
 
         const pageTitle = await foClassicProductPage.getPageTitle(page);
@@ -147,8 +143,8 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
 
         page = await foClassicProductPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await addProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
     });
   });
@@ -174,8 +170,8 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
 
       await boProductsPage.goToProductPage(page, 1);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should reset the product description', async function () {
@@ -184,8 +180,8 @@ describe('BO - Shop Parameters - General : Enable/Disable Allow iframes on HTML 
       await boProductsCreateTabDescriptionPage.setIframeInDescription(page, '');
       await boProductsCreateTabDescriptionPage.setDescription(page, dataProducts.demo_14.description);
 
-      const message = await addProductPage.saveProduct(page);
-      expect(message).to.eq(addProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 });

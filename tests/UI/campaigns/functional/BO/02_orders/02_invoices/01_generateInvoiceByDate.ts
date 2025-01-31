@@ -1,11 +1,9 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import invoicesPage from '@pages/BO/orders/invoices';
+import {expect} from 'chai';
 
 import {
   boDashboardPage,
+  boInvoicesPage,
   boLoginPage,
   boOrdersPage,
   boOrdersViewBlockTabListPage,
@@ -16,8 +14,6 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_invoices_generateInvoiceByDate';
 
@@ -100,15 +96,15 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
         boOrdersViewBlockTabListPage.invoicesLink,
       );
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      const pageTitle = await boInvoicesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
+      filePath = await boInvoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
 
       const exist = await utilsFile.doesFileExist(filePath);
       expect(exist, 'File does not exist').to.eq(true);
@@ -118,9 +114,9 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentInvoice', baseContext);
 
       // Generate PDF
-      const textMessage = await invoicesPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      const textMessage = await boInvoicesPage.generatePDFByDateAndFail(page, futureDate, futureDate);
 
-      expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByDate);
+      expect(textMessage).to.equal(boInvoicesPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

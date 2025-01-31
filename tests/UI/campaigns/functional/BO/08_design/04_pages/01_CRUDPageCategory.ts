@@ -1,5 +1,5 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
 // Import BO pages
@@ -8,9 +8,7 @@ import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
 import cmsPage from '@pages/FO/classic/cms';
-import {siteMapPage} from '@pages/FO/classic/siteMap';
 
-import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
@@ -18,6 +16,7 @@ import {
   FakerCMSCategory,
   FakerCMSPage,
   foClassicHomePage,
+  foClassicSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -157,21 +156,21 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
-      const pageTitle = await siteMapPage.getPageTitle(page);
-      expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      const pageTitle = await foClassicSitemapPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
     });
 
     it('should check the created category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO1', baseContext);
 
-      const pageCategoryName = await siteMapPage.getPageCategoryName(page, categoryID);
+      const pageCategoryName = await foClassicSitemapPage.getPageCategoryName(page, categoryID);
       expect(pageCategoryName).to.contains(createCategoryData.name);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await siteMapPage.closePage(browserContext, page, 0);
+      page = await foClassicSitemapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await pagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(pagesPage.pageTitle);
@@ -329,21 +328,21 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
-      const pageTitle = await siteMapPage.getPageTitle(page);
-      expect(pageTitle).to.equal(siteMapPage.pageTitle);
+      const pageTitle = await foClassicSitemapPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
     });
 
     it('should check the updated category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCategoryFO2', baseContext);
 
-      const pageCategoryName = await siteMapPage.getPageCategoryName(page, categoryID);
+      const pageCategoryName = await foClassicSitemapPage.getPageCategoryName(page, categoryID);
       expect(pageCategoryName).to.contains(editCategoryData.name);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-      page = await siteMapPage.closePage(browserContext, page, 0);
+      page = await foClassicSitemapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await pagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(pagesPage.pageTitle);

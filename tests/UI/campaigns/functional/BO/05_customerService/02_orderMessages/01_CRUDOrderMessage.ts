@@ -1,14 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import pages
-import orderMessagesPage from '@pages/BO/customerService/orderMessages';
 import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 
-import {expect} from 'chai';
 import {
   boDashboardPage,
   boLoginPage,
+  boOrderMessagesPage,
   type BrowserContext,
   FakerOrderMessage,
   type Page,
@@ -58,16 +57,16 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
       boDashboardPage.customerServiceParentLink,
       boDashboardPage.orderMessagesLink,
     );
-    await orderMessagesPage.closeSfToolBar(page);
+    await boOrderMessagesPage.closeSfToolBar(page);
 
-    const pageTitle = await orderMessagesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
+    const pageTitle = await boOrderMessagesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderMessagesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfOrderMessages = await orderMessagesPage.resetAndGetNumberOfLines(page);
+    numberOfOrderMessages = await boOrderMessagesPage.resetAndGetNumberOfLines(page);
     expect(numberOfOrderMessages).to.be.above(0);
   });
 
@@ -76,7 +75,7 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
     it('should go to new order message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewOrderMessagePage', baseContext);
 
-      await orderMessagesPage.goToAddNewOrderMessagePage(page);
+      await boOrderMessagesPage.goToAddNewOrderMessagePage(page);
 
       const pageTitle = await addOrderMessagePage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
@@ -86,13 +85,13 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderMessage', baseContext);
 
       const result = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
-      expect(result).to.equal(orderMessagesPage.successfulCreationMessage);
+      expect(result).to.equal(boOrderMessagesPage.successfulCreationMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterCreate', baseContext);
 
-      const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderMessagesAfterReset = await boOrderMessagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 1);
     });
   });
@@ -102,19 +101,19 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
     it(`should filter by name '${createOrderMessageData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
-      await orderMessagesPage.filterTable(page, 'name', createOrderMessageData.name);
+      await boOrderMessagesPage.filterTable(page, 'name', createOrderMessageData.name);
 
-      const numberOfOrderMessagesAfterFilter = await orderMessagesPage.getNumberOfElementInGrid(page);
+      const numberOfOrderMessagesAfterFilter = await boOrderMessagesPage.getNumberOfElementInGrid(page);
       expect(numberOfOrderMessagesAfterFilter).to.be.at.most(numberOfOrderMessages + 1);
 
-      const textColumn = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
+      const textColumn = await boOrderMessagesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(createOrderMessageData.name);
     });
 
     it('should go to edit first order message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-      await orderMessagesPage.gotoEditOrderMessage(page, 1);
+      await boOrderMessagesPage.gotoEditOrderMessage(page, 1);
 
       const pageTitle = await addOrderMessagePage.getPageTitle(page);
       expect(pageTitle).to.contains(addOrderMessagePage.pageTitleEdit);
@@ -124,13 +123,13 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderMessage', baseContext);
 
       const result = await addOrderMessagePage.addEditOrderMessage(page, editOrderMessageData);
-      expect(result).to.equal(orderMessagesPage.successfulUpdateMessage);
+      expect(result).to.equal(boOrderMessagesPage.successfulUpdateMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterUpdate', baseContext);
 
-      const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderMessagesAfterReset = await boOrderMessagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 1);
     });
   });
@@ -140,12 +139,12 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
     it(`should filter by name '${editOrderMessageData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await orderMessagesPage.filterTable(page, 'name', editOrderMessageData.name);
+      await boOrderMessagesPage.filterTable(page, 'name', editOrderMessageData.name);
 
-      const numberOfOrderMessagesAfterFilter = await orderMessagesPage.getNumberOfElementInGrid(page);
+      const numberOfOrderMessagesAfterFilter = await boOrderMessagesPage.getNumberOfElementInGrid(page);
       expect(numberOfOrderMessagesAfterFilter).to.be.at.most(numberOfOrderMessages + 1);
 
-      const textColumn = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
+      const textColumn = await boOrderMessagesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(editOrderMessageData.name);
     });
 
@@ -153,14 +152,14 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderMessage', baseContext);
 
       // delete order message in first row
-      const result = await orderMessagesPage.deleteOrderMessage(page, 1);
-      expect(result).to.be.equal(orderMessagesPage.successfulDeleteMessage);
+      const result = await boOrderMessagesPage.deleteOrderMessage(page, 1);
+      expect(result).to.be.equal(boOrderMessagesPage.successfulDeleteMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderMessagesAfterReset = await boOrderMessagesPage.resetAndGetNumberOfLines(page);
       expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages);
     });
   });

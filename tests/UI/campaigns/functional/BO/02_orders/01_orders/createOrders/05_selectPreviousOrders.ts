@@ -1,20 +1,19 @@
 // Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import addOrderPage from '@pages/BO/orders/add';
-import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
-
 import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersCreatePage,
+  boOrdersViewBlockCustomersPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   type BrowserContext,
@@ -30,8 +29,6 @@ import {
   utilsDate,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-
-import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_orders_orders_createOrders_selectPreviousOrders';
 
@@ -183,16 +180,16 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
 
       await boOrdersPage.goToCreateOrderPage(page);
 
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
     });
 
     it(`should choose customer ${newCustomer.firstName} ${newCustomer.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, newCustomer.email);
+      await boOrdersCreatePage.searchCustomer(page, newCustomer.email);
 
-      const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
+      const isCartsTableVisible = await boOrdersCreatePage.chooseCustomer(page);
       expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
   });
@@ -202,21 +199,21 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should go to \'Orders\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectOrdersTab', baseContext);
 
-      const isOrdersTableVisible = await addOrderPage.clickOnOrdersTab(page);
+      const isOrdersTableVisible = await boOrdersCreatePage.clickOnOrdersTab(page);
       expect(isOrdersTableVisible, 'Orders table is not visible!').to.eq(true);
     });
 
     it('should check that there is only one order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersNumber', baseContext);
 
-      const ordersNumber = await addOrderPage.getOrdersNumber(page);
+      const ordersNumber = await boOrdersCreatePage.getOrdersNumber(page);
       expect(ordersNumber, 'Orders number is not correct!').to.be.equal(1);
     });
 
     it('should check the order \'id\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIdOrder', baseContext);
 
-      const textResult = await addOrderPage.getTextFromOrdersTable(page, 'id');
+      const textResult = await boOrdersCreatePage.getTextFromOrdersTable(page, 'id');
       expect(textResult, 'The \'id\' value is not correct!').to.contains(orderID);
     });
 
@@ -230,7 +227,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
       it(`should check the order '${test.args.columnName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.columnName}Order`, baseContext);
 
-        const textResult = await addOrderPage.getTextFromOrdersTable(page, test.args.columnName);
+        const textResult = await boOrdersCreatePage.getTextFromOrdersTable(page, test.args.columnName);
         expect(textResult, `The '${test.args.columnName}' value is not correct!`).to.contains(test.args.content);
       });
     });
@@ -241,17 +238,17 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should click on \'Details\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDetailsButton', baseContext);
 
-      const isIframeVisible = await addOrderPage.clickOnOrderDetailsButton(page);
+      const isIframeVisible = await boOrdersCreatePage.clickOnOrderDetailsButton(page);
       expect(isIframeVisible, 'View order Iframe is not visible!').to.eq(true);
     });
 
     it('should check customer title, name, lastname', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInfo', baseContext);
 
-      orderIframe = addOrderPage.getOrderIframe(page, orderID);
+      orderIframe = boOrdersCreatePage.getOrderIframe(page, orderID);
       expect(orderIframe).to.not.eq(null);
 
-      const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(orderIframe!);
+      const customerInfo = await boOrdersViewBlockCustomersPage.getCustomerInfoBlock(orderIframe!);
       expect(customerInfo).to.contains(newCustomer.socialTitle);
       expect(customerInfo).to.contains(newCustomer.firstName);
       expect(customerInfo).to.contains(newCustomer.lastName);
@@ -297,21 +294,21 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should close the order Iframe', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeOrderIframe', baseContext);
 
-      const isIframeNotVisible = await addOrderPage.closeIframe(page);
+      const isIframeNotVisible = await boOrdersCreatePage.closeIframe(page);
       expect(isIframeNotVisible, 'Order iframe still visible!').to.eq(true);
     });
 
     it('should click on \'Use\' button and check that product table is visible on \'Cart\' block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnUseButton', baseContext);
 
-      const isProductTableVisible = await addOrderPage.clickOnOrderUseButton(page);
+      const isProductTableVisible = await boOrdersCreatePage.clickOnOrderUseButton(page);
       expect(isProductTableVisible, 'Product table is not visible!').to.eq(true);
     });
 
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
+      await boOrdersCreatePage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
       expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);

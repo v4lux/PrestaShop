@@ -1,17 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import FO pages
-import {siteMapPage} from '@pages/FO/classic/siteMap';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boShopParametersPage,
   type BrowserContext,
   foClassicHomePage,
+  foClassicSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -91,21 +87,21 @@ describe('BO - Shop Parameters - General : Enable/Disable display best sellers',
 
         await foClassicHomePage.goToFooterLink(page, 'Sitemap');
 
-        const pageTitle = await siteMapPage.getPageTitle(page);
-        expect(pageTitle).to.equal(siteMapPage.pageTitle);
+        const pageTitle = await foClassicSitemapPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
       });
 
       it('should verify the existence of the best sellers page link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkBestSellersPage_${test.args.action}`, baseContext);
 
-        const exist = await siteMapPage.isBestSellersLinkVisible(page);
+        const exist = await foClassicSitemapPage.isBestSellersLinkVisible(page);
         expect(exist).to.equal(test.args.exist);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-        page = await siteMapPage.closePage(browserContext, page, 0);
+        page = await foClassicSitemapPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boShopParametersPage.getPageTitle(page);
         expect(pageTitle).to.contains(boShopParametersPage.pageTitle);

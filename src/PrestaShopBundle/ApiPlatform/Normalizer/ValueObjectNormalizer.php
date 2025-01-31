@@ -168,6 +168,13 @@ class ValueObjectNormalizer implements NormalizerInterface, DenormalizerInterfac
         return $this->isValueObject($data);
     }
 
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'object' => true,
+        ];
+    }
+
     protected function isValueObject(mixed $data): bool
     {
         return is_object($data)

@@ -1,17 +1,13 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-// Import BO pages
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-import addProductPage from '@pages/BO/catalog/products/add';
-import seoTab from '@pages/BO/catalog/products/add/seoTab';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
+  boProductsCreateTabSEOPage,
   type BrowserContext,
   FakerProduct,
   foClassicHomePage,
@@ -77,8 +73,8 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
       await boProductsPage.selectProductType(page, productData.type);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should go to new product page', async function () {
@@ -86,17 +82,17 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-      await addProductPage.closeSfToolBar(page);
+      await boProductsCreatePage.closeSfToolBar(page);
 
-      const createProductMessage = await addProductPage.setProduct(page, productData);
-      expect(createProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     const tests = [
@@ -108,10 +104,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
       it('should go to \'Shop Parameters > SEO & Urls\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToSeoPageTo${test.args.action}`, baseContext);
 
-        await addProductPage.goToSubMenu(
+        await boProductsCreatePage.goToSubMenu(
           page,
-          addProductPage.shopParametersParentLink,
-          addProductPage.trafficAndSeoLink,
+          boProductsCreatePage.shopParametersParentLink,
+          boProductsCreatePage.trafficAndSeoLink,
         );
 
         const pageTitle = await seoAndUrlsPage.getPageTitle(page);
@@ -161,21 +157,21 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
         await boProductsPage.goToProductPage(page, 1);
 
-        const pageTitle = await addProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
 
-        await addProductPage.goToTab(page, 'seo');
-        await seoTab.clickOnGenerateUrlFromNameButton(page);
+        await boProductsCreatePage.goToTab(page, 'seo');
+        await boProductsCreateTabSEOPage.clickOnGenerateUrlFromNameButton(page);
 
-        const updateProductMessage = await addProductPage.saveProduct(page);
-        expect(updateProductMessage).to.equal(addProductPage.successfulUpdateMessage);
+        const updateProductMessage = await boProductsCreatePage.saveProduct(page);
+        expect(updateProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
       });
 
       it('should check the product URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkProductUrl${test.args.action}`, baseContext);
 
         // Go to product page in FO
-        page = await addProductPage.previewProduct(page);
+        page = await boProductsCreatePage.previewProduct(page);
 
         const url = await foClassicHomePage.getCurrentURL(page);
         expect(url).to.contains(test.args.productNameInURL.toLowerCase());
@@ -187,15 +183,15 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         // Go back to BO
         page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await addProductPage.getPageTitle(page);
-        expect(pageTitle).to.contains(addProductPage.pageTitle);
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
       });
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const testResult = await addProductPage.deleteProduct(page);
+      const testResult = await boProductsCreatePage.deleteProduct(page);
       expect(testResult).to.equal(boProductsPage.successfulDeleteMessage);
     });
 

@@ -77,7 +77,7 @@ describe('BO - Login : Check links', async () => {
     page = await boLoginPage.clickOnTwitterLink(page);
 
     const url = await boLoginPage.getCurrentURL(page);
-    expect(url).to.equal('https://x.com/PrestaShop?mx=2');
+    expect(url).to.contains('https://x.com').and.to.contains('PrestaShop');
   });
 
   it('should close the twitter page', async function () {

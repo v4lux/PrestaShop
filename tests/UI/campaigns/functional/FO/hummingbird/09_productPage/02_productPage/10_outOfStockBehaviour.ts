@@ -1,23 +1,16 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import common tests
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import BO pages
-import createProductPage from '@pages/BO/catalog/products/add';
-import movementsPage from '@pages/BO/catalog/stocks/movements';
-
-// Import FO pages
 import blockCartModal from '@pages/FO/hummingbird/modal/blockCart';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
   boProductsPage,
+  boProductsCreatePage,
   boProductsCreateTabStocksPage,
+  boStockMovementsPage,
   type BrowserContext,
   FakerProduct,
   foHummingbirdProductPage,
@@ -117,25 +110,25 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
 
       await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createPackOfProducts', baseContext);
 
-      await createProductPage.closeSfToolBar(page);
+      await boProductsCreatePage.closeSfToolBar(page);
 
-      const createProductMessage = await createProductPage.setProduct(page, newProductData);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, newProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should go to the Stocks tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksTab', baseContext);
 
-      await createProductPage.goToTab(page, 'stock');
+      await boProductsCreatePage.goToTab(page, 'stock');
 
-      const isTabActive = await createProductPage.isTabActive(page, 'stock');
+      const isTabActive = await boProductsCreatePage.isTabActive(page, 'stock');
       expect(isTabActive).to.equal(true);
     });
 
@@ -144,17 +137,17 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
 
       page = await boProductsCreateTabStocksPage.clickViewAllStockMovements(page);
 
-      const pageTitle = await movementsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(movementsPage.pageTitle);
+      const pageTitle = await boStockMovementsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(boStockMovementsPage.pageTitle);
     });
 
     it('should close the Stock Movements page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeStockMovementsPage', baseContext);
 
-      page = await movementsPage.closePage(browserContext, page, 0);
+      page = await boStockMovementsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should fill Stocks values', async function () {
@@ -164,8 +157,8 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
       await boProductsCreateTabStocksPage.setStockLocation(page, 'Second floor');
       await boProductsCreateTabStocksPage.setLowStockAlertByEmail(page, true, 3);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.equal(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should fill When out of stock values', async function () {
@@ -175,14 +168,14 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
       await boProductsCreateTabStocksPage.setLabelWhenOutOfStock(page, 'Out of stock');
       await boProductsCreateTabStocksPage.setAvailabilityDate(page, todayDate);
 
-      const message = await createProductPage.saveProduct(page);
-      expect(message).to.equal(createProductPage.successfulUpdateMessage);
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
@@ -225,8 +218,8 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
       // Go back to BO
       page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should check the deny orders option', async function () {
@@ -235,15 +228,15 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
       await boProductsCreateTabStocksPage.setQuantityDelta(page, -300);
       await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Deny orders');
 
-      const createProductMessage = await createProductPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
       // Click on preview button
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
@@ -265,8 +258,8 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
       // Go back to BO
       page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(createProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should check the allow orders option and set Label when out of stock', async function () {
@@ -274,15 +267,15 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
 
       await boProductsCreateTabStocksPage.setOptionWhenOutOfStock(page, 'Allow orders');
 
-      const createProductMessage = await createProductPage.saveProduct(page);
-      expect(createProductMessage).to.equal(createProductPage.successfulUpdateMessage);
+      const createProductMessage = await boProductsCreatePage.saveProduct(page);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
 
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct3', baseContext);
 
       // Click on preview button
-      page = await createProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
       const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);

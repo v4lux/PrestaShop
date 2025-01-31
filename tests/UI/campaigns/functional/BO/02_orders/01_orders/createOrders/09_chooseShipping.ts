@@ -4,13 +4,11 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
-// Import BO pages
-import addOrderPage from '@pages/BO/orders/add';
-
 import {
   boDashboardPage,
   boLoginPage,
   boOrdersPage,
+  boOrdersCreatePage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
   boOrderSettingsPage,
@@ -137,16 +135,16 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
 
       await boOrdersPage.goToCreateOrderPage(page);
 
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      expect(pageTitle).to.contains(addOrderPage.pageTitle);
+      const pageTitle = await boOrdersCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersCreatePage.pageTitle);
     });
 
     it(`should choose customer ${dataCustomers.johnDoe.firstName} ${dataCustomers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, dataCustomers.johnDoe.email);
+      await boOrdersCreatePage.searchCustomer(page, dataCustomers.johnDoe.email);
 
-      const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
+      const isCartsTableVisible = await boOrdersCreatePage.chooseCustomer(page);
       expect(isCartsTableVisible, 'History block is not visible!').to.eq(true);
     });
   });
@@ -156,7 +154,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check that shipping block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatShippingBlockNotVisible', baseContext);
 
-      const isVisible = await addOrderPage.isShippingBlockVisible(page);
+      const isVisible = await boOrdersCreatePage.isShippingBlockVisible(page);
       expect(isVisible, 'Shipping block is visible!').to.eq(false);
     });
 
@@ -164,9 +162,9 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       const productToSelect = `${dataProducts.demo_11.name} - €${dataProducts.demo_11.price.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, dataProducts.demo_11, productToSelect);
+      await boOrdersCreatePage.addProductToCart(page, dataProducts.demo_11, productToSelect);
 
-      const result = await addOrderPage.getProductDetailsFromTable(page);
+      const result = await boOrdersCreatePage.getProductDetailsFromTable(page);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_11.thumbImage),
         expect(result.description).to.equal(dataProducts.demo_11.name),
@@ -176,14 +174,14 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check that shipping block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatShippingBlockVisible', baseContext);
 
-      const isVisible = await addOrderPage.isShippingBlockVisible(page);
+      const isVisible = await boOrdersCreatePage.isShippingBlockVisible(page);
       expect(isVisible, 'Shipping block is not visible!').to.eq(true);
     });
 
     it(`should choose the carrier '${dataCarriers.myCarrier.name}' and check shipping price`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingBlockContent', baseContext);
 
-      const shippingPriceTTC = await addOrderPage.setDeliveryOption(
+      const shippingPriceTTC = await boOrdersCreatePage.setDeliveryOption(
         page, `${dataCarriers.myCarrier.name} - Delivery next day!`,
       );
       expect(shippingPriceTTC).to.equal(`€${dataCarriers.myCarrier.priceTTC.toFixed(2)}`);
@@ -195,7 +193,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + dataCarriers.myCarrier.price).toFixed(2);
       const totalTaxInc = (dataProducts.demo_12.price + dataCarriers.myCarrier.priceTTC).toFixed(2);
 
-      const result = await addOrderPage.getSummaryDetails(page);
+      const result = await boOrdersCreatePage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalShipping).to.equal(`€${dataCarriers.myCarrier.price.toFixed(2)}`),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExc}`),
@@ -206,16 +204,16 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should enable free shipping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableFreeShipping', baseContext);
 
-      await addOrderPage.setFreeShipping(page, true);
+      await boOrdersCreatePage.setFreeShipping(page, true);
 
-      const shippingPrice = await addOrderPage.getShippingCost(page);
+      const shippingPrice = await boOrdersCreatePage.getShippingCost(page);
       expect(shippingPrice).to.be.equal('€0.00');
     });
 
     it('should re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
-      const result = await addOrderPage.getSummaryDetails(page);
+      const result = await boOrdersCreatePage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxExcluded).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
@@ -226,21 +224,21 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should enable \'Recycled packaging\' and \'Gift\' and add a gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-      await addOrderPage.setRecycledPackaging(page, true);
-      await addOrderPage.setGiftMessage(page, giftMessage);
-      await addOrderPage.setGift(page, true);
+      await boOrdersCreatePage.setRecycledPackaging(page, true);
+      await boOrdersCreatePage.setGiftMessage(page, giftMessage);
+      await boOrdersCreatePage.setGift(page, true);
     });
 
     it('should enable gift and re-check summary block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
-      await addOrderPage.setGift(page, true);
+      await boOrdersCreatePage.setGift(page, true);
 
       const tax = await utilsCore.percentage(giftOptions.price, 10);
       const totalTaxExc = (dataProducts.demo_12.priceTaxExcluded + giftOptions.price).toFixed(2);
       const totalTaxInc = (dataProducts.demo_12.price + giftOptions.price + tax).toFixed(2);
 
-      const result = await addOrderPage.getSummaryDetails(page);
+      const result = await boOrdersCreatePage.getSummaryDetails(page);
       await Promise.all([
         expect(result.totalShipping).to.equal('€0.00'),
         expect(result.totalTaxExcluded).to.equal(`€${totalTaxExc}`),
@@ -251,7 +249,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
+      await boOrdersCreatePage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
       expect(pageTitle).to.contain(boOrdersViewBlockProductsPage.pageTitle);

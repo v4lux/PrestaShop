@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boEmployeesPage,
+  boEmployeesCreatePage,
   boLoginPage,
   type BrowserContext,
   type FakerEmployee,
@@ -71,14 +68,14 @@ function createEmployeeTest(employeeData: FakerEmployee, baseContext: string = '
 
       await boEmployeesPage.goToAddNewEmployeePage(page);
 
-      const pageTitle = await addEmployeePage.getPageTitle(page);
-      expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+      const pageTitle = await boEmployeesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boEmployeesCreatePage.pageTitleCreate);
     });
 
     it('should create employee and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
 
-      const textResult = await addEmployeePage.createEditEmployee(page, employeeData);
+      const textResult = await boEmployeesCreatePage.createEditEmployee(page, employeeData);
       expect(textResult).to.equal(boEmployeesPage.successfulCreationMessage);
     });
   });

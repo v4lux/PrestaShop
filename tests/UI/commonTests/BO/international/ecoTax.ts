@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import BO pages
-import taxesPage from '@pages/BO/international/taxes';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
+  boTaxesPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
@@ -46,16 +43,16 @@ function enableEcoTaxTest(baseContext: string = 'commonTests-enableEcoTaxTest'):
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.internationalParentLink, boDashboardPage.taxesLink);
-      await taxesPage.closeSfToolBar(page);
+      await boTaxesPage.closeSfToolBar(page);
 
-      const pageTitle = await taxesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(taxesPage.pageTitle);
+      const pageTitle = await boTaxesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTaxesPage.pageTitle);
     });
 
     it('should enable ecotax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableEcoTax', baseContext);
 
-      const textResult = await taxesPage.enableEcoTax(page, true);
+      const textResult = await boTaxesPage.enableEcoTax(page, true);
       expect(textResult).to.be.equal('Update successful');
     });
   });
@@ -91,16 +88,16 @@ function disableEcoTaxTest(baseContext: string = 'commonTests-disableEcoTaxTest'
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
       await boDashboardPage.goToSubMenu(page, boDashboardPage.internationalParentLink, boDashboardPage.taxesLink);
-      await taxesPage.closeSfToolBar(page);
+      await boTaxesPage.closeSfToolBar(page);
 
-      const pageTitle = await taxesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(taxesPage.pageTitle);
+      const pageTitle = await boTaxesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTaxesPage.pageTitle);
     });
 
     it('should disable Ecotax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableEcoTax', baseContext);
 
-      const textResult = await taxesPage.enableEcoTax(page, false);
+      const textResult = await boTaxesPage.enableEcoTax(page, false);
       expect(textResult).to.be.equal('Update successful');
     });
   });

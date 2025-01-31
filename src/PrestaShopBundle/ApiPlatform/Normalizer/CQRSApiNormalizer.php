@@ -28,9 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
-use PrestaShopBundle\ApiPlatform\Exception\LocaleNotFoundException;
+use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
-use PrestaShopBundle\Entity\Repository\LangRepository;
+use PrestaShopBundle\ApiPlatform\NormalizationMapper;
+use PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidator;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -49,32 +50,25 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 /**
  * This normalizer is based on the Symfony ObjectNormalizer, but it handles some specific normalization for
  * our CQRS <-> ApiPlatform conversion:
+ *  - detects if a type is a domain class (either because it is detected as a CQRS command or query) or if it is part of the
+ *    PrestaShop\PrestaShop\Core\Domain namespace
+ *  - handle CQRS constructor proper types because the constructor types sometimes don't match their properties, since they are
+ *    transformed into Value Objects, so the regular ObjectNormalizer triggers a type exception
  *  - handle getters that match the property without starting by get, has, is
  *  - set appropriate context for the ValueObjectNormalizer for when we don't want a ValueObject but the scalar value to be used
- *  - converts localized values keys in the arrays on properties that have been flagged as LocalizedValue:
- *    - the input is indexed by locale ['fr-FR' => 'Nom de la valeur', 'en-US' => 'Value name']
- *    - the data is normalized and indexed by locale ID [1 => 'Nom de la valeur', 2 => 'Value name']
- *    - reversely localized data indexed by IDs are converted into an array localized by locale during denormalization
+ *  - if an API resource is denormalized but has an input class from the domain this serializer detects it and automatically deserialize
+ *    the data into the CQRS object, this saves one deserialization process as the command can be passed to the processor directly
+ *  - when CQRS input class switching is detected the normalizer performs a validation of the input,then it build a new context for
+ *    the next serialization so that mapping and localized values are correctly handled
  *  - handle setter methods that use multiple parameters
- *  - handle casting of boolean values
  */
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class CQRSApiNormalizer extends ObjectNormalizer
 {
-    public const CAST_BOOL = 'cast_bool';
-
-    /**
-     * @var array<int, string>
-     */
-    protected array $localesByID;
-
-    /**
-     * @var array<string, int>
-     */
-    protected array $idsByLocale;
-
     public function __construct(
-        protected LangRepository $languageRepository,
+        protected readonly array $commandsAndQueries,
+        protected readonly LocalizedValueUpdater $localizedValueUpdater,
+        protected readonly CQRSApiValidator $CQRSApiValidator,
         ?ClassMetadataFactoryInterface $classMetadataFactory = null,
         ?NameConverterInterface $nameConverter = null,
         ?PropertyAccessorInterface $propertyAccessor = null,
@@ -86,6 +80,90 @@ class CQRSApiNormalizer extends ObjectNormalizer
         parent::__construct($classMetadataFactory, $nameConverter, $propertyAccessor, $propertyTypeExtractor, $classDiscriminatorResolver, $objectClassResolver, $defaultContext);
     }
 
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = [])
+    {
+        if (!empty($context['input']['class']) && $this->isDomainObject($context['input']['class'], [])) {
+            $inputType = $context['input']['class'];
+            unset($context['input']);
+
+            if (!empty($context['operation']) && $this->CQRSApiValidator->hasConstraints($type)) {
+                $apiResource = parent::denormalize($data, $type, $format, $context);
+                $this->CQRSApiValidator->validate($apiResource, $context['operation']);
+            }
+
+            // Prepare the list of localized values since the LocalizedValue attribute is set on the API Resource class
+            // but not on the CQRS input class, we need to pass this information via the context
+            $localizedValueParameters = $this->localizedValueUpdater->getLocalizedAttributesContext($type, $context);
+            if (!empty($localizedValueParameters)) {
+                // CQRS commands are base on Language IDs, so we force the conversion
+                foreach ($localizedValueParameters as $parameterName => $localizedValueParameter) {
+                    $localizedValueParameters[$parameterName][LocalizedValue::DENORMALIZED_KEY] = LocalizedValue::ID_KEY;
+                    $localizedValueParameters[$parameterName][LocalizedValue::NORMALIZED_KEY] = LocalizedValue::ID_KEY;
+                }
+                $context += [LocalizedValue::LOCALIZED_VALUE_PARAMETERS => $localizedValueParameters];
+            }
+            if (!empty($context['operation']) && !empty($context['operation']->getExtraProperties()['CQRSCommandMapping'])) {
+                $context[NormalizationMapper::NORMALIZATION_MAPPING] = ($context[NormalizationMapper::NORMALIZATION_MAPPING] ?? []) + $context['operation']->getExtraProperties()['CQRSCommandMapping'];
+            }
+
+            if (!$this->serializer instanceof DenormalizerInterface) {
+                throw new LogicException(sprintf('Cannot create an instance of "%s" from serialized data because the serializer inject in "%s" is not a denormalizer.', $inputType, static::class));
+            }
+
+            return $this->serializer->denormalize($data, $inputType, $format, $context);
+        }
+
+        return parent::denormalize($data, $type, $format, $context);
+    }
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = [])
+    {
+        return parent::supportsDenormalization($data, $type, $format) && $this->isDomainObject($type, $context);
+    }
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = [])
+    {
+        return parent::supportsNormalization($data, $format) && $this->isDomainObject($data, $context);
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'object' => true,
+        ];
+    }
+
+    protected function isDomainObject(mixed $objectOrType, array $context): bool
+    {
+        // Some API Resource operation can define another class as the input, which is defined in the context,
+        // if suc input class is a domain class then this normalizer should handle it
+        if (!empty($context['input']['class'])) {
+            $objectOrType = $context['input']['class'];
+        }
+
+        // Check the type if a string is provided
+        if (is_string($objectOrType) && class_exists($objectOrType)) {
+            $objectClass = $objectOrType;
+        } elseif (is_object($objectOrType) && class_exists(get_class($objectOrType))) {
+            $objectClass = get_class($objectOrType);
+        } else {
+            return false;
+        }
+
+        // CQRS classes are handled by our domain serializer
+        if (in_array($objectClass, $this->commandsAndQueries)) {
+            return true;
+        }
+
+        // Even if the class is not a command itself, but it is part of the domain namespace
+        // then this normalizer should support it
+        if (str_starts_with($objectClass, 'PrestaShop\PrestaShop\Core\Domain')) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * This method is overridden because our CQRS objects sometimes have setters with multiple arguments, these are usually used to force specifying arguments that must
      * be defined all together, so they can be validated as a whole. The ObjectNormalizer only deserialize object properties one at a time, so we have to handle this special
@@ -93,7 +171,6 @@ class CQRSApiNormalizer extends ObjectNormalizer
      */
     protected function instantiateObject(array &$data, string $class, array &$context, ReflectionClass $reflectionClass, bool|array $allowedAttributes, ?string $format = null)
     {
-        $this->castBooleanAttributes($data, $context, $reflectionClass);
         $object = parent::instantiateObject($data, $class, $context, $reflectionClass, $allowedAttributes, $format);
         $methodsWithMultipleArguments = $this->findMethodsWithMultipleArguments($reflectionClass, $data);
         $this->executeMethodsWithMultipleArguments($data, $object, $methodsWithMultipleArguments, $context, $format);
@@ -105,12 +182,12 @@ class CQRSApiNormalizer extends ObjectNormalizer
      * This method is only used to denormalize the constructor parameters, the CQRS classes usually expect scalar input values that
      * are converted into ValueObject in the constructor, so only in this phase of the denormalization we disable the ValueObjectNormalizer
      * by specifying the context option ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR.
+     *
+     * This is also the right moment to update localized values before they are passed in the constructor.
      */
     protected function denormalizeParameter(ReflectionClass $class, ReflectionParameter $parameter, string $parameterName, mixed $parameterData, array $context, ?string $format = null): mixed
     {
-        if (($context[LocalizedValue::IS_LOCALIZED_VALUE] ?? false) && is_array($parameterData)) {
-            $parameterData = $this->updateLanguageIndexesWithLocales($parameterData);
-        }
+        $parameterData = $this->localizedValueUpdater->denormalizeLocalizedValue($parameterData, $parameterName, $context);
 
         return parent::denormalizeParameter($class, $parameter, $parameterName, $parameterData, $context + [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true], $format);
     }
@@ -173,11 +250,8 @@ class CQRSApiNormalizer extends ObjectNormalizer
     protected function getAttributeValue(object $object, string $attribute, ?string $format = null, array $context = []): mixed
     {
         $attributeValue = parent::getAttributeValue($object, $attribute, $format, $context);
-        if (($context[LocalizedValue::IS_LOCALIZED_VALUE] ?? false) && is_array($attributeValue)) {
-            $attributeValue = $this->updateLanguageIndexesWithIDs($attributeValue);
-        }
 
-        return $attributeValue;
+        return $this->localizedValueUpdater->denormalizeLocalizedValue($attributeValue, $attribute, $context);
     }
 
     /**
@@ -186,9 +260,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
      */
     protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = [])
     {
-        if (($context[LocalizedValue::IS_LOCALIZED_VALUE] ?? false) && is_array($value)) {
-            $value = $this->updateLanguageIndexesWithLocales($value);
-        }
+        $value = $this->localizedValueUpdater->denormalizeLocalizedValue($value, $attribute, $context);
 
         parent::setAttributeValue($object, $attribute, $value, $format, $context);
     }
@@ -224,31 +296,6 @@ class CQRSApiNormalizer extends ObjectNormalizer
 
             $reflectionMethod->invoke($object, ...$methodParameters);
             unset($data[$attributeName]);
-        }
-    }
-
-    /**
-     * Force casting boolean properties si that values like (1, 0, true, on, false, ...) are valid, this is useful for
-     * data coming from DB where boolean are returned as tiny integers. Requires CAST_BOOL context option to be true.
-     *
-     * Note: in Symfony 7.1 a new option AbstractNormalizer::FILTER_BOOL has been introduced, when we upgrade our
-     * Symfony dependencies our custom CAST_BOOL option (inspired by the Symfony one) can be removed.
-     *
-     * https://symfony.com/doc/7.1/serializer.html#handling-boolean-values
-     */
-    protected function castBooleanAttributes(array &$data, array $context, ReflectionClass $reflectionClass): void
-    {
-        if (!($context[self::CAST_BOOL] ?? false)) {
-            return;
-        }
-
-        foreach ($data as $attributeName => $value) {
-            if ($reflectionClass->hasProperty($attributeName)) {
-                $attributeType = $reflectionClass->getProperty($attributeName)->getType();
-                if ($attributeType instanceof ReflectionNamedType && $attributeType->isBuiltin() && $attributeType->getName() === 'bool') {
-                    $data[$attributeName] = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                }
-            }
         }
     }
 
@@ -301,84 +348,5 @@ class CQRSApiNormalizer extends ObjectNormalizer
         }
 
         return $methodsWithMultipleArguments;
-    }
-
-    /**
-     * Return the localized array with keys based on locale string value transformed into integer database IDs.
-     *
-     * @param array $localizedValue
-     *
-     * @return array
-     *
-     * @throws LocaleNotFoundException
-     */
-    protected function updateLanguageIndexesWithIDs(array $localizedValue): array
-    {
-        $indexLocalizedValue = [];
-        $this->fetchLanguagesMapping();
-        foreach ($localizedValue as $localeKey => $localeValue) {
-            if (is_string($localeKey)) {
-                if (!isset($this->idsByLocale[$localeKey])) {
-                    throw new LocaleNotFoundException('Locale "' . $localeKey . '" not found.');
-                }
-
-                $indexLocalizedValue[$this->idsByLocale[$localeKey]] = $localeValue;
-            }
-        }
-
-        return $indexLocalizedValue;
-    }
-
-    /**
-     * Return the localized array with keys based on integer database IDs transformed into locale string values.
-     *
-     * @param array $localizedValue
-     *
-     * @return array
-     *
-     * @throws LocaleNotFoundException
-     */
-    protected function updateLanguageIndexesWithLocales(array $localizedValue): array
-    {
-        $localeLocalizedValue = [];
-        $this->fetchLanguagesMapping();
-        foreach ($localizedValue as $localeId => $localeValue) {
-            if (is_numeric($localeId)) {
-                if (!isset($this->localesByID[$localeId])) {
-                    throw new LocaleNotFoundException('Locale with ID "' . $localeId . '" not found.');
-                }
-
-                $localeLocalizedValue[$this->localesByID[$localeId]] = $localeValue;
-            }
-        }
-
-        return $localeLocalizedValue;
-    }
-
-    /**
-     * Fetches the language mapping once and save them in local property for better performance.
-     *
-     * @return void
-     */
-    protected function fetchLanguagesMapping(): void
-    {
-        if (!isset($this->localesByID) || !isset($this->idsByLocale)) {
-            $this->localesByID = [];
-            $this->idsByLocale = [];
-            foreach ($this->languageRepository->getMapping() as $langId => $language) {
-                $this->localesByID[(int) $langId] = $language['locale'];
-                $this->idsByLocale[$language['locale']] = (int) $langId;
-            }
-        }
-    }
-
-    /**
-     * CQRSApiNormalizer must be the last normalizer executed after all the special types normalizers already did their job.
-     *
-     * @return int
-     */
-    public static function getNormalizerPriority(): int
-    {
-        return -1;
     }
 }
