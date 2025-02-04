@@ -480,7 +480,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierData);
     expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriers', baseContext);
 
@@ -625,7 +625,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataFreeShipping);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierFreeShipping', baseContext);
 
@@ -681,7 +681,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataHandlingCosts);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierHandlingCosts', baseContext);
 
@@ -738,7 +738,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataTax);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierTax', baseContext);
 
@@ -895,7 +895,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataRanges);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierRanges', baseContext);
 
@@ -1040,7 +1040,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataBilling);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierBilling', baseContext);
 
@@ -1094,7 +1094,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataRemoveRanges);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierWORanges', baseContext);
 

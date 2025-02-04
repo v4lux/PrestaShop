@@ -247,13 +247,13 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
 
       it('should return to carriers page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `returnToCarriers${index}`, baseContext);
-  
+
         await boDashboardPage.goToSubMenu(
           page,
           boDashboardPage.shippingLink,
           boDashboardPage.carriersLink,
         );
-    
+
         const pageTitle = await boCarriersPage.getPageTitle(page);
         expect(pageTitle).to.contains(boCarriersPage.pageTitle);
 

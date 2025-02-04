@@ -179,7 +179,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       const textResult = await boCarriersCreatePage.createEditCarrier(page, createCarrierData);
       expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
     });
-    
+
     it('should return to carriers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriers', baseContext);
 
@@ -188,7 +188,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         boDashboardPage.shippingLink,
         boDashboardPage.carriersLink,
       );
-  
+
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
     });

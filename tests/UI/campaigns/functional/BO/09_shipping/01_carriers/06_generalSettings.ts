@@ -208,7 +208,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierData);
     expect(textResult).to.contains(boCarriersPage.successfulCreationMessage);
   });
-  
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriers', baseContext);
 
@@ -343,7 +343,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataEnabled);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-    
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierStatus', baseContext);
 
@@ -392,7 +392,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataName);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-    
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierName', baseContext);
 
@@ -447,7 +447,7 @@ describe('BO - Shipping - Carriers : General Settings', async () => {
     const textResult = await boCarriersCreatePage.createEditCarrier(page, carrierDataGuest);
     expect(textResult).to.contains(boCarriersPage.successfulUpdateMessage);
   });
-    
+
   it('should return to carriers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersAfterUpdateCarrierGroupAccess', baseContext);
 

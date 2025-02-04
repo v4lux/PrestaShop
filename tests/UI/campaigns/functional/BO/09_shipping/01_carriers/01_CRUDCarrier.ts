@@ -234,7 +234,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
         boDashboardPage.shippingLink,
         boDashboardPage.carriersLink,
       );
-  
+
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
 
@@ -380,7 +380,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
         boDashboardPage.shippingLink,
         boDashboardPage.carriersLink,
       );
-  
+
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
 
