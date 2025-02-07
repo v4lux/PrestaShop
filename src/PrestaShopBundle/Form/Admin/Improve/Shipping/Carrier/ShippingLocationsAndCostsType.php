@@ -91,6 +91,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                         'target' => '_blank',
                     ],
                 ],
+                'placeholder' => false,
             ])
             ->add('has_additional_handling_fee', SwitchType::class, [
                 'label' => $this->trans('Handling costs', 'Admin.Shipping.Feature'),
