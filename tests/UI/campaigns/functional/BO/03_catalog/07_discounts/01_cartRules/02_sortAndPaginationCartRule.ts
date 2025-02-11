@@ -16,17 +16,16 @@ import {
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_sortAndPaginationCartRule';
 
 /*
-Create 21 cart rules
-Pagination between pages
-Sort cart rules table by Id, name, priority, code, quantity and date
-Delete created cart rules by bulk actions
+ * Create 21 cart rules
+ * Pagination between pages
+ * Sort cart rules table by Id, name, priority, code, quantity and date
+ * Delete created cart rules by bulk actions
  */
 describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCartRules: number = 0;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -132,91 +131,73 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
   describe('Sort cart rules table', async () => {
     const sortTests = [
       {
-        args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_cart_rule', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByIdDesc', sortBy: 'id_cart_rule', sortDirection: 'down', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByPriorityAsc', sortBy: 'priority', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByPriorityAsc', sortBy: 'priority', sortDirection: 'up', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByPriorityDesc', sortBy: 'priority', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByPriorityDesc', sortBy: 'priority', sortDirection: 'down', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByCodeAsc', sortBy: 'code', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByCodeAsc', sortBy: 'code', sortDirection: 'up',
       },
       {
-        args: {
-          testIdentifier: 'sortByCodeDesc', sortBy: 'code', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByCodeDesc', sortBy: 'code', sortDirection: 'down',
       },
       {
-        args: {
-          testIdentifier: 'sortByQuantityAsc', sortBy: 'quantity', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByQuantityAsc', sortBy: 'quantity', sortDirection: 'up', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByQuantityDesc', sortBy: 'quantity', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByQuantityDesc', sortBy: 'quantity', sortDirection: 'down', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up', isDate: true,
-        },
+        testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up', isDate: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down', isDate: true,
-        },
+        testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down', isDate: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_cart_rule', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByIdAsc', sortBy: 'id_cart_rule', sortDirection: 'up', isFloat: true,
       },
     ];
-    sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    sortTests.forEach((test: {
+      testIdentifier: string,
+      sortBy: string,
+      sortDirection: string,
+      isDate?: boolean,
+      isFloat?: boolean
+    }) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-        const nonSortedTable = await boCartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boCartRulesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        await boCartRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boCartRulesPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        const sortedTable = await boCartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boCartRulesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        if (test.args.isFloat) {
+        if (test.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'up') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
-        } else if (test.args.isDate) {
+        } else if (test.isDate) {
           const expectedResult: string[] = await utilsCore.sortArrayDate(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -224,7 +205,7 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
         } else {
           const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());

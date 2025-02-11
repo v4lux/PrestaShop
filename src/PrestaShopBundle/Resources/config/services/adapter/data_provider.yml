@@ -27,7 +27,10 @@ services:
     arguments: [ "@=service('prestashop.adapter.legacy.context')" ]
 
   prestashop.adapter.data_provider.group:
-    class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
+    alias: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.adapter.data_provider.manufacturer:
     class: PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider

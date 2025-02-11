@@ -67,7 +67,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const isActionPerformed = await boCarriersPage.setStatus(page, 1, false);
 
       if (isActionPerformed) {
-        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
         expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
@@ -140,7 +140,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const isActionPerformed = await boCarriersPage.setStatus(page, 3, true);
 
       if (isActionPerformed) {
-        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
         expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
@@ -174,7 +174,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const isActionPerformed = await boCarriersPage.setFreeShippingStatus(page, 2, true);
 
       if (isActionPerformed) {
-        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
         expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
@@ -226,7 +226,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const isActionPerformed = await boCarriersPage.setFreeShippingStatus(page, 2, false);
 
       if (isActionPerformed) {
-        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
         expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
@@ -240,7 +240,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const isActionPerformed = await boCarriersPage.setStatus(page, 3, false);
 
       if (isActionPerformed) {
-        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
         expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 
@@ -254,7 +254,7 @@ describe('BO - Shipping - Carriers : Quick edit status and free shipping', async
       const isActionPerformed = await boCarriersPage.setStatus(page, 1, true);
 
       if (isActionPerformed) {
-        const resultMessage = await boCarriersPage.getAlertSuccessBlockContent(page);
+        const resultMessage = await boCarriersPage.getAlertSuccessBlockParagraphContent(page);
         expect(resultMessage).to.contains(boCarriersPage.successfulUpdateStatusMessage);
       }
 

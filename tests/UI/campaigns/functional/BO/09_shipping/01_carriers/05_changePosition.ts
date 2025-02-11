@@ -19,6 +19,7 @@ import {
   foClassicHomePage,
   foClassicProductPage,
   type Page,
+  utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -132,6 +133,22 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
+    });
+
+    it('should sort by \'position\' \'asc\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
+
+      const nonSortedTable = await boCarriersPage.getAllRowsColumnContent(page, 'a!position');
+
+      await boCarriersPage.sortTable(page, 'a!position', 'asc');
+
+      const sortedTable = await boCarriersPage.getAllRowsColumnContent(page, 'a!position');
+
+      const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
+      const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+
+      const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
+      expect(sortedTableFloat).to.deep.equal(expectedResult);
     });
 
     it('should change first carrier position to 2', async function () {
