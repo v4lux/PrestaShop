@@ -115,6 +115,10 @@
                       />
                     </span>
                     <span class="hook-name">{{ hook['name'] }}</span>
+                    {% if hook['title'] is defined %}
+                      <span class="help-box" data-toggle="popover" data-trigger="hover" data-html="true" data-content="{{ hook['title'] }}" data-placement="top">
+ </span>
+                    {% endif %}
                     <label class="badge badge-pill float-right">
                       {% if hook['modules_count'] and isSingleShopContext %}
                         <input type="checkbox" class="hook-checker"

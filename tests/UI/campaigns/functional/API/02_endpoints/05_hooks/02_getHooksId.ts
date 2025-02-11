@@ -31,7 +31,7 @@ describe('API : GET /hook/{id}', async () => {
   let idHook: number;
   let statusHook: boolean;
   let nameHook: string;
-  //let titleHook: string;
+  let titleHook: string;
   let descriptionHook: string;
 
   const clientScope: string = 'hook_read';
@@ -162,9 +162,8 @@ describe('API : GET /hook/{id}', async () => {
       nameHook = await boDesignPositionsPage.getHookName(page, 0);
       expect(nameHook.length).to.be.gt(0);
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
-      //titleHook = await boDesignPositionsPage.getHookStatus(page, 0);
-      //expect(titleHook.length).to.be.gt(0);
+      titleHook = await boDesignPositionsPage.getHookTitle(page, 0);
+      expect(titleHook.length).to.be.gt(0);
 
       descriptionHook = await boDesignPositionsPage.getHookDescription(page, 0);
       expect(descriptionHook.length).to.be.gt(0);
@@ -223,15 +222,12 @@ describe('API : GET /hook/{id}', async () => {
       expect(jsonResponse.name).to.be.equal(nameHook);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/34552
     it('should check the JSON Response : `title`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseTitle', baseContext);
 
-      this.skip();
-
-      //expect(jsonResponse).to.have.property('title');
-      //expect(jsonResponse.title).to.be.a('string');
-      //expect(jsonResponse.title).to.be.equal(titleHook);
+      expect(jsonResponse).to.have.property('title');
+      expect(jsonResponse.title).to.be.a('string');
+      expect(jsonResponse.title).to.be.equal(titleHook);
     });
 
     it('should check the JSON Response : `description`', async function () {
