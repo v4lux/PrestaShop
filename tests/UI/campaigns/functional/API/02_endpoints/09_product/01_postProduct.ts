@@ -146,14 +146,9 @@ describe('API : POST /product', async () => {
         },
         data: {
           type: createProduct.type,
-          active: createProduct.status,
           names: {
             [dataLanguages.english.locale]: createProduct.name,
             [dataLanguages.french.locale]: createProduct.nameFR,
-          },
-          descriptions: {
-            [dataLanguages.english.locale]: createProduct.description,
-            [dataLanguages.french.locale]: createProduct.descriptionFR,
           },
         },
       });
@@ -182,12 +177,12 @@ describe('API : POST /product', async () => {
 
       expect(jsonResponse.productId).to.be.gt(0);
       expect(jsonResponse.type).to.equal(createProduct.type);
+      expect(jsonResponse.active).to.equal(false);
       expect(jsonResponse.names[dataLanguages.english.locale]).to.equal(createProduct.name);
       expect(jsonResponse.names[dataLanguages.french.locale]).to.equal(createProduct.nameFR);
+      expect(jsonResponse.descriptions[dataLanguages.english.locale]).to.equal('');
+      expect(jsonResponse.descriptions[dataLanguages.french.locale]).to.equal('');
       expect(jsonResponse.shopIds).to.deep.equal([1]);
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35619
-      //expect(jsonResponse.descriptions[dataLanguages.english.id]).to.equal(createProduct.description);
-      //expect(jsonResponse.descriptions[dataLanguages.french.id]).to.equal(createProduct.descriptionFR);
     });
   });
 

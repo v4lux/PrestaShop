@@ -24,7 +24,7 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
-#   v9.0.0 Beta 1 - (2024-12-20)
+#   v9.0.0 Beta 1 - (2024-02-03)
 ####################################
 
 - Back Office:
@@ -46,6 +46,11 @@ Changelog for PrestaShop 9
     - #36585: Renew PrestaShop installer branding (by @tblivet)
     - #36348: [BC Break] Finalize login page migration (by @jolelievre)
   - Improvement:
+    - #37941: Improve category helptext (by @Hlavtox)
+    - #37828: Add URL Validation when installing theme from URL (by @M0rgan01)
+    - #36086: Improve Admin API doc generation (by @jolelievre)
+    - #37763: SymfonyCacheClearer tries multiple manual cache clear (by @jolelievre)
+    - #37745: Improve ShopCollection list of shop IDs in API, and test API validation (by @jolelievre)
     - #37699: Refactored Hooks API (by @nicosomb)
     - #37692: [BC Break] Add Language locale in grid and form (by @jolelievre)
     - #37648: Improve hook list (by @tleon)
@@ -84,6 +89,15 @@ Changelog for PrestaShop 9
     - #36246: Add several fields to carrier (by @tleon)
     - #35488: Add Export button missing on new Product Page V2 (by @OrionCodeDev)
   - Bug fix:
+    - #37944: Fix: MaterialChoiceTableType does not render help text (by @Codencode)
+    - #37869: Fix: Admin search by product ID results in CSV download instead of product page redirect (by @Codencode)
+    - #37838: Fix: bug: Legacy form sends GET request instead of POST as it should (by @Codencode)
+    - #37888: Fix: BO > Order details page - When changing pagination, Refunded column displays automatically (by @Codencode)
+    - #37803: Fix multistore disabling (by @boherm)
+    - #37771: Improve constraint on Product description (by @jolelievre)
+    - #37818: Fix: BO > Carriers - Exception thrown Invalid Carrier url. Got "@" (by @Codencode)
+    - #37717: Fix: Problem with shop association component (by @Codencode)
+    - #37819: Fix: BO > Carriers - Exception thrown Carrier cannot be both shipping handling and free (by @Codencode)
     - #37679: Fix use case when changing status for already existed alias (by @boherm)
     - #37678: Fix the use of special chars for aliases search term (by @boherm)
     - #37565: Fix employee form bugs (by @jolelievre)
@@ -147,6 +161,7 @@ Changelog for PrestaShop 9
     - #36322: Symfony clean after migration (by @jolelievre)
 - Front Office:
   - New feature:
+    - #37125: Make getHookModuleExecList customizable from modules (by @matthieu-rolland)
     - #37236: Enable controlling of default language URL prefix (by @Hlavtox)
   - Improvement:
     - #37598: Upgrade attachment names length (by @LaBisquerie)
@@ -165,7 +180,9 @@ Changelog for PrestaShop 9
     - #36423: Add new selector for quickview modal using Bootstrap 5 (Hummingbird) (by @tblivet)
     - #36359: Match URLs with a trailing slash (by @Hlavtox)
   - Bug fix:
+    - #37747: Add sales to manufacturer sort (by @jf-viguier)
     - #37430: Add 'product Sales' to default product sort parameter and in front category page (by @jf-viguier)
+    - #37533: If price is not shown hide add to cart too. Fixes #37532 (by @tswfi)
     - #37589: Fix lazy array (by @matthieu-rolland)
     - #37268: Fix Incorrect SpecificPrice Currency Conversion (Issue 36844) (by @mrkalchemy)
     - #37267: Fix cart value amount (by @idnovate)
@@ -198,6 +215,10 @@ Changelog for PrestaShop 9
     - #36946: Delete js/validate.js - deprecated since 1.6.0.4 (by @ShaiMagal)
 - Core:
   - Improvement:
+    - #37931: Update dependencies (by @jolelievre)
+    - #37907: Chore: [release-8.2.1] - update version number to 8.2.1 (by @mattgoud)
+    - #37354: Slovakia VAT change from 2025/01 to 5% and 19% and 23% (by @ShaiMagal)
+    - #37711: Update Changelog for 9.0.0-beta.1 (by @jolelievre)
     - #37586: Apply rector fixes (by @FabienPapet)
     - #37018: [BC Break] Improve and finalize availability (by @Hlavtox)
     - #37591: Add debug information during installation (by @nicosomb)
@@ -285,6 +306,11 @@ Changelog for PrestaShop 9
     - #36341: Preliminary tasks for 8.1.7 release (by @jolelievre)
     - #36284: Updated PrestaShop Packages (by @github-actions[bot])
   - Bug fix:
+    - #37861: [BC Break] Fix Customer threads messages for multiple products (by @boherm)
+    - #37912: Fix performance issue linked to HookModuleFilter PR (by @matthieu-rolland)
+    - #37849: Fix issue with count on string (by @pszostok)
+    - #37876: Downgrade lockfileVersion of themes package-lock.json files (by @mattgoud)
+    - #37332: Order::getCustomerOrders - in specific case incorrect sorting by date_add DESC (by @ShaiMagal)
     - #37474: [BC Break] Make Twig accessible for modules inside hooks (by @kpodemski)
     - #37620: Update patch version of dependencies + Major faceted search module (by @jolelievre)
     - #37486: Fix obvious notice in Warehouse class (by @kpodemski)
@@ -332,6 +358,7 @@ Changelog for PrestaShop 9
     - #36397: Remove unexpected binary condition (by @davidglezz)
 - Installer:
   - Improvement:
+    - #37957: Update default catalog 9.0.x (by @ps-jarvis)
     - #37709: Update default catalog 9.0.x (by @ps-jarvis)
     - #37706: Update default catalog 9.0.x (by @ps-jarvis)
     - #37581: Improve Installation errors (by @jolelievre)
@@ -347,6 +374,8 @@ Changelog for PrestaShop 9
     - #36345: Update default catalog 8.1.x (by @ps-jarvis)
     - #36340: Update default catalog 8.1.x (by @ps-jarvis)
     - #36270: Update doc about ReleaseCreator (by @PrestaEdit)
+  - Bug fix:
+    - #37942: Generate category thumbnail for demo data on install (by @jolelievre)
 - Web Services:
   - Bug fix:
     - #36807: Move the array_unshift in Product::setWsPositionInCategory() (by @matks)
@@ -354,6 +383,14 @@ Changelog for PrestaShop 9
     - #37415: [BC Break] Remove outdated E_STRICT (by @Hlavtox)
 - Tests:
   - Improvement:
+    - #37945: Functional Tests: Bump `@prestashop-core/ui-testing` (by @Progi1984)
+    - #37923: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 3) (by @Progi1984)
+    - #37891: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 2) (by @Progi1984)
+    - #37871: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 1) (by @Progi1984)
+    - #37743: Functional Tests : Audit - BO - Shop Parameters (by @florine2623)
+    - #37742: Functional Tests : API : GET /languages (by @Progi1984)
+    - #37741: Functional Tests : API : POST /customers/group (by @Progi1984)
+    - #37732: Functional Tests : Bump `@prestashop-core/ui-testing` (by @Progi1984)
     - #37677: Functional Tests : Audit - BO - International (by @florine2623)
     - #37645: Nightly : Fixed campaigns after #37592 (by @Progi1984)
     - #37624: Functional Tests : Audit - BO - Shipping (by @florine2623)
@@ -458,6 +495,10 @@ Changelog for PrestaShop 9
     - #36383: Functional Tests : New products block module - BO header buttons (by @Progi1984)
     - #36295: Functional Tests : Support for MariaDB (by @Progi1984)
   - Bug fix:
+    - #37908: Clean JS errors between each steps in UI tests (by @jolelievre)
+    - #37887: Fix: #37886 - [docker-compose] - upgrade node 14 to 16 (by @mattgoud)
+    - #37870: Nightly : Improved `functionals/BO/00*/04*` (by @Progi1984)
+    - #37862: Use Ubuntu 22.04 on `8.2.x` (by @Progi1984)
     - #37662: Functional Tests : Reduce Sanity (and improve stability) (by @Progi1984)
     - #37429: Clean behat context constructors (by @jolelievre)
     - #37203: Functional Tests : Stabilization (by @Progi1984)

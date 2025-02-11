@@ -10,35 +10,44 @@ import {
   FakerCartRule,
   type Page,
   utilsPlaywright,
+  utilsDate,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_filterQuickEditAndBulkActionsCartRules';
 
 /*
-Create 2 cart rules
-Filter cart rules by id, priority, code, quantity, status
-Quick edit first cart rule in list
-Enable, disable and delete cart rules by bulk actions
+ * Create 2 cart rules
+ * Filter cart rules by id, priority, code, quantity, status
+ * Quick edit first cart rule in list
+ * Enable, disable and delete cart rules by bulk actions
  */
 describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart rules', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCartRules: number = 0;
+  let cartRuleId: number = 0;
 
+  const dateYesterday: string = utilsDate.getDateFormat('yyyy-mm-dd', 'yesterday');
+  const dateToday: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateTomorrow: string = utilsDate.getDateFormat('yyyy-mm-dd', 'tomorrow');
+  const dateTomorrowDisplayed: string = utilsDate.getDateFormat('mm/dd/yyyy', 'tomorrow');
   const firstCartRule: FakerCartRule = new FakerCartRule({
     name: 'todelete1',
     code: '4QABV6I0',
     discountType: 'Percent',
     discountPercent: 20,
+    dateFrom: dateYesterday,
+    dateTo: dateToday,
   });
   const secondCartRule: FakerCartRule = new FakerCartRule({
     name: 'todelete2',
     code: '3PAJA674',
     discountType: 'Percent',
     discountPercent: 30,
+    dateFrom: dateYesterday,
+    dateTo: dateTomorrow,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -98,70 +107,77 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
 
           const numberOfCartRulesAfterCreation = await boCartRulesPage.getNumberOfElementInGrid(page);
           expect(numberOfCartRulesAfterCreation).to.be.at.most(numberOfCartRules + index + 1);
+
+          if (index > 0) {
+            cartRuleId = parseInt(await boCartRulesPage.getTextColumn(page, 1, 'id_cart_rule'), 10);
+            expect(cartRuleId).to.be.gt(0);
+          }
         });
       });
   });
 
   describe('Filter cart rules table', async () => {
-    const tests = [
+    [
       {
-        args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: firstCartRule.name,
-        },
+        testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_cart_rule', filterValue: cartRuleId.toString(),
       },
       {
-        args: {
-          testIdentifier: 'filterPriority', filterType: 'input', filterBy: 'priority', filterValue: '1',
-        },
+        testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: firstCartRule.name,
       },
       {
-        args: {
-          testIdentifier: 'filterCode', filterType: 'input', filterBy: 'code', filterValue: firstCartRule.code,
-        },
+        testIdentifier: 'filterPriority', filterType: 'input', filterBy: 'priority', filterValue: '1',
       },
       {
-        args: {
-          testIdentifier: 'filterQuantity', filterType: 'input', filterBy: 'quantity', filterValue: '1',
-        },
+        testIdentifier: 'filterCode', filterType: 'input', filterBy: 'code', filterValue: firstCartRule.code,
       },
       {
-        args: {
-          testIdentifier: 'filterStatus', filterType: 'select', filterBy: 'active', filterValue: '1',
-        },
+        testIdentifier: 'filterQuantity', filterType: 'input', filterBy: 'quantity', filterValue: '1',
       },
-    ];
-
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+      {
+        testIdentifier: 'filterExpirationDate', filterType: 'input', filterBy: 'date_from', filterValue: dateTomorrow,
+      },
+      {
+        testIdentifier: 'filterStatus', filterType: 'select', filterBy: 'active', filterValue: '1',
+      },
+    ].forEach((test: {
+      testIdentifier: string,
+      filterType: string,
+      filterBy: string,
+      filterValue: string
+    }) => {
+      it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         await boCartRulesPage.filterCartRules(
           page,
-          test.args.filterType,
-          test.args.filterBy,
-          test.args.filterValue,
+          test.filterType,
+          test.filterBy,
+          test.filterValue,
         );
 
         const numberOfCartRulesAfterFilter = await boCartRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfCartRulesAfterFilter).to.be.at.most(numberOfCartRules + 2);
 
         for (let row = 1; row <= numberOfCartRulesAfterFilter; row++) {
-          if (test.args.filterBy === 'active') {
+          if (test.filterBy === 'active') {
             const cartRuleStatus = await boCartRulesPage.getCartRuleStatus(page, row);
-            expect(cartRuleStatus).to.equal(test.args.filterValue === '1');
+            expect(cartRuleStatus).to.equal(test.filterValue === '1');
+          } else if (test.filterBy === 'date_from') {
+            const textColumn = await boCartRulesPage.getTextColumn(page, row, 'date');
+            expect(textColumn).to.contains(dateTomorrowDisplayed);
           } else {
             const textColumn = await boCartRulesPage.getTextColumn(
               page,
               row,
-              test.args.filterBy,
+              test.filterBy,
             );
-            expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.filterValue);
           }
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfCartRulesAfterReset = await boCartRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfCartRulesAfterReset).to.equal(numberOfCartRules + 2);
@@ -180,16 +196,16 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
     });
 
     [
-      {args: {status: 'disable', enable: false}},
-      {args: {status: 'enable', enable: true}},
-    ].forEach((status) => {
-      it(`should ${status.args.status} the first cart rule`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}CartRule`, baseContext);
+      {status: 'disable', enable: false},
+      {status: 'enable', enable: true},
+    ].forEach((test: {status: string, enable: boolean}) => {
+      it(`should ${test.status} the first cart rule`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.status}CartRule`, baseContext);
 
-        await boCartRulesPage.setCartRuleStatus(page, 1, status.args.enable);
+        await boCartRulesPage.setCartRuleStatus(page, 1, test.enable);
 
         const currentStatus = await boCartRulesPage.getCartRuleStatus(page, 1);
-        expect(currentStatus).to.be.equal(status.args.enable);
+        expect(currentStatus).to.be.equal(test.enable);
       });
     });
 
@@ -224,7 +240,7 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
     [
       {action: 'enable', wantedStatus: true},
       {action: 'disable', wantedStatus: false},
-    ].forEach((test) => {
+    ].forEach((test: {action: string, wantedStatus: boolean}) => {
       it(`should ${test.action} cart rules with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.action}CartRules`, baseContext);
 
